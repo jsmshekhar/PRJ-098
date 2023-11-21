@@ -6,8 +6,10 @@
             <h5 class="mb-0">Sign In to your Account</h5>
             <p class="text-muted mt-2">Welcome back! please enter your detail</p>
         </div>
-        <form class="mt-4 pt-2" action="{{ route('login') }}" method="POST">
+        <form class="mt-4 pt-2" action="{{ url('password/set') }}" method="POST">
             @csrf
+            <input type="hidden" name="token" value="{{ $token }}">
+
             <div class="position-relative">
                 <img src="{{ asset('public/assets/images/icons/mail.svg') }}" alt="" class="left-icon-form">
                 <input type="text" class="form-control" id="email" placeholder="Enter Email" name="email"

@@ -1,12 +1,12 @@
 @extends('auth.layouts.auth')
 @section('title', 'Reset Your Password')
 @section('content')
-    <div class="auth-form">
-        <div class="text-center mb-3">
-            <a href=""><img src="{{ asset('public/web-2.O/images/logo/logo-full.png') }}" alt=""></a>
+    <div class="auth-content">
+        <div class="text-left">
+            <h5 class="mb-0">Reset Your Password</h5>
+            <p class="text-muted mt-2">Create your new Password!</p>
         </div>
-        <h4 class="text-center mb-4">Reset Your Password</h4>
-        <form method="POST" method="POST" action="{{ route('password.update') }}">
+        <form class="mt-4 pt-2" action="{{ route('password.update') }}" method="POST">
             @csrf
             <input type="hidden" name="token" value="{{ $token }}">
             @if (session('status'))
@@ -14,47 +14,52 @@
                     {{ session('status') }}
                 </div>
             @endif
-            <div class="mb-3">
-                <label class="mb-1"><strong>Email</strong></label>
-                <input type="email" class="form-control" name="email" id="email"
-                    value="{{ $email ?? old('email') }}" required placeholder="Enter Email" readonly />
-                @error('email')
-                    <span class="text-danger" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @enderror
+
+            <div class="position-relative">
+                <img src="{{ asset('public/assets/images/icons/mail.svg') }}" alt="" class="left-icon-form">
+                <input type="text" class="form-control" id="email" placeholder="Enter Email" name="email"
+                    value="{{ $email ?? old('email') }}" required readonly>
             </div>
-            <div class="mb-3">
-                <label class="mb-1"><strong>Password</strong></label>
-                <input type="password" class="form-control" name="password" placeholder="Password" required />
+            @error('email')
+                <span class="text-danger">
+                    <strong>{{ $message }}</strong>
+                </span>
+            @enderror
+
+            <div class="mt-3 mb-3">
+                <div class="input-group auth-pass-inputgroup">
+                    <img src="{{ asset('public/assets/images/icons/lock.svg') }}" alt="" class="left-icon-form">
+                    <input type="password" class="form-control" placeholder="Enter new password" name="password">
+                    <button class="btn btn-light shadow-none ms-0" type="button" id="password-addon">
+                        <img src="{{ asset('public/assets/images/icons/eye-off.svg') }}" alt="">
+                    </button>
+                </div>
                 @error('password')
-                    <span class="text-danger" role="alert">
+                    <span class="text-danger">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
             </div>
-            <div class="mb-3">
-                <label class="mb-1"><strong>Confirm password</strong></label>
-                <input type="password" class="form-control" name="password_confirmation" placeholder="Confirmation password"
-                    required />
+
+            <div class="mt-3 mb-3">
+                <div class="input-group auth-pass-inputgroup">
+                    <img src="{{ asset('public/assets/images/icons/lock.svg') }}" alt="" class="left-icon-form">
+                    <input type="password" class="form-control" name="password_confirmation"
+                        placeholder="Confirmation password" required>
+                    <button class="btn btn-light shadow-none ms-0" type="button" id="password-addon-1">
+                        <img src="{{ asset('public/assets/images/icons/eye-off.svg') }}" alt="">
+                    </button>
+                </div>
                 @error('password_confirmation')
-                    <span class="text-danger" role="alert">
+                    <span class="text-danger">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
             </div>
-            <div class="text-center mt-4">
-                <button type="submit" class="btn btn-primary btn-block">{{ __('Login') }}</button>
+
+            <div class="mb-3">
+                <button class="btn btn-primary w-100" type="submit">Log In</button>
             </div>
         </form>
-        <div class="new-account mt-3">
-            @if (Route::has('login'))
-                <p>
-                    <a class="text-primary" href="{{ route('login') }}">
-                        {{ __('Login account') }}
-                    </a>
-                </p>
-            @endif
-        </div>
     </div>
 @endsection

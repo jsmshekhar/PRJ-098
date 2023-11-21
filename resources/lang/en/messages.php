@@ -10,6 +10,9 @@ return [
     'LOGOUT_SUCCESS' => 'Logout Successfully.',
     'UPDATE_IMAGE_DESC' => 'Image description updated successfully.',
     'ERROR_UPDATE_IMAGE_DESC' => 'Image description not updated.',
+    'HTTP_NOT_FOUND' => 'Data not found.',
+    'HTTP_FOUND' => 'Data found.',
+
 
     'PUBLISH_ERROR' => 'Property not published getting some error.',
     'PUBLISH_SUCCESS' => 'Property published successfully.',
@@ -23,7 +26,7 @@ return [
     'VALIDATION_ERROR' => 'Some request parameters failed for validation.',
     'INVALID_CREDENTIAL' => 'Credentials are invalid.',
     'PROXY_AUTHENTICATION_EQUIRED' => 'Proxy authentication required.',
-    'HTTP_NOT_FOUND' => 'Data not found.',
+
     'FOB_NOT_FOUND' => 'FOB id is not available.',
     'INVALID_REQUEST_METHOD' => "This method is not supported this route.",
     'forget_email' => [

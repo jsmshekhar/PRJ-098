@@ -38,7 +38,6 @@ class AuthApiController extends ApiController
                 $result = $this->riderModel->register($request);
                 return finalResponse($result);
             }
-
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -85,11 +84,10 @@ class AuthApiController extends ApiController
     Return    : Json
     --------------------------------------------------*/
     public function logout(Request $request)
-    { 
+    {
         try {
             $result = $this->riderModel->logout($request);
             return finalResponse($result);
-            
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -97,7 +95,7 @@ class AuthApiController extends ApiController
                 'message' => $ex->getMessage(),
             ];
             return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
-        } 
+        }
     }
     /*--------------------------------------------------
     Developer : Chandra Shekhar
@@ -108,8 +106,8 @@ class AuthApiController extends ApiController
     public function getRiderDetails(Request $request)
     {
         try {
-            echo "get details";
-            die;
+            $result = $this->riderModel->getDetails($request);
+            return finalResponse($result);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),

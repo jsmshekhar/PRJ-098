@@ -15,20 +15,12 @@ use Illuminate\Support\Facades\Route;
  */
 
 Route::namespace('Api')->prefix('v1')->group(function () {
-
     Route::post('register', [AuthApiController::class, 'register']);
     Route::post('login', [AuthApiController::class, 'login']);
-
 });
 
-
-//Route::middleware('auth:api')->get('/rider-details', 'AuthApiController@getRiderDetails');
 
 Route::middleware(['auth:rider-api'])->namespace('Api')->prefix('v1')->group(function () {
     Route::get('/logout', [AuthApiController::class, 'logout']);
     Route::get('/rider-details', [AuthApiController::class, 'getRiderDetails']);
 });
-
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });

@@ -28,6 +28,7 @@ class CreateUsersTable extends Migration
             $table->integer('emp_id')->nullable();
             $table->rememberToken();
             $table->tinyInteger('status_id')->default(1)->comment('1 => Active, 2 => Pending, 3 => Invite, 4 => Deleted');
+            $table->string('set_password_token')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamp('created_at')->nullable()->useCurrent();

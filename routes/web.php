@@ -2,12 +2,13 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\RoleUserController;
 use App\Http\Controllers\HubController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RiderController;
 use App\Http\Controllers\ComplainController;
+use App\Http\Controllers\RoleUserController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Auth\PasswordSetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,4 +72,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/notification-status-changed', [NotificationController::class, 'notificationStatusChanged'])->name('notification-status-changed');
         Route::post('/add-user-base', [NotificationController::class, 'addUserBase'])->name('add-user-base');
     });
+
+    Route::get('password/set/{token}', [PasswordSetController::class, 'showSetPasswordForm'])->name('show-set-password-form');
+    Route::post('password/set', [PasswordSetController::class, 'setPassword'])->name('set-password');
 });
