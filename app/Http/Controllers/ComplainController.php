@@ -30,9 +30,18 @@ class ComplainController extends ApiController
     {
         try {
             $permission = User::getPermissions();
+            $auth = Auth::user();
             if (Gate::allows('view_complaint', $permission)) {
-                $complains = Complain::whereNull('deleted_at')->orderBy('created_at', 'DESC')->paginate(25);
-                return view('admin.complain.complain', compact('complains', 'permission'));
+                if($auth->role_id == 0){
+                    $complains = Complain::whereNull('deleted_at')->orderBy('created_at', 'DESC')->paginate(25);
+                }else{
+                    $complains = Complain::where('user_id', $auth->user_id)->whereNull('deleted_at')->orderBy('created_at', 'DESC')->paginate(25);
+                }
+                
+                $users = User::where('user_slug', $auth->slug)->whereNull('deleted_at')
+                    ->orderBy('first_name', 'DESC')->select('first_name', 'last_name', 'user_id')
+                    ->get();
+                return view('admin.complain.complain', compact('complains', 'users', 'permission'));
             } else {
                 return view('admin.401.401');
             }
@@ -71,6 +80,32 @@ class ComplainController extends ApiController
                 ];
             }
             return response()->json($status);
+        } catch (\Exception $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Raj Kumar
+    Action    : Complain assignment Changed
+    --------------------------------------------------*/
+    public function complainAssignmentChanged(Request $request)
+    {
+        try {
+            $user_id = !empty($request->user_id) ? $request->user_id : null;
+            $slug = !empty($request->slug) ? $request->slug : null;
+            $complain = Complain::where('slug', $slug)->update([
+                "user_id" => $user_id,
+            ]);
+            if ($complain) {
+                return redirect()->back();
+            } else {
+            }
         } catch (\Exception $ex) {
             $result = [
                 'line' => $ex->getLine(),

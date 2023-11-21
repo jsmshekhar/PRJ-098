@@ -60,6 +60,7 @@ Route::group(['prefix' => 'admin'], function () {
         //Complain & Query Routes
         Route::get('/complain-queries', [ComplainController::class, 'getComplains'])->name('complain-queries');
         Route::post('/complain-status-changed', [ComplainController::class, 'complainStatusChanged'])->name('complain-status-changed');
+        Route::post('/change-complain-assignment', [ComplainController::class, 'complainAssignmentChanged'])->name('change-complain-assignment');
 
         ///Notification Routes
         Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications');

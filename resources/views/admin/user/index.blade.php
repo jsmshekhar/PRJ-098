@@ -9,16 +9,16 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
-            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <div class="page-title-left">
+            <div class="nav_cust_menu">
+                <ul>
                     @can('view_user', $permission)
-                    <a href="{{route('users')}}" class="btn btn-info btn-sm active" title="User Panel">User Panel</a>
+                    <li><a href="{{route('users')}}" class="active" title="User Panel">User Panel</a></li>
                     @endcan
                     @can('view_role', $permission)
-                    <a href="{{route('roles')}}" class="btn btn-info btn-sm" title="Permission Panel">Permission Panel</a>
+                    <li><a href="{{route('roles')}}" class="" title="Permission Panel">Permission Panel</a>
+                    </li>
                     @endcan
-                </div>
-                <h4 class="mb-sm-0 font-size-18">User Management</h4>
+                </ul>
             </div>
         </div>
     </div>
@@ -45,37 +45,37 @@
                                     <form id="" method="post">
                                         <div class="row">
                                             <div class="col-xl-3 col-md-6">
-                                                <div class="form-group mb-3">
+                                                <div class="form-group mb-2">
                                                     <label class="form-label">User Id</label>
                                                     <input type="text" required class="form-control" />
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-md-6">
-                                                <div class="form-group mb-3">
+                                                <div class="form-group mb-2">
                                                     <label class="form-label">User Name</label>
                                                     <input type="text" required class="form-control" />
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-md-6">
-                                                <div class="form-group mb-3">
+                                                <div class="form-group mb-2">
                                                     <label class="form-label">Email Id</label>
                                                     <input type="text" required class="form-control" />
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-md-6">
-                                                <div class="form-group mb-3">
+                                                <div class="form-group mb-2">
                                                     <label class="form-label">Email Address</label>
                                                     <input type="text" required class="form-control" />
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-md-6">
-                                                <div class="form-group mb-3">
+                                                <div class="form-group mb-2">
                                                     <label class="form-label">Phone Number</label>
                                                     <input type="text" required class="form-control" />
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-md-6">
-                                                <div class="form-group mb-3">
+                                                <div class="form-group mb-2">
                                                     <label class="form-label">Role</label>
                                                     <input type="text" required class="form-control" />
                                                 </div>
@@ -92,6 +92,33 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body p-0">
+                    <div class="table-filter">
+                        <ul>
+                            <li>
+                                <a href="#" class="btn btn-link">
+                                    <img src="{{asset('public/assets/images/icons/refresh.svg')}}" alt="">
+                                </a>
+                            </li>
+                            <li>
+                                <p>Total Record : <span>255</span></p>
+                            </li>
+                            <li>
+                                <p>Display up to :
+                                <div class="form-group">
+                                    <select class="form-control" name="choices-single-no-sorting" id="choices-single-no-sorting">
+                                        <option value="Madrid">50</option>
+                                        <option value="Toronto">25</option>
+                                    </select>
+                                </div>
+                                </p>
+                            </li>
+                            <li>
+                                <button type="button" class="btn btn-success waves-effect waves-light">
+                                    <img src="{{asset('public/assets/images/icons/download.svg')}}" alt=""> Export
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
                     <div class="table-rep-plugin">
                         @if(count($users) >0)
                         <div class="table-responsive mb-0 fixed-solution" data-pattern="priority-columns">
@@ -175,37 +202,36 @@
                 <form method="post" enctype="multipart/form-data" id="addUpdateUser">
                     @csrf
                     <input type="hidden" class="form-control" name="slug" id="slug">
-                    <div class="mb-3">
+                    <div class="form-group mb-2">
                         <label for="role-name" class="col-form-label">First Name <sup class="compulsayField">*</sup> <span class="spanColor name_error"></span></label>
                         <input type="text" name="first_name" class="form-control" id="first_name">
                     </div>
-                    <div class="mb-3">
+                    <div class="form-group mb-2">
                         <label for="role-name" class="col-form-label">Last Name</label>
                         <input type="text" name="last_name" class="form-control" id="last_name">
                     </div>
-                    <div class="mb-3">
+                    <div class="form-group mb-2">
                         <label for="role-name" class="col-form-label">Email <sup class="compulsayField">*</sup> <span class="spanColor email_error"></span></label>
                         <input type="text" name="email" class="form-control" id="email">
                     </div>
-                    <div class="mb-3">
+                    <div class="form-group mb-2">
                         <label for="role-name" class="col-form-label">Phone No.</label>
                         <input type="text" name="phone" class="form-control" id="phone">
                     </div>
-                    <div class="mb-3">
-                        <label for="role-name" class="col-form-label">Role</label>
+                    <div class="form-group mb-2">
+                        <label for="choices-single-no-search" class="form-label font-size-13 text-muted">Role</label>
                         <select class="form-control" name="role_id" id="role_id">
                             @foreach($roles as $role)
                             <option value="{{$role->role_id}}">{{ucfirst($role->name)}}</option>
                             @endforeach
                         </select>
-
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer  d-flex justify-content-between">
                 <span class="text-success d-block" id="message" style="margin-right: 10px"></span>
 
-                <button type="button" id="submitUser" class="btn btn-primary">Add
+                <button type="button" id="submitUser" class="btn btn-success waves-effect waves-light">Add
                 </button>
                 <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
             </div>

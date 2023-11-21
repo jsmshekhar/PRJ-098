@@ -246,6 +246,12 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'Update refund status',
                 "permission_slug" => "update-refund-status",
             ],
+            [
+                'module_slug' => "COMPLAINSMGT",
+                'module_id' => 8,
+                'name' => 'Change Assignment',
+                "permission_slug" => "change-assignment",
+            ],
         ];
         Permission::insert($permissions);
     }

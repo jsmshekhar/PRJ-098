@@ -29,12 +29,9 @@
         <div class="main-content">
 
             <div class="page-content">
-                <div class="container-fluid">
                     <!-- start page title -->
                     @yield('content')
                     <!-- end page title -->
-
-                </div>
                 <!-- container-fluid -->
             </div>
             <!-- End Page-content -->

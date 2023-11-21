@@ -28,11 +28,19 @@ class ComplaintPolicy
             return false;
         }
     }
-
     public function change_complaint_status()
     {
         $permission = User::getPermissions();
         if (in_array('change-complaint-status', $permission)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public function change_assignment()
+    {
+        $permission = User::getPermissions();
+        if (in_array('change-assignment', $permission)) {
             return true;
         } else {
             return false;

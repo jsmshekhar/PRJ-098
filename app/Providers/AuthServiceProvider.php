@@ -72,6 +72,7 @@ class AuthServiceProvider extends ServiceProvider
         //Cpmplain Policies
         Gate::define('view_complaint', 'App\Policies\ComplaintPolicy@view_complaint');
         Gate::define('change_complaint_status', 'App\Policies\ComplaintPolicy@change_complaint_status');
+        Gate::define('change_assignment', 'App\Policies\ComplaintPolicy@change_assignment');
 
         //Notification Policies
         Gate::define('view_notification', 'App\Policies\NotificationPolicy@view_notification');

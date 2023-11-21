@@ -80,6 +80,33 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body p-0">
+                    <div class="table-filter">
+                        <ul>
+                            <li>
+                                <a href="#" class="btn btn-link">
+                                    <img src="{{asset('public/assets/images/icons/refresh.svg')}}" alt="">
+                                </a>
+                            </li>
+                            <li>
+                                <p>Total Record : <span>255</span></p>
+                            </li>
+                            <li>
+                                <p>Display up to :
+                                <div class="form-group">
+                                    <select class="form-control" name="choices-single-no-sorting" id="choices-single-no-sorting">
+                                        <option value="Madrid">50</option>
+                                        <option value="Toronto">25</option>
+                                    </select>
+                                </div>
+                                </p>
+                            </li>
+                            <li>
+                                <button type="button" class="btn btn-success waves-effect waves-light">
+                                    <img src="{{asset('public/assets/images/icons/download.svg')}}" alt=""> Export
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
                     <div class="table-rep-plugin">
                         @if(count($hubs) >0)
                         <div class="table-responsive mb-0 fixed-solution" data-pattern="priority-columns">
@@ -102,31 +129,31 @@
                                         @foreach($hubs as $key => $hub)
                                         <tr>
                                             <td>@can('hub_view', $permission) <a href="{{route('hub-view',$hub->slug)}}" title="View Hub" style="cursor: pointer;margin-right: 5px;" target="_blank">{{$hub->hubId}}
-                                                </a> @endcan </td>
-                                            <td>{{$hub->city}}</td>
-                                            <td>{{$hub->state}}</td>
-                                            <td>{{$hub->country}}</td>
-                                            <td>{{$hub->address_1}}{{$hub->address_2 ? ', ' . $hub->address_2 : ''}}</td>
-                                            <td>{{$hub->hub_limit}}</td>
-                                            <td>###</td>
-                                            <td>
-                                                <div class="d-flex flex-wrap gap-2">
-                                                    <input type="checkbox" id="switch3{{$key}}" onclick="toggleStatus('switch3{{$key}}')" switch="bool" {{ $hub->status_id == 1 ? 'checked' : '' }} value="{{$hub->slug}}">
-                                                    <label for="switch3{{$key}}" data-on-label="Active" data-off-label="Inactive"></label>
-                                                </div>
+                                    </a> @endcan </td>
+                                    <td>{{$hub->city}}</td>
+                                    <td>{{$hub->state}}</td>
+                                    <td>{{$hub->country}}</td>
+                                    <td>{{$hub->address_1}}{{$hub->address_2 ? ', ' . $hub->address_2 : ''}}</td>
+                                    <td>{{$hub->hub_limit}}</td>
+                                    <td>###</td>
+                                    <td>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            <input type="checkbox" id="switch3{{$key}}" onclick="toggleStatus('switch3{{$key}}')" switch="bool" {{ $hub->status_id == 1 ? 'checked' : '' }} value="{{$hub->slug}}">
+                                            <label for="switch3{{$key}}" data-on-label="Active" data-off-label="Inactive"></label>
+                                        </div>
 
-                                            </td>
-                                            <td>
-                                                @can('edit_hub', $permission)
-                                                <a class="hubModelForm" data-toggle="modal" data-hub_id="{{ $hub->hub_Id }}" data-hubid="{{ $hub->hubId }}" data-city="{{ $hub->city }}" data-state="{{ $hub->state }}" data-country="{{ $hub->country }}" data-slug="{{ $hub->slug }}" data-address1="{{ $hub->address_1 }}" data-address2="{{ $hub->address_2 }}" data-fulladdress="{{ $hub->full_address }}" data-zipcode="{{ $hub->zip_code }}" data-hublimit="{{ $hub->hub_limit }}" title="Edit Hub" style="cursor: pointer;margin-right: 5px;"><i class="fa fa-edit"></i>
-                                                </a> @endcan
-                                                @can('hub_view', $permission) | <a href="{{route('hub-view',$hub->slug)}}" title="View Hub" style="cursor: pointer;margin-right: 5px;" target="_blank"><i class="fa fa-eye"></i>
-                                                </a> @endcan
-                                                @can('delete_hub', $permission) | <form id="delete-form-{{ $hub->slug }}" method="post" action="{{route('hub-delete',$hub->slug)}}" style="display: none;">
-                                                    @csrf
-                                                    {{method_field('POST')}} <!-- delete query -->
-                                                </form>
-                                                <a href="" class="shadow btn-xs sharp" onclick="
+                                    </td>
+                                    <td>
+                                        @can('edit_hub', $permission)
+                                        <a class="hubModelForm" data-toggle="modal" data-hub_id="{{ $hub->hub_Id }}" data-hubid="{{ $hub->hubId }}" data-city="{{ $hub->city }}" data-state="{{ $hub->state }}" data-country="{{ $hub->country }}" data-slug="{{ $hub->slug }}" data-address1="{{ $hub->address_1 }}" data-address2="{{ $hub->address_2 }}" data-fulladdress="{{ $hub->full_address }}" data-zipcode="{{ $hub->zip_code }}" data-hublimit="{{ $hub->hub_limit }}" title="Edit Hub" style="cursor: pointer;margin-right: 5px;"><i class="fa fa-edit"></i>
+                                        </a> @endcan
+                                        @can('hub_view', $permission) | <a href="{{route('hub-view',$hub->slug)}}" title="View Hub" style="cursor: pointer;margin-right: 5px;" target="_blank"><i class="fa fa-eye"></i>
+                                        </a> @endcan
+                                        @can('delete_hub', $permission) | <form id="delete-form-{{ $hub->slug }}" method="post" action="{{route('hub-delete',$hub->slug)}}" style="display: none;">
+                                            @csrf
+                                            {{method_field('POST')}} <!-- delete query -->
+                                        </form>
+                                        <a href="" class="shadow btn-xs sharp" onclick="
                                                         if (confirm('Are you sure, You want to delete?')) 
                                                         {
                                                             event.preventDefault();
@@ -135,26 +162,26 @@
                                                             event.preventDefault();
                                                         }
                                                         " title="delete">
-                                                    <i class="fa fa-trash" style="color:#d74b4b;"></i>
-                                                </a> @endcan
-                                            </td>
-                                        </tr>
-                                        @endforeach
+                                            <i class="fa fa-trash" style="color:#d74b4b;"></i>
+                                        </a> @endcan
+                                    </td>
+                                    </tr>
+                                    @endforeach
                                     </tbody>
-                                </table>
-                            </div>
-                            {{ $hubs->withQueryString()->links('pagination::bootstrap-4') }}
-                        </div>
-                        @else
-                        <p>No reords found</p>
-                        @endif
+                                    </table>
                     </div>
-
+                    {{ $hubs->withQueryString()->links('pagination::bootstrap-4') }}
                 </div>
+                @else
+                <p>No reords found</p>
+                @endif
             </div>
-            <!-- end card -->
-        </div> <!-- end col -->
-    </div> <!-- end row -->
+
+        </div>
+    </div>
+    <!-- end card -->
+</div> <!-- end col -->
+</div> <!-- end row -->
 
 </div>
 <!-- Add role model -->
@@ -168,49 +195,69 @@
             <div class="modal-body">
                 <form method="post" enctype="multipart/form-data" id="addUpdateHub" autocomplete="off">
                     @csrf
-                    <input type="hidden" class="form-control" name="slug" id="slug">
-                    <div class="mb-2">
-                        <label for="hubid" class="col-form-label">Hub Id <sup class="compulsayField">*</sup> <span class="spanColor hubid_error"></span></label>
-                        <input type="text" name="hubId" class="form-control" id="hubId" value="{{$hubId}}" readonly>
+                    <div class="row">
+                        <div class="col-12">
+                            <input type="hidden" class="form-control" name="slug" id="slug">
+                            <div class="form-group mb-2">
+                                <label for="hubid" class="col-form-label">Hub Id <sup class="compulsayField">*</sup> <span class="spanColor hubid_error"></span></label>
+                                <input type="text" name="hubId" class="form-control" id="hubId" value="{{$hubId}}" readonly>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group mb-2">
+                                <label for="address serach" class="col-form-label">Search Address</label>
+                                <input id="autocomplete" name="full_address" placeholder="Enter your address" type="text" class="floating-input form-control" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group mb-2">
+                                <label for="address1" class="col-form-label">Address Line 1</label>
+                                <input type="text" name="address1" class="form-control" id="address1">
+                            </div>
+                        </div>
                     </div>
-                    <div class="mb-2">
-                        <label for="address serach" class="col-form-label">Search Address</label>
-                        <input id="autocomplete" name="full_address" placeholder="Enter your address" type="text" class="floating-input form-control" autocomplete="off">
+                    <div class="col-12">
+                        <div class="form-group mb-2">
+                            <label for="address2" class="col-form-label">Address Line 2</label>
+                            <input type="text" name="address2" class="form-control" id="address2">
+                        </div>
                     </div>
-                    <div class="mb-2">
-                        <label for="address1" class="col-form-label">Address Line 1</label>
-                        <input type="text" name="address1" class="form-control" id="address1">
+                    <div class="col-12">
+                        <div class="form-group mb-2">
+                            <label for="city" class="col-form-label">City</label>
+                            <input type="text" name="city" class="form-control" id="city">
+                        </div>
                     </div>
-                    <div class="mb-2">
-                        <label for="address2" class="col-form-label">Address Line 2</label>
-                        <input type="text" name="address2" class="form-control" id="address2">
+                    <div class="col-12">
+                        <div class="form-group mb-2">
+                            <label for="state" class="col-form-label">State </label>
+                            <input type="text" name="state" class="form-control" id="state">
+                        </div>
                     </div>
-                    <div class="mb-2">
-                        <label for="city" class="col-form-label">City</label>
-                        <input type="text" name="city" class="form-control" id="city">
+                    <div class="col-12">
+                        <div class="form-group mb-2">
+                            <label for="country" class="col-form-label">Country</label>
+                            <input type="text" name="country" class="form-control" id="country">
+                        </div>
                     </div>
-                    <div class="mb-2">
-                        <label for="state" class="col-form-label">State </label>
-                        <input type="text" name="state" class="form-control" id="state">
+                    <div class="col-12">
+                        <div class="form-group mb-2">
+                            <label for="pincode" class="col-form-label">Pin Code</label>
+                            <input type="text" name="zip_code" class="form-control" id="zip_code">
+                        </div>
                     </div>
-                    <div class="mb-2">
-                        <label for="country" class="col-form-label">Country</label>
-                        <input type="text" name="country" class="form-control" id="country">
-                    </div>
-                    <div class="mb-2">
-                        <label for="pincode" class="col-form-label">Pin Code</label>
-                        <input type="text" name="zip_code" class="form-control" id="zip_code">
-                    </div>
-                    <div class="mb-2">
-                        <label for="hublimit" class="col-form-label">Hub Limit &nbsp;<span class="spanColor" id="hub_errors"></span></label>
-                        <input type="text" name="hub_limit" class="form-control" id="hub_limit">
+                    <div class="col-12">
+                        <div class="form-group mb-2">
+                            <label for="hublimit" class="col-form-label">Hub Limit &nbsp;<span class="spanColor" id="hub_errors"></span></label>
+                            <input type="text" name="hub_limit" class="form-control" id="hub_limit">
+                        </div>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <span class="text-success d-block" id="message" style="margin-right: 10px"></span>
+            <div class="modal-footer d-flex justify-content-between">
+                <span class=" text-success d-block" id="message" style="margin-right: 10px"></span>
 
-                <button type="button" id="submitHub" class="btn btn-primary">Add
+                <button type="button" id="submitHub" class="btn btn-success waves-effect waves-light">Add
                 </button>
                 <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
             </div>
