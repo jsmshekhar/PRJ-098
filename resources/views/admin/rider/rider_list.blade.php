@@ -91,11 +91,36 @@
                 </div><!-- end card-body -->
             </div><!-- end card -->
         </div><!-- end col -->
-
-
         <div class="col-12">
             <div class="card">
                 <div class="card-body p-0">
+                    <div class="table-filter">
+                        <ul>
+                            <li>
+                                <a href="#" class="btn btn-link">
+                                    <img src="{{asset('public/assets/images/icons/refresh.svg')}}" alt="">
+                                </a>
+                            </li>
+                            <li>
+                                <p>Total Record : <span>255</span></p>
+                            </li>
+                            <li>
+                                <p>Display up to :
+                                <div class="form-group">
+                                    <select class="form-control" name="choices-single-no-sorting" id="choices-single-no-sorting">
+                                        <option value="Madrid">50</option>
+                                        <option value="Toronto">25</option>
+                                    </select>
+                                </div>
+                                </p>
+                            </li>
+                            <li>
+                                <button type="button" class="btn btn-success waves-effect waves-light">
+                                    <img src="{{asset('public/assets/images/icons/download.svg')}}" alt=""> Export
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
                     <div class="table-rep-plugin">
                         @if(count($riders) >0)
                         <div class="table-responsive mb-0" data-pattern="priority-columns">

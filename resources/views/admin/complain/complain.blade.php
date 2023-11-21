@@ -9,6 +9,11 @@
     input[switch]:checked+label:after {
         left: 54px !important;
     }
+
+    .changeAssignment {
+        margin-top: 10px;
+        transform: translate(10%, 35%);
+    }
 </style>
 @endsection
 @section('content')
@@ -84,6 +89,33 @@
                 </div><!-- end card-body -->
             </div><!-- end card -->
         </div><!-- end col -->
+        <div class="table-filter">
+            <ul>
+                <li>
+                    <a href="#" class="btn btn-link">
+                        <img src="{{asset('public/assets/images/icons/refresh.svg')}}" alt="">
+                    </a>
+                </li>
+                <li>
+                    <p>Total Record : <span>255</span></p>
+                </li>
+                <li>
+                    <p>Display up to :
+                    <div class="form-group">
+                        <select class="form-control" name="choices-single-no-sorting" id="choices-single-no-sorting">
+                            <option value="Madrid">50</option>
+                            <option value="Toronto">25</option>
+                        </select>
+                    </div>
+                    </p>
+                </li>
+                <li>
+                    <button type="button" class="btn btn-success waves-effect waves-light">
+                        <img src="{{asset('public/assets/images/icons/download.svg')}}" alt=""> Export
+                    </button>
+                </li>
+            </ul>
+        </div>
         <div class="col-12">
             <div class="card">
                 <div class="card-body p-0">
@@ -106,7 +138,7 @@
                                     @foreach($complains as $key => $complain)
                                     <tr>
                                         <td>
-                                            <a class="complainModelForm" data-toggle="modal" data-description="{{ $complain->description }}" data-name="{{ $complain->name }}" data-email="{{ $complain->email }}" data-phone="{{ $complain->phone }}" data-date="{{ date('d M, Y', strtotime($complain->created_at)) }}" data-category="{{ $complain->complain_category }}" data-cnumber="{{ $complain->complain_number }}" title="View Description" style="cursor: pointer;margin-right: 5px;">{{$complain->complain_number}}
+                                            <a class="complainModelForm" data-toggle="modal" data-description="{{ $complain->description }}" data-name="{{ $complain->name }}" data-email="{{ $complain->email }}" data-phone="{{ $complain->phone }}" data-date="{{ date('d M, Y', strtotime($complain->created_at)) }}" data-category="{{ $complain->complain_category }}" data-cnumber="{{ $complain->complain_number }}" data-slug="{{ $complain->slug }}" data-userid="{{ $complain->user_id }}" title="View Description" style="cursor: pointer;margin-right: 5px;">{{$complain->complain_number}}
                                             </a>
                                         </td>
                                         <td>{{$complain->complain_category}}
@@ -174,9 +206,37 @@
                         <h5>Phone: </h5>
                         <p id="phone"></p>
                     </div>
+                    <div class="col-md-12 mb-3">
+                        <h5>Description: </h5>
+                        <p id="desc"></p>
+                    </div>
                 </div>
-                <h5>Description: </h5>
-                <p id="desc"></p>
+                @can('change_assignment', $permission)
+                <div>
+                    <form method="POST" action="{{ route('change-complain-assignment') }}" id="changeAssignmentForm">
+                        @csrf
+                        <div class="row mb-3">
+                            <div class="col-md-9">
+                                <div class="mb-3">
+                                    <input type="hidden" class="form-control" name="slug" id="slug">
+                                    <label for="users" class="col-form-label">Change Assignment </label>
+                                    <select class="form-control" name="user_id" id="user_id" required>
+                                        <option value="">Select User</option>
+                                        @foreach($users as $key => $user)
+                                        <option value="{{$user->user_id}}">{{$user->first_name}} {{$user->last_name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3 changeAssignment">
+                                <div class="mb-3">
+                                    <button type="submit" class="btn btn-success mb-3" id="changeAssignment">Change</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                @endcan
             </div>
         </div>
     </div>
@@ -195,6 +255,8 @@
             var email = $(this).data('email');
             var phone = $(this).data('phone');
             var date = $(this).data('date');
+            var slug = $(this).data('slug');
+            var user_id = $(this).data('userid');
 
             $("#cid").html(cid);
             $("#category").html(category);
@@ -203,6 +265,8 @@
             $("#email").html(email);
             $("#phone").html(phone);
             $("#date").html(date);
+            $("#slug").val(slug);
+            $("#user_id").val(user_id);
         });
     });
     // Active inactive status toggle

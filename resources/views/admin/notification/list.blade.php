@@ -52,8 +52,8 @@
                                             @if($notification->status_id == 1 && $notification->notification_parameter_value !== 3)
                                             <label class="text-success">Active</label>
                                             @elseif($notification->status_id == 3 || $notification->schedule_date < date('Y-m-d')) <label class="text-danger">Expired</label>
-                                            @elseif($notification->status_id == 1 || $notification->schedule_date >= date('Y-m-d')) <label class="text-success">Active</label>
-                                            @endif
+                                                @elseif($notification->status_id == 1 || $notification->schedule_date >= date('Y-m-d')) <label class="text-success">Active</label>
+                                                @endif
                                         </td>
                                         <td>
                                             <a href="{{ route('edit-notification', [$notification->param, $notification->slug]) }}" class="notificationEditForm" title="Edit Notification" style="cursor: pointer;margin-right: 5px;"><i class="fa fa-edit"></i>
@@ -106,9 +106,9 @@
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer d-flex justify-content-between">
                 <span class="text-success d-block" id="message" style="margin-right: 10px"></span>
-                <button type="button" id="submitUserBase" class="btn btn-primary">Add User Base
+                <button type="button" id="submitUserBase" class="btn btn-success waves-effect waves-light">Add User Base
                 </button>
             </div>
         </div>
