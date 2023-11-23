@@ -64,7 +64,7 @@ class Rider extends Authenticatable
     {
         try {
             $credentials = [
-                'email' => $request->input('email'),
+                'phone' => $request->input('phone'),
                 'password' => $request->input('password'),
             ];
 

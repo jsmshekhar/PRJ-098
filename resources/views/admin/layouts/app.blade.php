@@ -29,9 +29,9 @@
         <div class="main-content">
 
             <div class="page-content">
-                    <!-- start page title -->
-                    @yield('content')
-                    <!-- end page title -->
+                <!-- start page title -->
+                @yield('content')
+                <!-- end page title -->
                 <!-- container-fluid -->
             </div>
             <!-- End Page-content -->
@@ -47,6 +47,22 @@
     @include('admin.layouts.js')
     @yield('js')
 
+    <script>
+        function refreshPage(pageUrl) {
+            window.location.href = pageUrl;
+        }
+
+        function submitSearchForm() {
+            var selectedValue = $('#perPageDropdown').val();
+            $('#perPageHidden').val(selectedValue);
+            $("#searchForm").submit();
+        }
+
+        function perPage(select) {
+            $('#perPageHidden').val(select.value);
+            $("#searchForm").submit();
+        }
+    </script>
 </body>
 
 </html>
