@@ -28,7 +28,7 @@ class AuthApiController extends ApiController
         try {
             $requiredFields = [
                 'name' => 'required',
-                'email' => 'required',
+                // 'email' => 'required',
                 'password' => 'required',
                 'phone' => 'required',
             ];
@@ -58,7 +58,7 @@ class AuthApiController extends ApiController
     {
         try {
             $requiredFields = [
-                'email' => 'required',
+                'phone' => 'required',
                 'password' => 'required',
             ];
             if (!$this->checkValidation($request, $requiredFields)) {
