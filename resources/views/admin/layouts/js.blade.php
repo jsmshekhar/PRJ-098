@@ -19,6 +19,13 @@
  </script>
  <!-- dashboard init -->
  {{-- <script src="{{ asset('public/assets/js/pages/dashboard.init.js') }}"></script> --}}
+ <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
  <script src="{{ asset('public/assets/js/pages/form-advanced.init.js') }}"></script>
  <script src="{{ asset('public/assets/js/app.js') }}"></script>
  <script src="{{ asset('public/assets/js/common.js') }}"></script>
+
+ <script>
+     window.addEventListener('load', () => {
+         $('.select2').select2();
+     });
+ </script>

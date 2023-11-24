@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Password;
 use App\Http\Controllers\Api\ApiController;
 use App\Notifications\SetPasswordNotification;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
-
 class RoleUserController extends ApiController
 {
     use SendsPasswordResetEmails;
@@ -155,7 +154,8 @@ class RoleUserController extends ApiController
                     ->paginate(15);
 
                 $roles = Role::where('user_id', Auth::user()->user_id)->whereNull('deleted_at')->get();
-                return view('admin.user.index', compact('users', 'roles', 'permission'));
+                $hubs = DB::table('hubs')->whereNull('deleted_at')->where('status_id',1)->select('hub_id', 'city')->get();
+                return view('admin.user.index', compact('users', 'roles', 'hubs', 'permission'));
             } else {
                 return view('admin.401.401');
             }
@@ -182,6 +182,7 @@ class RoleUserController extends ApiController
             $phone = !empty($request->phone) ? $request->phone : "";
             $role_id = !empty($request->role_id) ? $request->role_id : "";
             $slug = !empty($request->slug) ? $request->slug : "";
+            $hub_id = !empty($request->hub_id) ? $request->hub_id : "";
             $last_empId = User::latest()->select('emp_id')->where('users.role_id', '!=', 0)->first();
             $auth = Auth::user();
             if (!empty($request->slug)) {
@@ -191,6 +192,7 @@ class RoleUserController extends ApiController
                     "email" => $email,
                     "phone" => $phone,
                     "role_id" => $role_id,
+                    "hub_id" => $hub_id,
                 ]);
             } else {
                 $slug = slug();
@@ -202,6 +204,7 @@ class RoleUserController extends ApiController
                     "email" => $email,
                     "phone" => $phone,
                     "role_id" => $role_id,
+                    "hub_id" => $hub_id,
                     "user_slug" => $auth->slug,
                     "emp_id" => $last_empId ? $last_empId->emp_id + 1 : 101,
                     "password" => Hash::make($slug),

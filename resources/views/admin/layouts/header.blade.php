@@ -3,7 +3,7 @@ $roles = DB::table('roles')->where('role_id', auth()->user()->role_id)->select('
 if ($roles) {
     $role = $roles->name;
 } else {
-    $role = "Admin";
+    $role = "Superadmin";
 }
 ?>
 <header id="page-topbar">
@@ -155,28 +155,24 @@ if ($roles) {
                     </div>
                 </div>
             </div>
-
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <img class="rounded-circle header-profile-user" src="{{ asset('public/assets/images/users/avatar-1.jpg') }}" alt="Header Avatar">
                     <span class="active"></span>
                     <span class="d-none d-xl-inline-block ms-1 fw-medium">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</span><br />
+                    <span>{{$role}}</span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     <!-- item-->
-                    <p class="dropdown-item">
-                        <span class="font-weight-bold">Welcome !</span> ({{$role}})
-                    </p>
-                    <a class="dropdown-item" href="#">Profile</a>
+                    <!-- <a class="dropdown-item" href="#">Profile</a>
                     <a class="dropdown-item" href="#">Lock Screen</a>
-                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-divider"></div> -->
                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>
                 </div>
             </div>
-
         </div>
     </div>
 </header>

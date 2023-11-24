@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Response;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
-
+use App\Models\Product;
 class Hub extends Model
 {
     use HasFactory, SoftDeletes;
@@ -71,14 +72,56 @@ class Hub extends Model
     Developer : Raj Kumar
     Action    : view hub
     --------------------------------------------------*/
-    public function viewHub($slug)
+    public function viewHub($request, $slug, $param)
     {
         try {
+            $perPage = env('PER_PAGE');
+            if (isset($request->per_page) && $request->per_page > 0) {
+                $perPage = $request->per_page;
+            }
+            $vehicles = [];
+            $employees = [];
+            $roles = [];
             $hub = Hub::where('slug', $slug)->whereNull('deleted_at')->first();
+            if($param == 'vehicle'){
+                $vehicles = Product::join('product_categories as pc', 'products.product_category_id', '=', 'pc.product_category_id')
+                ->join('ev_types as et', 'products.ev_type_id', '=', 'et.ev_type_id')
+                ->where('products.hub_id', $hub->hub_id)
+                ->whereNull('products.deleted_at')
+                ->where('products.product_category_id', 1)
+                ->select(
+                    'products.*',
+                    'pc.product_category_name',
+                    'pc.slug as pc_slug',
+                    'et.ev_type_name',
+                    'et.slug as ev_type_slug',
+                    DB::raw("CASE 
+                        WHEN products.ev_category='two_wheeler' THEN '" . config('constants.EV_CATEGORIES.two_wheeler') . "' 
+                        WHEN products.ev_category='three_wheeler' THEN '" . config('constants.EV_CATEGORIES.three_wheeler') . "' 
+                        ELSE '' 
+                    END as ev_category_name"),
+                    DB::raw("CASE 
+                        WHEN products.profile_category='individual' THEN '" . config('constants.PROFILE_CATEGORIES.individual') . "' 
+                        WHEN products.profile_category='corporate' THEN '" . config('constants.PROFILE_CATEGORIES.corporate') . "' 
+                        ELSE '' 
+                    END as profile_category_name")
+                )
+                ->paginate($perPage);
+            }
+            if ($param == 'employee') {
+                $employees = User::select('users.*', 'roles.name as role_name')
+                    ->where('users.hub_id', $hub->hub_id)
+                    ->where('users.role_id', '!=', 0)
+                    ->whereNull('users.deleted_at')
+                    ->orderBy('users.created_at', 'DESC')
+                    ->leftJoin('roles', 'users.role_id', '=', 'roles.role_id')
+                    ->paginate($perPage);
+                $roles = Role::whereNull('deleted_at')->get();
+            }
             if ($hub) {
-                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), $hub);
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => $hub, 'vehicles' => $vehicles, 'employees' => $employees, 'roles' => $roles]);
             } else {
-                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), []);
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => [], 'vehicles' => [], 'employees' => [], 'roles' => []]);
             }
         } catch (\Throwable $ex) {
             $result = [

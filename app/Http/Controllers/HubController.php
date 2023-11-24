@@ -54,14 +54,17 @@ class HubController extends ApiController
     Developer : Raj Kumar
     Action    : View Hub
     --------------------------------------------------*/
-    public function viewHub($slug)
+    public function viewHub(Request $request, $slug, $param)
     {
         try {
             $permission = User::getPermissions();
             if (Gate::allows('hub_view', $permission)) {
-                $hubs = $this->hub->viewHub($slug);
-                $hub = $hubs['result'];
-                return view('admin.hub.view_hub', compact('hub', 'permission'));
+                $hubs = $this->hub->viewHub($request, $slug, $param);
+                $hub = $hubs['result']['hubs'];
+                $vehicles = $hubs['result']['vehicles'];
+                $employees = $hubs['result']['employees'];
+                $roles = $hubs['result']['roles'];
+                return view('admin.hub.view_hub', compact('hub', 'vehicles', 'employees', 'roles', 'permission'));
             } else {
                 return view('admin.401.401');
             }
@@ -77,7 +80,7 @@ class HubController extends ApiController
 
     /*--------------------------------------------------
     Developer : Raj Kumar
-    Action    : Add Role
+    Action    : Add Hub
     --------------------------------------------------*/
     public function addUpdateHub(Request $request)
     {

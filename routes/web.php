@@ -50,7 +50,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/distributed-hubs', [HubController::class, 'getHubs'])->name('distributed-hubs');
         Route::post('/add-update-hub', [HubController::class, 'addUpdateHub'])->name('add-update-hub');
         Route::post('/hub-delete/{slug}', [HubController::class, 'deleteHub'])->name('hub-delete');
-        Route::get('/hub-view/{slug}', [HubController::class, 'viewHub'])->name('hub-view');
+        Route::get('/view-hub/{slug}/{param}', [HubController::class, 'viewHub'])->name('hub-view');
         Route::post('/hub-status-changed', [HubController::class, 'hubStatusChanged'])->name('hub-status-changed');
 
         //Rider Routes
@@ -62,6 +62,9 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/complain-queries', [ComplainController::class, 'getComplains'])->name('complain-queries');
         Route::post('/complain-status-changed', [ComplainController::class, 'complainStatusChanged'])->name('complain-status-changed');
         Route::post('/change-complain-assignment', [ComplainController::class, 'complainAssignmentChanged'])->name('change-complain-assignment');
+        Route::get('/complain-categories', [ComplainController::class, 'getComplainCategories'])->name('complain-categories');
+        Route::post('/add-update-complain-category', [ComplainController::class, 'addUpdateComplainCategories'])->name('add-update-complain-category');
+        Route::post('/caomplain-category-delete/{slug}', [ComplainController::class, 'deleteComplainCategory'])->name('caomplain-category-delete');
 
         ///Notification Routes
         Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications');
@@ -72,6 +75,16 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/notification-delete/{slug}', [NotificationController::class, 'deleteNotification'])->name('notification-delete');
         Route::post('/notification-status-changed', [NotificationController::class, 'notificationStatusChanged'])->name('notification-status-changed');
         Route::post('/add-user-base', [NotificationController::class, 'addUserBase'])->name('add-user-base');
+
+        //Products Routes
+        Route::get('/products', [ProductController::class, 'getProducts'])->name('products');
+        Route::post('/add-update-product', [ProductController::class, 'addUpdateProduct'])->name('add-update-product');
+        Route::post('/product-delete/{slug}', [ProductController::class, 'deleteProduct'])->name('product-delete');
+        // Route::post('/complain-status-changed', [ComplainController::class, 'complainStatusChanged'])->name('complain-status-changed');
+        // Route::post('/change-complain-assignment', [ComplainController::class, 'complainAssignmentChanged'])->name('change-complain-assignment');
+        // Route::get('/complain-categories', [ComplainController::class, 'getComplainCategories'])->name('complain-categories');
+        // Route::post('/add-update-product', [ComplainController::class, 'addUpdateComplainCategories'])->name('add-update-complain-category');
+        // Route::post('/caomplain-category-delete/{slug}', [ComplainController::class, 'deleteComplainCategory'])->name('caomplain-category-delete');
     });
 
     Route::get('password/set/{token}', [PasswordSetController::class, 'showSetPasswordForm'])->name('show-set-password-form');

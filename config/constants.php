@@ -43,4 +43,14 @@ return [
         '-9 Days' => -9,
         '-10 Days' => -10,
     ],
+
+    'EV_CATEGORIES' => [
+        'two_wheeler' => 'Two Wheeler',
+        'three_wheeler' => 'Three Wheeler',
+    ],
+
+    'PROFILE_CATEGORIES' => [
+        'individual' => 'Individual',
+        'corporate' => 'Corporate',
+    ],
 ];

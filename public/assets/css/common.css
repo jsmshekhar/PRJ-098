@@ -5,3 +5,8 @@ ul.pagination {
 .spanColor{
     color: #dc143c;
 }
+
+.active>.page-link, .page-link.active {
+    background-color: #49a257 !important;
+    border-color: #49a257 !important;
+}

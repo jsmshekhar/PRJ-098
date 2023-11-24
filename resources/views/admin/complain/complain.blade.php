@@ -20,6 +20,17 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
+            <div class="nav_cust_menu">
+                <ul>
+                    @can('view_complaint', $permission)
+                    <li><a href="{{route('complain-queries')}}" class="active" title="User Panel">Complain & Queries</a></li>
+                    @endcan
+                    <li><a href="{{route('complain-categories')}}" class="" title="Permission Panel">Complain Categories</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-12">
             <div class="card">
                 <div class="card-body p-0">
                     <div class="accordion" id="accordionExample">
@@ -89,36 +100,36 @@
                 </div><!-- end card-body -->
             </div><!-- end card -->
         </div><!-- end col -->
-        <div class="table-filter">
-            <ul>
-                <li>
-                    <a href="#" class="btn btn-link">
-                        <img src="{{asset('public/assets/images/icons/refresh.svg')}}" alt="">
-                    </a>
-                </li>
-                <li>
-                    <p>Total Record : <span>255</span></p>
-                </li>
-                <li>
-                    <p>Display up to :
-                    <div class="form-group">
-                        <select class="form-control" name="choices-single-no-sorting" id="choices-single-no-sorting">
-                            <option value="Madrid">50</option>
-                            <option value="Toronto">25</option>
-                        </select>
-                    </div>
-                    </p>
-                </li>
-                <li>
-                    <button type="button" class="btn btn-success waves-effect waves-light">
-                        <img src="{{asset('public/assets/images/icons/download.svg')}}" alt=""> Export
-                    </button>
-                </li>
-            </ul>
-        </div>
         <div class="col-12">
             <div class="card">
                 <div class="card-body p-0">
+                    <div class="table-filter">
+                        <ul>
+                            <li>
+                                <a href="#" class="btn btn-link">
+                                    <img src="{{asset('public/assets/images/icons/refresh.svg')}}" alt="">
+                                </a>
+                            </li>
+                            <li>
+                                <p>Total Record : <span>255</span></p>
+                            </li>
+                            <li>
+                                <p>Display up to :
+                                <div class="form-group">
+                                    <select class="form-control" name="choices-single-no-sorting" id="choices-single-no-sorting">
+                                        <option value="Madrid">50</option>
+                                        <option value="Toronto">25</option>
+                                    </select>
+                                </div>
+                                </p>
+                            </li>
+                            <li>
+                                <button type="button" class="btn btn-success waves-effect waves-light">
+                                    <img src="{{asset('public/assets/images/icons/download.svg')}}" alt=""> Export
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
                     <div class="table-rep-plugin">
                         @if(count($complains) >0)
                         <div class="table-responsive mb-0" data-pattern="priority-columns">
@@ -138,10 +149,10 @@
                                     @foreach($complains as $key => $complain)
                                     <tr>
                                         <td>
-                                            <a class="complainModelForm" data-toggle="modal" data-description="{{ $complain->description }}" data-name="{{ $complain->name }}" data-email="{{ $complain->email }}" data-phone="{{ $complain->phone }}" data-date="{{ date('d M, Y', strtotime($complain->created_at)) }}" data-category="{{ $complain->complain_category }}" data-cnumber="{{ $complain->complain_number }}" data-slug="{{ $complain->slug }}" data-userid="{{ $complain->user_id }}" title="View Description" style="cursor: pointer;margin-right: 5px;">{{$complain->complain_number}}
+                                            <a class="complainModelForm" data-toggle="modal" data-description="{{ $complain->description }}" data-name="{{ $complain->name }}" data-email="{{ $complain->email }}" data-phone="{{ $complain->phone }}" data-date="{{ date('d M, Y', strtotime($complain->created_at)) }}" data-category="{{ $complain->complain_category }}" data-cnumber="{{ $complain->complain_number }}" data-slug="{{ $complain->slug }}" data-cname="{{ $complain->category_name }}" data-userid="{{ $complain->user_id }}" title="View Description" style="cursor: pointer;margin-right: 5px;">{{$complain->complain_number}}
                                             </a>
                                         </td>
-                                        <td>{{$complain->complain_category}}
+                                        <td>{{$complain->category_name}}
                                         </td>
                                         <td>{{$complain->name}}
                                         </td>
@@ -216,7 +227,7 @@
                     <form method="POST" action="{{ route('change-complain-assignment') }}" id="changeAssignmentForm">
                         @csrf
                         <div class="row mb-3">
-                            <div class="col-md-9">
+                            <div class="col-md-12">
                                 <div class="mb-3">
                                     <input type="hidden" class="form-control" name="slug" id="slug">
                                     <label for="users" class="col-form-label">Change Assignment </label>
@@ -228,9 +239,22 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-3 changeAssignment">
+                            <div class="col-md-12">
                                 <div class="mb-3">
-                                    <button type="submit" class="btn btn-success mb-3" id="changeAssignment">Change</button>
+                                    <label for="users" class="col-form-label">Change Category </label>
+                                    <select class="form-control" name="category_slug" id="category_slug">
+                                        <option value="">Select Category</option>
+                                        @foreach($categories as $key => $category)
+                                        <option value="{{$category->slug}}">{{$category->category_name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-3">
+                                    <div class="mb-3">
+                                        <button type="submit" class="btn btn-success mb-3" id="changeAssignment">Change</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -249,7 +273,8 @@
         $('.complainModelForm').click(function() {
             $('#complainModelForm').modal('show');
             var cid = $(this).data('cnumber');
-            var category = $(this).data('category');
+            var category_slug = $(this).data('category');
+            var cname = $(this).data('cname');
             var description = $(this).data('description');
             var name = $(this).data('name');
             var email = $(this).data('email');
@@ -257,9 +282,10 @@
             var date = $(this).data('date');
             var slug = $(this).data('slug');
             var user_id = $(this).data('userid');
+            var user_id = $(this).data('userid');
 
             $("#cid").html(cid);
-            $("#category").html(category);
+            $("#category").html(cname);
             $("#desc").html(description);
             $("#name").html(name);
             $("#email").html(email);
@@ -267,6 +293,7 @@
             $("#date").html(date);
             $("#slug").val(slug);
             $("#user_id").val(user_id);
+            $("#category_slug").val(category_slug);
         });
     });
     // Active inactive status toggle
