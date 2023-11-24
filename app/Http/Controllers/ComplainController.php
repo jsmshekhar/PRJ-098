@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
 use App\Models\Complain;
 use App\Models\ComplainCategory;
+use App\Models\Role;
 use App\Models\User;
 
 class ComplainController extends ApiController
@@ -41,18 +42,20 @@ class ComplainController extends ApiController
                         ->select('complains.*','cc.category_name')->paginate(25);
                 }else{
                     $complains = Complain::join('complain_categories as cc', 'complains.complain_category', '=', 'cc.slug')
-                        ->where('complains.user_id', $auth->user_id)
                         ->whereNull('complains.deleted_at')->orderBy('complains.created_at', 'DESC')
                         ->select('complains.*', 'cc.category_name')->paginate(25);
                 }
-                
-                $users = User::where('user_slug', $auth->slug)->whereNull('deleted_at')
-                    ->orderBy('first_name', 'DESC')->select('first_name', 'last_name', 'user_id')
-                    ->get();
-                $categories = ComplainCategory::whereNull('deleted_at')
-                    ->orderBy('category_name', 'DESC')->select('category_name', 'slug')
-                    ->get();
-                return view('admin.complain.complain', compact('complains', 'users', 'categories', 'permission'));
+
+                $role = DB::table('users')
+                    ->select('roles.name', 'users.role_id', 'users.hub_id')
+                    ->leftJoin('roles', 'users.role_id', '=', 'roles.role_id')
+                    ->where('users.role_id', '!=', 0);
+                    if($auth->role_id != 0){
+                        $role->where('users.hub_id', $auth->hub_id);
+                    }
+                $roles = $role->whereNull('users.deleted_at')->whereNull('roles.deleted_at')->get();
+
+                return view('admin.complain.complain', compact('complains', 'roles', 'permission'));
             } else {
                 return view('admin.401.401');
             }
@@ -108,10 +111,10 @@ class ComplainController extends ApiController
     public function complainAssignmentChanged(Request $request)
     {
         try {
-            $user_id = !empty($request->user_id) ? $request->user_id : null;
+            $role_id = !empty($request->role_id) ? $request->role_id : null;
             $slug = !empty($request->slug) ? $request->slug : null;
             $complain = Complain::where('slug', $slug)->update([
-                "user_id" => $user_id,
+                "role_id" => $role_id,
             ]);
             if ($complain) {
                 return redirect()->back();
@@ -134,9 +137,22 @@ class ComplainController extends ApiController
     public function getComplainCategories(Request $request)
     {
         try {
+            $auth = Auth::user();
             $permission = User::getPermissions();
-            $categories = ComplainCategory::where('status_id', 1)->whereNull('deleted_at')->get();
-            return view('admin.complain.category', compact('categories', 'permission'));
+            $categories = ComplainCategory::leftJoin('roles', 'complain_categories.role_id', '=', 'roles.role_id')
+                ->where('complain_categories.status_id', 1)
+                ->whereNull('complain_categories.deleted_at')
+                ->select('complain_categories.*', 'roles.name as role_name')
+                ->get();
+            $roles = DB::table('users')
+                ->select('roles.name', 'users.role_id', 'users.hub_id')
+                ->leftJoin('roles', 'users.role_id', '=', 'roles.role_id')
+                ->where('users.role_id', '!=', 0)
+                ->whereNull('users.deleted_at')->whereNull('roles.deleted_at')->get();
+            foreach ($roles as $key => $value) {
+                $value->city = DB::table('hubs')->where('hub_id', $value->hub_id)->value('city');
+            }
+            return view('admin.complain.category', compact('categories', 'roles', 'permission'));
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -156,12 +172,14 @@ class ComplainController extends ApiController
         try {
             $category_name = !empty($request->category_name) ? $request->category_name : "";
             $slug = !empty($request->slug) ? $request->slug : "";
+            $role_id = !empty($request->role_id) ? $request->role_id : "";
             $auth = Auth::user();
             if (!empty($request->slug)) {
                 $category = ComplainCategory::where('slug', $slug)->update([
                     "category_name" => $category_name,
                     "user_slug" => $auth->slug,
                     "user_id" => $auth->user_id,
+                    "role_id" => $role_id,
                 ]);
             } else {
                 $category = ComplainCategory::insertGetId([
@@ -169,6 +187,7 @@ class ComplainController extends ApiController
                     "category_name" => $category_name,
                     "user_slug" => $auth->slug,
                     "user_id" => $auth->user_id,
+                    "role_id" => $role_id,
                 ]);
             }
             if ($category) {

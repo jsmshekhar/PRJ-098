@@ -149,7 +149,7 @@
                                     @foreach($complains as $key => $complain)
                                     <tr>
                                         <td>
-                                            <a class="complainModelForm" data-toggle="modal" data-description="{{ $complain->description }}" data-name="{{ $complain->name }}" data-email="{{ $complain->email }}" data-phone="{{ $complain->phone }}" data-date="{{ date('d M, Y', strtotime($complain->created_at)) }}" data-category="{{ $complain->complain_category }}" data-cnumber="{{ $complain->complain_number }}" data-slug="{{ $complain->slug }}" data-cname="{{ $complain->category_name }}" data-userid="{{ $complain->user_id }}" title="View Description" style="cursor: pointer;margin-right: 5px;">{{$complain->complain_number}}
+                                            <a class="complainModelForm" data-toggle="modal" data-description="{{ $complain->description }}" data-name="{{ $complain->name }}" data-email="{{ $complain->email }}" data-phone="{{ $complain->phone }}" data-date="{{ date('d M, Y', strtotime($complain->created_at)) }}" data-category="{{ $complain->complain_category }}" data-cnumber="{{ $complain->complain_number }}" data-slug="{{ $complain->slug }}" data-cname="{{ $complain->category_name }}" data-userid="{{ $complain->user_id }}" data-role_id="{{ $complain->role_id }}" title="View Description" style="cursor: pointer;margin-right: 5px;">{{$complain->complain_number}}
                                             </a>
                                         </td>
                                         <td>{{$complain->category_name}}
@@ -231,21 +231,10 @@
                                 <div class="mb-3">
                                     <input type="hidden" class="form-control" name="slug" id="slug">
                                     <label for="users" class="col-form-label">Change Assignment </label>
-                                    <select class="form-control" name="user_id" id="user_id" required>
-                                        <option value="">Select User</option>
-                                        @foreach($users as $key => $user)
-                                        <option value="{{$user->user_id}}">{{$user->first_name}} {{$user->last_name}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="mb-3">
-                                    <label for="users" class="col-form-label">Change Category </label>
-                                    <select class="form-control" name="category_slug" id="category_slug">
-                                        <option value="">Select Category</option>
-                                        @foreach($categories as $key => $category)
-                                        <option value="{{$category->slug}}">{{$category->category_name}}</option>
+                                    <select class="form-control" name="role_id" id="role_id" required>
+                                        <option value="">Select Role</option>
+                                        @foreach($roles as $key => $role)
+                                        <option value="{{$role->role_id}}">{{$role->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -281,8 +270,7 @@
             var phone = $(this).data('phone');
             var date = $(this).data('date');
             var slug = $(this).data('slug');
-            var user_id = $(this).data('userid');
-            var user_id = $(this).data('userid');
+            var role_id = $(this).data('role_id');
 
             $("#cid").html(cid);
             $("#category").html(cname);
@@ -292,8 +280,7 @@
             $("#phone").html(phone);
             $("#date").html(date);
             $("#slug").val(slug);
-            $("#user_id").val(user_id);
-            $("#category_slug").val(category_slug);
+            $("#role_id").val(role_id);
         });
     });
     // Active inactive status toggle

@@ -20,6 +20,7 @@ class CreateComplainCategoriesTable extends Migration
             $table->tinyInteger('status_id')->default(1)->comment('1 => Active, 2 => Inactive, 3 => Delete');
             $table->string('user_slug')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('role_id')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamp('created_at')->nullable()->useCurrent();

@@ -37,6 +37,17 @@
                                     <input type="text" name="category_name" class="form-control" required>
                                 </div>
                             </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="users" class="col-form-label">Default Assignment </label>
+                                    <select class="form-control" name="role_id" id="role_id" required>
+                                        <option value="">Select Role</option>
+                                        @foreach($roles as $key => $role)
+                                        <option value="{{$role->role_id}}">{{$role->name}} ({{$role->city}})</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                             <div class="col-md-2">
                                 <div class="modal-footer d-flex justify-content-between CategoryTop">
                                     <button type="submit" class="btn btn-success waves-effect waves-light">Add Category
@@ -56,18 +67,18 @@
                                 <tr>
                                     <th>S.No</th>
                                     <th>Name</th>
+                                    <th>Assigned To</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($categories as $key => $category)
                                 <tr>
-                                    <td>{{$key+1}}
-                                    </td>
-                                    <td>{{$category->category_name}}
-                                    </td>
+                                    <td>{{$key+1}}</td>
+                                    <td>{{$category->category_name}}</td>
+                                    <td>{{$category->role_name}}</td>
                                     <td>
-                                        <a class="categoryModelForm" data-toggle="modal" data-category="{{ $category->category_name }}" data-slug="{{ $category->slug }}" title="Edit Category" style="cursor: pointer;margin-right: 5px;"><i class="fa fa-edit"></i>
+                                        <a class="categoryModelForm" data-toggle="modal" data-category="{{ $category->category_name }}" data-slug="{{ $category->slug }}" data-role_id="{{ $category->role_id }}" title="Edit Category" style="cursor: pointer;margin-right: 5px;"><i class="fa fa-edit"></i>
                                         </a> | <form id="delete-form-{{ $category->slug }}" method="post" action="{{route('caomplain-category-delete',$category->slug)}}" style="display: none;">
                                             @csrf
                                             {{method_field('POST')}} <!-- delete query -->
@@ -111,21 +122,29 @@
                 <div class="modal-body">
                     @csrf
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-12 mb-2">
                             <input type="hidden" class="form-control" name="slug" id="slug">
                             <div class="form-group mb-2">
                                 <label for="category_name" class="col-form-label">Category Name</label>
                                 <input type="text" name="category_name" class="form-control" id="category_name">
                             </div>
                         </div>
-                    </div>
+                        <div class="col-12 mb-2">
+                            <label for="users" class="col-form-label">Change Assignment </label>
+                            <select class="form-control" name="role_id" id="role_id" required>
+                                <option value="">Select Role</option>
+                                @foreach($roles as $key => $role)
+                                <option value="{{$role->role_id}}">{{$role->name}} ({{$role->city}})</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                </div>
-                <div class="modal-footer d-flex justify-content-between">
-                    <span class=" text-success d-block" id="message" style="margin-right: 10px"></span>
-                    <button type="submit" class="btn btn-success waves-effect waves-light">Edit Category
-                    </button>
-                </div>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-between">
+                        <span class=" text-success d-block" id="message" style="margin-right: 10px"></span>
+                        <button type="submit" class="btn btn-success waves-effect waves-light">Edit Category
+                        </button>
+                    </div>
             </form>
         </div>
     </div>
@@ -139,8 +158,10 @@
             $('#categoryModelForm').modal('show');
             var category = $(this).data('category');
             var slug = $(this).data('slug');
+            var role_id = $(this).data('role_id');
             $("#category_name").val(category);
             $("#slug").val(slug);
+            $("#role_id").val(role_id);
         });
     });
 </script>

@@ -24,6 +24,7 @@ class CreateComplainsTable extends Migration
             $table->string('complain_number')->nullable();
             $table->string('user_slug')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('role_id')->nullable();
             $table->tinyInteger('status_id')->default(1)->comment('1 => Resolved, 2 => Pending, 3 => Discard');
             $table->unsignedBigInteger('rider_id')->nullable();
             $table->timestamp('created_at')->nullable()->useCurrent();

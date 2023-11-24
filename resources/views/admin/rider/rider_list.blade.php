@@ -2,7 +2,13 @@
 @section('title', 'Customer (Rider) Management')
 @section('css')
 <style>
+    input[switch]+label {
+        width: 75px !important;
+    }
 
+    input[switch]:checked+label:after {
+        left: 54px !important;
+    }
 </style>
 @endsection
 @section('content')
@@ -157,7 +163,7 @@
                                             @can('enable_disable_customer', $permission)
                                             <div class="d-flex flex-wrap gap-2">
                                                 <input type="checkbox" id="switch3{{$key}}" onclick="toggleStatus('switch3{{$key}}')" switch="bool" {{ $rider->status_id == 1 ? 'checked' : '' }} value="{{$rider->slug}}">
-                                                <label for="switch3{{$key}}" data-on-label="" data-off-label=""></label>
+                                                <label for="switch3{{$key}}" data-on-label="Verified" data-off-label="Pending"></label>
                                             </div>
                                             @endcan
                                         </td>
