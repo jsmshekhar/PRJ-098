@@ -25,7 +25,7 @@
                                     Advance Search
                                 </button>
                                 <div class="collaps_btns">
-                                    <button type="button" class="btn btn-outline-danger waves-effect waves-light" onclick="refreshPage('<?= url()->current() ?>');">Clear</button>
+                                    <button type="button" class="btn btn-outline-danger waves-effect waves-light" onclick="clearSearch('<?= url()->current() ?>');">Clear</button>
                                     <button type="button" onclick="submitSearchForm()" class="btn btn-outline-success waves-effect waves-light">Search</button>
                                     @can('hub_list', $permission)
                                     <a class="btn btn-success waves-effect waves-light hubModelForm" data-toggle="modal" title="Add Hub">Add New Hub</a>
@@ -85,7 +85,7 @@
                     <div class="table-filter">
                         <ul>
                             <li>
-                                <a href="javascript:void(0);" class="btn btn-link" onclick="refreshPage('<?= url()->current() ?>');">
+                                <a href="javascript:void(0);" class="btn btn-link" onclick="refreshPage();">
                                     <img src="{{ asset('public/assets/images/icons/refresh.svg') }}" alt="">
                                 </a>
                             </li>
