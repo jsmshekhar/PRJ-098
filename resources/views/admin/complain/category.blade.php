@@ -40,7 +40,7 @@
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="users" class="col-form-label">Default Assignment </label>
-                                    <select class="form-control" name="role_id" id="role_id" required>
+                                    <select class="form-control" name="role_id" required>
                                         <option value="">Select Role</option>
                                         @foreach($roles as $key => $role)
                                         <option value="{{$role->role_id}}">{{$role->name}} ({{$role->city}})</option>
@@ -131,7 +131,7 @@
                         </div>
                         <div class="col-12 mb-2">
                             <label for="users" class="col-form-label">Change Assignment </label>
-                            <select class="form-control" name="role_id" id="role_id" required>
+                            <select class="form-control select2" name="role_id" id="role_id" required>
                                 <option value="">Select Role</option>
                                 @foreach($roles as $key => $role)
                                 <option value="{{$role->role_id}}">{{$role->name}} ({{$role->city}})</option>
@@ -161,7 +161,7 @@
             var role_id = $(this).data('role_id');
             $("#category_name").val(category);
             $("#slug").val(slug);
-            $("#role_id").val(role_id);
+            $('#role_id').val(role_id).trigger('change');
         });
     });
 </script>
