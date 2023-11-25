@@ -48,7 +48,12 @@
     @yield('js')
 
     <script>
-        function refreshPage(pageUrl) {
+        function refreshPage() {
+            var selectedValue = $('#perPageDropdown').val();
+            $('#perPageHidden').val(selectedValue);
+            $("#searchForm").submit();
+        }
+        function clearSearch(pageUrl) {
             window.location.href = pageUrl;
         }
 

@@ -18,10 +18,10 @@ class CreateRidersTable extends Migration
             $table->bigIncrements('rider_id');
             $table->string('slug', 12)->nullable();
             $table->string('name')->nullable();
-            $table->string('email', 191)->unique();
+            $table->string('email', 191)->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('activated_at')->nullable();
-            $table->string('phone', 191)->unique();
+            $table->string('phone', 191)->nullable();
             $table->string('password')->nullable();
             $table->text('current_address')->nullable();
             $table->text('permanent_address')->nullable();

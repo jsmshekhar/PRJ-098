@@ -15,6 +15,9 @@
 <div class="container-fluid">
     <!-- end page title -->
     <div class="row">
+        <form id="searchForm" method="get" action="<?= url()->current() ?>">
+            <input type="hidden" name="per_page" id="perPageHidden" />
+        </form>
         <div class="col-12">
             <div class="card">
                 <div class="card-header border-bottom">

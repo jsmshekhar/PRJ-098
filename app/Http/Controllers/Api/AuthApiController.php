@@ -30,7 +30,8 @@ class AuthApiController extends ApiController
                 'name' => 'required',
                 // 'email' => 'required',
                 'password' => 'required',
-                'phone' => 'required',
+                'phone' => 'required|unique:riders,phone,NULL,rider_id,deleted_at,NULL',
+                'email' => 'unique:riders,email,NULL,rider_id,deleted_at,NULL',
             ];
             if (!$this->checkValidation($request, $requiredFields)) {
                 return validationResponse(Response::HTTP_UNPROCESSABLE_ENTITY, Lang::get('messages.VALIDATION_ERROR'), $this->errorMessage);
