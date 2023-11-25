@@ -226,15 +226,15 @@
                     </div>
                     <div class="form-group mb-2">
                         <label for="choices-single-no-search" class="form-label font-size-13 text-muted">Role</label>
-                        <select class="form-control" name="role_id" id="role_id">
+                        <select class="form-control select2" name="role_id" id="role_id">
                             @foreach($roles as $role)
                             <option value="{{$role->role_id}}">{{ucfirst($role->name)}}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="form-group mb-2">
-                        <label for="choices-single-no-search" class="form-label font-size-13 text-muted">Hum</label>
-                        <select class="form-control" name="hub_id" id="hub_id">
+                        <label for="choices-single-no-search" class="form-label font-size-13 text-muted">Hub</label>
+                        <select class="form-control select2" name="hub_id" id="hub_id">
                             @foreach($hubs as $hub)
                             <option value="{{$hub->hub_id}}">{{$hub->city}}</option>
                             @endforeach
@@ -273,10 +273,9 @@
             $("#email").val(email);
             $("#phone").val(phone);
             $("#slug").val(slug);
-            //$("#role_id").find(':selected').attr('data-roleid')
-            $("#role_id").val(roleid);
+            $('#role_id').val(roleid).trigger('change');
             $("#rolename").val(rolename);
-            $('#hub_id').val(hubid);
+            $('#hub_id').val(hubid).trigger('change');
 
             if (slug) {
                 $('#submitUser').html('Update')

@@ -48,7 +48,7 @@
                                             @if(request()->route('param')=="automatic")
                                             <div class="mb-3">
                                                 <label for="notification-parameter" class="col-form-label">Notification Parameter</label>
-                                                <select class="form-control" name="notification_parameter" id="notification_parameter">
+                                                <select class="form-control select2" name="notification_parameter" id="notification_parameter">
                                                     @foreach($parameters as $key => $parameter)
                                                     @if($parameter == 1 || $parameter == 2)
                                                     <option value="{{$parameter}}" @if($parameter==$notification->notification_parameter) selected @endif>{{str_replace("_", " ", $key) }}</option>
@@ -58,7 +58,7 @@
                                             </div>
                                             <div class="mb-3 {{$notification->distance_remaining == null ? 'distanceHideShow' : ''}}" id="distanceHideShow">
                                                 <label for="role-name" class="col-form-label">Disatance Remaining to Notify</label>
-                                                <select class="form-control" name="distance_remaining" id="distance_remaining">
+                                                <select class="form-control select2" name="distance_remaining" id="distance_remaining">
                                                     <option value="">Select Distance</option>
                                                     @foreach($distance as $key => $dist)
                                                     <option value="{{$dist}}" @if($dist==$notification->distance_remaining) selected @endif>{{str_replace("_", " ", $key) }}</option>
@@ -67,7 +67,7 @@
                                             </div>
                                             <div class="mb-3 {{$notification->days_remaining == null ? 'dayHideShow' : ''}}" id="dayHideShow">
                                                 <label for="role-name" class="col-form-label">Days Remaining to Notify</label>
-                                                <select class="form-control" name="days_remaining" id="days_remaining">
+                                                <select class="form-control select2" name="days_remaining" id="days_remaining">
                                                     <option value="">Select Days</option>
                                                     @foreach($days as $key => $day)
                                                     <option value="{{$day}}" @if($day==$notification->days_remaining) selected @endif>{{str_replace("_", " ", $key) }}</option>
@@ -88,7 +88,7 @@
                                             @elseif(request()->route('param')=="manual")
                                             <div class="mb-3">
                                                 <label for="role-name" class="col-form-label">Notification User Base</label>
-                                                <select class="form-control" name="notification_user_based" id="notification_user_based">
+                                                <select class="form-control select2" name="notification_user_based" id="notification_user_based">
                                                     @foreach($user_based as $key => $uBased)
                                                     <option value="{{$uBased->user_base_id}}" @if($uBased->user_base_id == $notification->notification_user_based) selected @endif>{{$uBased->user_base_name}}</option>
                                                     @endforeach
@@ -96,7 +96,7 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label for="role-name" class="col-form-label">Notification Parameter</label>
-                                                <select class="form-control" name="notification_parameter" id="notification_parameter">
+                                                <select class="form-control select2" name="notification_parameter" id="notification_parameter">
                                                     @foreach($parameters as $key => $parameter)
                                                     @if($parameter == 3 || $parameter == 4)
                                                     <option value="{{$parameter}}" @if($parameter==$notification->notification_parameter) selected @endif>{{str_replace("_", " ", $key) }}</option>

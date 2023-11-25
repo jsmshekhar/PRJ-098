@@ -231,7 +231,7 @@
                                 <div class="mb-3">
                                     <input type="hidden" class="form-control" name="slug" id="slug">
                                     <label for="users" class="col-form-label">Change Assignment </label>
-                                    <select class="form-control" name="role_id" id="role_id" required>
+                                    <select class="form-control select2" name="role_id" id="role_id" required>
                                         <option value="">Select Role</option>
                                         @foreach($roles as $key => $role)
                                         <option value="{{$role->role_id}}">{{$role->name}}</option>
@@ -280,7 +280,7 @@
             $("#phone").html(phone);
             $("#date").html(date);
             $("#slug").val(slug);
-            $("#role_id").val(role_id);
+            $('#role_id').val(role_id).trigger('change');
         });
     });
     // Active inactive status toggle

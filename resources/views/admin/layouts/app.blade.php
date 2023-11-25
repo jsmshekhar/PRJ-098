@@ -8,7 +8,7 @@
     <meta content="Eva2z EV Rental Site" name="description" />
     <meta content="Themesbrand" name="author" />
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{ asset('public/assets/images/favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ asset('public/assets/images/favicon.png') }}">
 
     <!-- Style css -->
     @include('admin.layouts.css')
