@@ -1,7 +1,7 @@
  <!-- ========== Left Sidebar Start ========== -->
  <div class="vertical-menu">
 
-     <div data-simplebar class="h-100">
+     <div data-simplebar >
 
          <!--- Sidemenu -->
          <div id="sidebar-menu">

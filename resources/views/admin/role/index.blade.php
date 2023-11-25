@@ -28,7 +28,7 @@
                     <div class="card-body p-0">
                         <div class="accordion">
                             <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingOnes">
+                                <h2 class="accordion-header justify-content-end" id="headingOnes">
                                     <div class="collaps_btns">
                                         @can('add_role', $permission)
                                             <a class="btn btn-success waves-effect waves-light roleModelForm"
@@ -43,10 +43,10 @@
             </div><!-- end col -->
             <div class="col-12">
                 <div class="card">
-                    <div class="card-body p-0">
+                    <div class="card-body permission_tbl pt-0">
                         <div class="table-rep-plugin">
-                            <div class="col-md-12 mt-2">
-                                <div class="row">
+                            <div class="col-md-12">
+                                <div class="row permission_tbl_row">
                                     <div class="col-md-4">
                                         <h5>Role Name</h5>
                                     </div>
@@ -58,7 +58,7 @@
                                     </div>
                                 </div>
                                 @foreach ($roles as $role)
-                                    <div class="row d-flex align-items-center border px-2 py-1 justify-content-between">
+                                    <div class="row d-flex align-items-center border justify-content-between">
                                         <div class="col-md-4">
                                             <p>{{ ucfirst($role->name) }} : Permissions</p>
                                         </div>
@@ -100,20 +100,20 @@
                                                 @endcan
                                             </span>
                                         </div>
-                                        <div class="col-md-12">
+                                        <div class="col-md-12 p-0">
                                             <div class="slidingDiv{{ $role->role_id }}" style="display: none">
-                                                <div class="card-body">
+                                                <div class="card-body py-0">
                                                     <form method="post" style="position:relative">
                                                         @csrf
                                                         @foreach ($permissions as $key => $row)
                                                             <div class="row">
-                                                                <div class="col-md-3">
+                                                                <div class="col-md-3 border-bottom py-2">
                                                                     <h5 class="mb-1">{{ ucfirst($row->name) }}</h5>
                                                                 </div>
-                                                                <div class="col-md-9">
+                                                                <div class="col-md-9 border-bottom pt-2">
                                                                     <ul class="list-inline" style="margin-left: 30px;">
                                                                         @foreach ($row->sub_module as $value)
-                                                                            <li class="list-inline-item">
+                                                                            <li class="list-inline-item mr-3">
                                                                                 <?php $select = DB::table('permission_roles')
                                                                                     ->where('role_id', $role->role_id)
                                                                                     ->where('permission_id', $value->permission_id)

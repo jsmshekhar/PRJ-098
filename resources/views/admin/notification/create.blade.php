@@ -23,7 +23,26 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
-            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+
+
+
+        <div class="nav_cust_menu">
+            <ul>
+                <li>
+                @can('set_automatic_notification', $permission)
+                    <a href="{{route('create-notification','automatic')}}" class="{{request()->route('param')=='automatic' ? 'active' : ''}}" title="User Panel">Automatic Notification</a>
+                </li>
+                <li>
+                @endcan
+                    @can('send_push_notification', $permission)
+                    <a href="{{route('create-notification','manual')}}" class="{{request()->route('param')=='manual' ? 'active' : ''}}" title="Permission Panel">Push Notification</a>
+                @endcan
+                </li>
+           
+                </ul>
+        </div>
+
+            <!-- <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                 <div class="page-title-left">
                     @can('set_automatic_notification', $permission)
                     <a href="{{route('create-notification','automatic')}}" class="btn btn-info btn-sm {{request()->route('param')=='automatic' ? 'active' : ''}}" title="">Automatic Notification</a>
@@ -32,16 +51,14 @@
                     <a href="{{route('create-notification','manual')}}" class="btn btn-info btn-sm {{request()->route('param')=='manual' ? 'active' : ''}}" title="">Push Notification</a>
                     @endcan
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-body p-0">
                     <div class="table-rep-plugin">
                         <div class="card-body p-4">
-
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div>
@@ -89,7 +106,7 @@
                                             </div>
                                             <div class="form-check mb-3">
                                                 <input class="form-check-input" type="checkbox" name="is_send_charge" id="is_send_charge" checked>
-                                                <label class="form-check-label" for="formCheck1">
+                                                <label class="form-check-label pt-1 px-2" for="formCheck1">
                                                     Display penalty charges on notification panel with message
                                                 </label>
                                             </div>
@@ -127,8 +144,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-
                 </div>
             </div>
             <!-- end card -->

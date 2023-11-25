@@ -129,7 +129,7 @@
                         @if(count($users) >0)
                         <div class="table-responsive mb-0 fixed-solution" data-pattern="priority-columns">
                             <div class="sticky-table-header">
-                                <table class="table table-striped ">
+                                <table class="table">
                                     <thead>
                                         <tr>
                                             <th>User Id</th>
