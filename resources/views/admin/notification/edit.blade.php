@@ -81,7 +81,7 @@
                                             </div>
                                             <div class="form-check mb-3">
                                                 <input class="form-check-input" type="checkbox" name="is_send_charge" id="is_send_charge" @if($notification->is_send_charge == 1) checked @endif>
-                                                <label class="form-check-label" for="formCheck1">
+                                                <label class="form-check-label pt-1 px-2" for="formCheck1">
                                                     Display penalty charges on notification panel with message
                                                 </label>
                                             </div>

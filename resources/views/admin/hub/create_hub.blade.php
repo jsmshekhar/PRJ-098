@@ -10,6 +10,14 @@
     span.spanColor {
         color: #e03e3e !important;
     }
+    
+    input[switch]+label {
+        width: 75px !important;
+    }
+
+    input[switch]:checked+label:after {
+        left: 54px !important;
+    }
 </style>
 @endsection
 @section('content')
@@ -111,7 +119,7 @@
                         @if (count($hubs) > 0)
                         <div class="table-responsive mb-0 fixed-solution" data-pattern="priority-columns">
                             <div class="sticky-table-header">
-                                <table class="table table-striped ">
+                                <table class="table">
                                     <thead>
                                         <tr>
                                             <th>Hub Id</th>

@@ -43,7 +43,7 @@
                             <div class="col-xl-3 col-md-6">
                                 <h5>Total No. of Employees : <span>###</span></h5>
                             </div>
-                            <div class="col-xl-9 col-md-9">
+                            <div class="col-xl-3 col-md-3">
                                 <h5>Hub Address : <span> {{$hub->address_1}}{{$hub->address_2 ? ', '.$hub->address_2: ''}}</span></h5>
                             </div>
                             <div class="col-xl-3 col-md-6">

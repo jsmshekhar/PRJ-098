@@ -41,7 +41,6 @@ html {
   width: 300px;
   text-align: center;
   background: #fff;
-  box-shadow: 0px 1px 15px 0px rgba(0, 0, 0, 0.08);
   position: relative;
 }
 
@@ -49,7 +48,7 @@ html {
   content: "";
   position: absolute;
   bottom: -10px;
-  width: 98%;
+  width: 96.5%;
   background: #fff;
   height: 20px;
   left: 0;
@@ -546,17 +545,18 @@ body[data-layout="horizontal"] .footer {
   box-shadow: 0px 1px 15px 0px rgba(0, 0, 0, 0.08);
   height: 100%;
   overflow: scroll;
+  padding-bottom: 30px;
 }
 
 .vertical-menu::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 10px;
+  height: 10px;
 }
 
 .vertical-menu::-webkit-scrollbar-track {
   background-clip: content-box;
   border: 0px solid transparent;
-  width: 5px;
+  width: 10px;
   background-color: transparent;
   cursor: pointer;
 }
@@ -572,7 +572,7 @@ body[data-layout="horizontal"] .footer {
 .vertical-menu::-webkit-scrollbar-corner,
 .vertical-menu::-webkit-scrollbar-track {
   background-color: rgba(0, 0, 0, 0.088);
-  width: 5px;
+  width:10px;
 }
 
 .main-content {
@@ -3711,7 +3711,7 @@ input[switch] + label:before {
   position: absolute;
   right: 1px;
   margin: 3px;
-  top: -2px;
+  top: -1px;
   text-align: center;
   min-width: 1.66667rem;
   overflow: hidden;
@@ -3755,7 +3755,7 @@ input[switch]:checked + label:after {
 }
 
 input[switch="bool"] + label {
-  background-color: #fd625e;
+  background-color: #d23737;
 }
 
 input[switch="bool"] + label:before,
@@ -3765,7 +3765,7 @@ input[switch="default"]:checked + label:before {
 }
 
 input[switch="bool"]:checked + label {
-  background-color: #2ab57d;
+  background-color: #49a257;
 }
 
 input[switch="default"]:checked + label {
@@ -6430,4 +6430,39 @@ table .dropdown-menu.show .dropdown-item:hover {
 .detail_cnt.box-tbl table thead th{
     border-bottom: 0;
     background: #fff;
+}
+
+.text-primary{
+  color: #008c34 !important;
+}
+
+.permission_tbl{
+  padding: 10px;
+}
+
+.permission_tbl p{
+  margin: 0;
+  color: rgba(9, 9, 9, 0.7);
+  font-size: 16px;
+  font-weight: 400;
+  padding: 12px 0;
+}
+
+.permission_tbl .list-inline-item:not(:last-child){
+  margin-right: 30px;
+}
+
+.permission_tbl_row{
+  background: #f8fff9;
+  border-left: 2px solid #e9e9ef;
+  border-right: 3px solid #e9e9ef;
+}
+
+.permission_tbl_row h5{
+  margin: 12px 0;
+  font-size: 16px;
+}
+
+.permission_tbl .col-md-3.border-bottom.py-2 h5{
+  font-size: 16px;
 }

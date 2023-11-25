@@ -13,23 +13,20 @@
 @endsection
 @section('content')
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0 font-size-18">Notification Setting</h4>
-                <div class="page-title-left">
-                    @can('set_automatic_notification', $permission)
-                    <a href="{{route('create-notification','automatic')}}" class="btn btn-info waves-effect waves-light" title="Add New Notification">Add New Notification</a>
-                    @endcan
-                    <a class="btn btn-success waves-effect waves-light userBaseModelForm" data-toggle="modal" title="Add New User Base">Add New User Base</a>
-                </div>
 
-            </div>
-        </div>
-    </div>
     <div class="row">
         <div class="col-12">
             <div class="card">
+                <div class="card-header border-bottom bg-white">
+                    <h4 class="card-title">Notification Setting</h4>
+                    <div class="page-title-left">
+                        @can('set_automatic_notification', $permission)
+                        <a href="{{route('create-notification','automatic')}}" class="btn btn-outline-success waves-effect waves-light" title="Add New Notification">Add New Notification</a>
+                        @endcan
+                        <a class="btn btn-success waves-effect waves-light userBaseModelForm" data-toggle="modal" title="Add New User Base">Add New User Base</a>
+                    </div>
+                </div>
+
                 <div class="card-body p-0">
                     <div class="table-rep-plugin">
                         @if(count($notifications) >0)
@@ -50,9 +47,9 @@
                                         <td>{{$notification->notification_type}}</td>
                                         <td>
                                             @if($notification->status_id == 1 && $notification->notification_parameter_value !== 3)
-                                            <label class="text-success">Active</label>
-                                            @elseif($notification->status_id == 3 || $notification->schedule_date < date('Y-m-d')) <label class="text-danger">Expired</label>
-                                                @elseif($notification->status_id == 1 || $notification->schedule_date >= date('Y-m-d')) <label class="text-success">Active</label>
+                                            <label class="text-success m-0">Active</label>
+                                            @elseif($notification->status_id == 3 || $notification->schedule_date < date('Y-m-d')) <label class="text-danger m-0">Expired</label>
+                                                @elseif($notification->status_id == 1 || $notification->schedule_date >= date('Y-m-d')) <label class="text-success m-0">Active</label>
                                                 @endif
                                         </td>
                                         <td>
