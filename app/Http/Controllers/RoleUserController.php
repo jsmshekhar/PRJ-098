@@ -144,15 +144,38 @@ class RoleUserController extends ApiController
     {
         try {
             $permission = User::getPermissions();
+            $perPage = env('PER_PAGE');
+            if (isset($request->per_page) && $request->per_page > 0) {
+                $perPage = $request->per_page;
+            }
             if (Gate::allows('view_user', $permission)) {
                 $users = User::select('users.*', 'roles.name as role_name')
                     ->where('users.user_slug', Auth::user()->slug)
                     ->where('users.role_id', '!=', 0)
                     ->whereNull('users.deleted_at')
-                    ->orderBy('users.created_at', 'DESC')
-                    ->leftJoin('roles', 'users.role_id', '=', 'roles.role_id')
-                    ->paginate(15);
-
+                    ->leftJoin('roles', 'users.role_id', '=', 'roles.role_id');
+                    
+                if (isset($request->is_search) && $request->is_search == 1) {
+                    if (isset($request->user_id) && !empty($request->user_id)) {
+                        $users = $users->where('users.emp_id', $request->user_id);
+                    }
+                    if (isset($request->first_name) && !empty($request->first_name)) {
+                        $users = $users->where('users.first_name','LIKE', "%{$request->first_name}%");
+                    }
+                    if (isset($request->last_name) && !empty($request->last_name)) {
+                        $users = $users->where('users.last_name','LIKE', "%{$request->last_name}%");
+                    }
+                    if (isset($request->email) && !empty($request->email)) {
+                        $users = $users->where('users.email','LIKE', "%{$request->email}%");
+                    }
+                    if (isset($request->phone) && !empty($request->phone)) {
+                        $users = $users->where('users.phone','LIKE', "%{$request->phone}%");
+                    }
+                    if (isset($request->role) && !empty($request->role)) {
+                        $users = $users->where('users.role_id', $request->role);
+                    }
+                }
+                $users = $users->orderBy('users.created_at', 'DESC')->paginate($perPage);
                 $roles = Role::where('user_id', Auth::user()->user_id)->whereNull('deleted_at')->get();
                 $hubs = DB::table('hubs')->whereNull('deleted_at')->where('status_id',1)->select('hub_id', 'city')->get();
                 return view('admin.user.index', compact('users', 'roles', 'hubs', 'permission'));

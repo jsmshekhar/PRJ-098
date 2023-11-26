@@ -39,8 +39,8 @@
                                     Advance Search
                                 </button>
                                 <div class="collaps_btns">
-                                    <button type="button" class="btn btn-outline-danger waves-effect waves-light">Clear</button>
-                                    <button type="button" class="btn btn-outline-success waves-effect waves-light">Search</button>
+                                    <button type="button" class="btn btn-outline-danger waves-effect waves-light" onclick="clearSearch('<?= url()->current() ?>');">Clear</button>
+                                    <button type="button" onclick="submitSearchForm()" class="btn btn-outline-success waves-effect waves-light">Search</button>
                                     @can('add_user', $permission)
                                     <a class="btn btn-success waves-effect waves-light userModelForm" data-toggle="modal" title="Add Role">Add New User</a>
                                     @endcan
@@ -48,43 +48,48 @@
                             </h2>
                             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    <form id="" method="post">
+                                    <form id="searchForm" method="get" action="<?= url()->current() ?>">
+                                        <input type="hidden" name="is_search" value="1" />
+                                        <input type="hidden" name="per_page" id="perPageHidden" />
                                         <div class="row">
                                             <div class="col-xl-3 col-md-6">
-                                                <div class="form-group mb-2">
-                                                    <label class="form-label">User Id</label>
-                                                    <input type="text" required class="form-control" />
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label">User ID</label>
+                                                    <input type="text" class="form-control" name="emp_id" value="<?= isset($_GET['emp_id']) ? $_GET['emp_id'] : '' ?>" />
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-md-6">
-                                                <div class="form-group mb-2">
-                                                    <label class="form-label">User Name</label>
-                                                    <input type="text" required class="form-control" />
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label">First Name</label>
+                                                    <input type="text" class="form-control" name="first_name" value="<?= isset($_GET['first_name']) ? $_GET['first_name'] : '' ?>" />
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-md-6">
-                                                <div class="form-group mb-2">
-                                                    <label class="form-label">Email Id</label>
-                                                    <input type="text" required class="form-control" />
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label">Last Name</label>
+                                                    <input type="text" class="form-control" name="last_name" value="<?= isset($_GET['last_name']) ? $_GET['last_name'] : '' ?>" />
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-md-6">
-                                                <div class="form-group mb-2">
-                                                    <label class="form-label">Email Address</label>
-                                                    <input type="text" required class="form-control" />
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label">Email</label>
+                                                    <input type="text" class="form-control" name="email" value="<?= isset($_GET['email']) ? $_GET['email'] : '' ?>" />
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-md-6">
-                                                <div class="form-group mb-2">
-                                                    <label class="form-label">Phone Number</label>
-                                                    <input type="text" required class="form-control" />
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label">Phone</label>
+                                                    <input type="text" class="form-control" name="phone" value="<?= isset($_GET['phone']) ? $_GET['phone'] : '' ?>" />
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-md-6">
-                                                <div class="form-group mb-2">
-                                                    <label class="form-label">Role</label>
-                                                    <input type="text" required class="form-control" />
-                                                </div>
+                                                <label class="form-label">Role</label>
+                                                <select class="form-control select2" name="role">
+                                                    <option value="">Select Role</option>
+                                                    @foreach($roles as $key => $role)
+                                                    <option value="{{$role->role_id}}" <?= (isset($_GET['role']) && $role->role_id == $_GET['role']) ? 'selected' : '' ?>>{{$role->name}}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                     </form>
@@ -101,8 +106,8 @@
                     <div class="table-filter">
                         <ul>
                             <li>
-                                <a href="#" class="btn btn-link">
-                                    <img src="{{asset('public/assets/images/icons/refresh.svg')}}" alt="">
+                                <a href="#" class="btn btn-link" onclick="refreshPage();">
+                                    <img src=" {{asset('public/assets/images/icons/refresh.svg')}}" alt="">
                                 </a>
                             </li>
                             <li>
@@ -111,10 +116,7 @@
                             <li>
                                 <p>Display up to :
                                 <div class="form-group">
-                                    <select class="form-control" name="choices-single-no-sorting" id="choices-single-no-sorting">
-                                        <option value="Madrid">50</option>
-                                        <option value="Toronto">25</option>
-                                    </select>
+                                    @include('admin.layouts.per_page')
                                 </div>
                                 </p>
                             </li>

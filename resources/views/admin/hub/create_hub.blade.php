@@ -10,7 +10,7 @@
     span.spanColor {
         color: #e03e3e !important;
     }
-    
+
     input[switch]+label {
         width: 75px !important;
     }
@@ -266,8 +266,8 @@
                     </div>
                     <div class="col-12">
                         <div class="form-group mb-2">
-                            <label for="hublimit" class="col-form-label">Hub Limit &nbsp;<span class="spanColor" id="hub_errors"></span></label>
-                            <input type="text" name="hub_limit" class="form-control" id="hub_limit">
+                            <label for="hublimit" class="col-form-label">Hub Limit &nbsp;<span class="spanColor onlyDigit_error" id="hub_errors"></span></label>
+                            <input type="text" name="hub_limit" class="form-control onlyDigit" id="hub_limit">
                         </div>
                     </div>
                 </form>

@@ -50,7 +50,14 @@ return [
     ],
 
     'PROFILE_CATEGORIES' => [
-        'individual' => 'Individual',
         'corporate' => 'Corporate',
+        'individual' => 'Individual',
+        'student' => 'Student',
+        'vendor' => 'Vendor',
+    ],
+
+    'COMPLAIN_STATUS' => [
+       1 => 'Resolved',
+       2 => 'Pending',
     ],
 ];

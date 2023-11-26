@@ -4,8 +4,71 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Http\Response;
+use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
 class EvType extends Model
 {
     use HasFactory;
+
+    protected $table = "ev_types";
+    protected $primaryKey = 'ev_type_id';
+
+    /*--------------------------------------------------
+    Developer : Raj Kumar
+    Action    : addUpdateEvType
+    --------------------------------------------------*/
+    public function addUpdateEvType(Request $request)
+    {
+        try {
+            $ev_type_name = !empty($request->ev_type_name) ? $request->ev_type_name : "";
+            $range = !empty($request->range) ? $request->range : "";
+            $speed = !empty($request->speed) ? $request->speed : "";
+            $slug = !empty($request->slug) ? $request->slug : "";
+            $auth = Auth::user();
+            if (!empty($request->slug)) {
+                $ev_types = EvType::where('slug', $slug)->update([
+                    "ev_type_name" => $ev_type_name,
+                    "range" => $range,
+                    "speed" => $speed,
+                ]);
+            } else {
+                $slug = slug();
+                $ev_types = EvType::insertGetId([
+                    "slug" => $slug,
+                    "ev_type_name" => $ev_type_name,
+                    "range" => $range,
+                    "speed" => $speed,
+                    "user_id" => $auth->user_id,
+                    "user_slug" => $auth->slug,
+                    "created_by" => $auth->user_id,
+                ]);
+            }
+            if ($ev_types) {
+                $status = [
+                    'status' => Response::HTTP_OK,
+                    'url' => route('add-update-product-category'),
+                    'message' => !empty($slug) ? Lang::get('messages.UPDATE') : Lang::get('messages.INSERT'),
+                ];
+                return response()->json($status);
+            } else {
+                $status = [
+                    'status' => Response::HTTP_BAD_REQUEST,
+                    'url' => "",
+                    'message' => Lang::get('messages.INSERT_ERROR'),
+                ];
+                return response()->json($status);
+            }
+        } catch (\Exception $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
 }

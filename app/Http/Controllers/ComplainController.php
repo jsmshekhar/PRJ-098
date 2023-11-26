@@ -35,17 +35,44 @@ class ComplainController extends ApiController
         try {
             $permission = User::getPermissions();
             $auth = Auth::user();
+            $perPage = env('PER_PAGE');
+            if (isset($request->per_page) && $request->per_page > 0) {
+                $perPage = $request->per_page;
+            }
             if (Gate::allows('view_complaint', $permission)) {
                 if($auth->role_id == 0){
                     $complains = Complain::join('complain_categories as cc','complains.complain_category','=','cc.slug')
-                        ->whereNull('complains.deleted_at')->orderBy('complains.created_at', 'DESC')
-                        ->select('complains.*','cc.category_name')->paginate(25);
+                        ->whereNull('complains.deleted_at')
+                        ->select('complains.*','cc.category_name');
                 }else{
                     $complains = Complain::join('complain_categories as cc', 'complains.complain_category', '=', 'cc.slug')
-                        ->whereNull('complains.deleted_at')->orderBy('complains.created_at', 'DESC')
-                        ->select('complains.*', 'cc.category_name')->paginate(25);
+                        ->whereNull('complains.deleted_at')
+                        ->select('complains.*', 'cc.category_name');
                 }
-
+                if (isset($request->is_search) && $request->is_search == 1) {
+                    if (isset($request->complain_id) && !empty($request->complain_id)) {
+                        $complains = $complains->where('complains.complain_number', 'LIKE',"%{$request->complain_id}%");
+                    }
+                    if (isset($request->name) && !empty($request->name)) {
+                        $complains = $complains->where('complains.name','LIKE', "%{$request->name}%");
+                    }
+                    if (isset($request->email) && !empty($request->email)) {
+                        $complains = $complains->where('complains.email','LIKE', "%{$request->email}%");
+                    }
+                    if (isset($request->phone) && !empty($request->phone)) {
+                        $complains = $complains->where('complains.phone','LIKE', "%{$request->phone}%");
+                    }
+                    if (isset($request->category) && !empty($request->category)) {
+                        $complains = $complains->where('complains.complain_category', $request->category);
+                    }
+                    if (isset($request->status) && !empty($request->status)) {
+                        $complains = $complains->where('complains.status_id', $request->status);
+                    }
+                    if (isset($request->date) && !empty($request->date)) {
+                        $complains = $complains->whereDate('complains.created_at', $request->date);
+                    }
+                }
+                $complains = $complains->orderBy('complains.created_at', 'DESC')->paginate($perPage);
                 $role = DB::table('users')
                     ->select('roles.name', 'users.role_id', 'users.hub_id')
                     ->leftJoin('roles', 'users.role_id', '=', 'roles.role_id')
@@ -54,8 +81,9 @@ class ComplainController extends ApiController
                         $role->where('users.hub_id', $auth->hub_id);
                     }
                 $roles = $role->whereNull('users.deleted_at')->whereNull('roles.deleted_at')->get();
-
-                return view('admin.complain.complain', compact('complains', 'roles', 'permission'));
+                $categories = ComplainCategory::whereNull('deleted_at')->get();
+                $compalinStatus = config('constants.COMPLAIN_STATUS');
+                return view('admin.complain.complain', compact('complains', 'roles', 'categories', 'compalinStatus', 'permission'));
             } else {
                 return view('admin.401.401');
             }

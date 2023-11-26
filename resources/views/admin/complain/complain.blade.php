@@ -40,56 +40,63 @@
                                     Advance Search
                                 </button>
                                 <div class="collaps_btns">
-                                    <button type="button" class="btn btn-outline-danger waves-effect waves-light">Clear</button>
-                                    <button type="button" class="btn btn-success waves-effect waves-light">Search</button>
+                                    <button type="button" class="btn btn-outline-danger waves-effect waves-light" onclick="clearSearch('<?= url()->current() ?>');">Clear</button>
+                                    <button type="button" onclick="submitSearchForm()" class="btn btn-success waves-effect waves-light">Search</button>
                                 </div>
                             </h2>
                             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    <form id="" method="post">
+                                    <form id="searchForm" method="get" action="<?= url()->current() ?>">
+                                        <input type="hidden" name="is_search" value="1" />
+                                        <input type="hidden" name="per_page" id="perPageHidden" />
                                         <div class="row">
                                             <div class="col-xl-3 col-md-6">
                                                 <div class="form-group mb-3">
-                                                    <label class="form-label">Complain Id</label>
-                                                    <input type="text" required class="form-control" />
+                                                    <label class="form-label">Complain ID</label>
+                                                    <input type="text" class="form-control" name="complain_id" value="<?= isset($_GET['complain_id']) ? $_GET['complain_id'] : '' ?>" />
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-md-6">
                                                 <div class="form-group mb-3">
-                                                    <label class="form-label">Complain Category</label>
-                                                    <input type="text" required class="form-control" />
+                                                    <label class="form-label">Name</label>
+                                                    <input type="text" class="form-control" name="name" value="<?= isset($_GET['name']) ? $_GET['name'] : '' ?>" />
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-md-6">
                                                 <div class="form-group mb-3">
-                                                    <label class="form-label">Complainer Name</label>
-                                                    <input type="text" required class="form-control" />
+                                                    <label class="form-label">Email</label>
+                                                    <input type="text" class="form-control" name="email" value="<?= isset($_GET['email']) ? $_GET['email'] : '' ?>" />
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-md-6">
                                                 <div class="form-group mb-3">
-                                                    <label class="form-label">Email Address</label>
-                                                    <input type="text" required class="form-control" />
-                                                </div>
-                                            </div>
-                                            <div class="col-xl-3 col-md-6">
-                                                <div class="form-group mb-3">
-                                                    <label class="form-label">Phone Number</label>
-                                                    <input type="text" required class="form-control" />
+                                                    <label class="form-label">Phone</label>
+                                                    <input type="text" class="form-control" name="phone" value="<?= isset($_GET['phone']) ? $_GET['phone'] : '' ?>" />
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-md-6">
                                                 <div class="form-group mb-3">
                                                     <label class="form-label">Complain Date</label>
-                                                    <input type="text" required class="form-control" />
+                                                    <input type="date" class="form-control" name="date" value="<?= isset($_GET['date']) ? $_GET['date'] : '' ?>" />
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-md-6">
-                                                <div class="form-group mb-3">
-                                                    <label class="form-label">Complain
-                                                        Status</label>
-                                                    <input type="text" required class="form-control" />
-                                                </div>
+                                                <label class="form-label">Complain Category</label>
+                                                <select class="form-control select2" name="category">
+                                                    <option value="">Select Category</option>
+                                                    @foreach($categories as $key => $category)
+                                                    <option value="{{$category->slug}}" <?= (isset($_GET['category']) && $category->slug == $_GET['category']) ? 'selected' : '' ?>>{{$category->category_name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-xl-3 col-md-6">
+                                                <label class="form-label">Complain Status</label>
+                                                <select class="form-control select2" name="status">
+                                                    <option value="">Select Status</option>
+                                                    @foreach($compalinStatus as $key => $cs)
+                                                    <option value="{{$key}}" <?= (isset($_GET['status']) && $key == $_GET['status']) ? 'selected' : '' ?>>{{$cs}}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                     </form>
@@ -106,7 +113,7 @@
                     <div class="table-filter">
                         <ul>
                             <li>
-                                <a href="#" class="btn btn-link">
+                                <a href="#" class="btn btn-link" onclick="refreshPage();">
                                     <img src="{{asset('public/assets/images/icons/refresh.svg')}}" alt="">
                                 </a>
                             </li>
@@ -116,10 +123,7 @@
                             <li>
                                 <p>Display up to :
                                 <div class="form-group">
-                                    <select class="form-control" name="choices-single-no-sorting" id="choices-single-no-sorting">
-                                        <option value="Madrid">50</option>
-                                        <option value="Toronto">25</option>
-                                    </select>
+                                    @include('admin.layouts.per_page')
                                 </div>
                                 </p>
                             </li>
