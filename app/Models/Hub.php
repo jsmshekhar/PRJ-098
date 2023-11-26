@@ -102,8 +102,10 @@ class Hub extends Model
                     END as ev_category_name"),
                     DB::raw("CASE 
                         WHEN products.profile_category='individual' THEN '" . config('constants.PROFILE_CATEGORIES.individual') . "' 
-                        WHEN products.profile_category='corporate' THEN '" . config('constants.PROFILE_CATEGORIES.corporate') . "' 
-                        ELSE '' 
+                        WHEN products.profile_category='corporate' THEN '" . config('constants.PROFILE_CATEGORIES.corporate') ."' 
+                        WHEN products.profile_category='vendor' THEN '" . config('constants.PROFILE_CATEGORIES.vendor') . "' 
+                        WHEN products.profile_category='student' THEN '" . config('constants.PROFILE_CATEGORIES.student') . "' 
+                        ELSE ''
                     END as profile_category_name")
                 )
                 ->paginate($perPage);

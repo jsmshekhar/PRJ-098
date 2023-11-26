@@ -9,6 +9,7 @@ use App\Http\Controllers\ComplainController;
 use App\Http\Controllers\RoleUserController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Auth\PasswordSetController;
+use App\Http\Controllers\ProductCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,11 +81,10 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/products', [ProductController::class, 'getProducts'])->name('products');
         Route::post('/add-update-product', [ProductController::class, 'addUpdateProduct'])->name('add-update-product');
         Route::post('/product-delete/{slug}', [ProductController::class, 'deleteProduct'])->name('product-delete');
-        // Route::post('/complain-status-changed', [ComplainController::class, 'complainStatusChanged'])->name('complain-status-changed');
-        // Route::post('/change-complain-assignment', [ComplainController::class, 'complainAssignmentChanged'])->name('change-complain-assignment');
-        // Route::get('/complain-categories', [ComplainController::class, 'getComplainCategories'])->name('complain-categories');
-        // Route::post('/add-update-product', [ComplainController::class, 'addUpdateComplainCategories'])->name('add-update-complain-category');
-        // Route::post('/caomplain-category-delete/{slug}', [ComplainController::class, 'deleteComplainCategory'])->name('caomplain-category-delete');
+
+        Route::get('/product/categories-and-types', [ProductCategoryController::class, 'getProductCategoryType'])->name('categories-and-types');
+        Route::post('/add-update-product-category', [ProductCategoryController::class, 'addUpdateProductCategory'])->name('add-update-product-category');
+        Route::post('/add-update-ev-type', [ProductCategoryController::class, 'addUpdateEvType'])->name('add-update-ev-type');
     });
 
     Route::get('password/set/{token}', [PasswordSetController::class, 'showSetPasswordForm'])->name('show-set-password-form');

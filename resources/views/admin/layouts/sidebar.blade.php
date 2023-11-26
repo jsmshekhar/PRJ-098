@@ -1,7 +1,7 @@
  <!-- ========== Left Sidebar Start ========== -->
  <div class="vertical-menu">
 
-     <div data-simplebar >
+     <div data-simplebar>
 
          <!--- Sidemenu -->
          <div id="sidebar-menu">
@@ -41,8 +41,8 @@
                      </a>
                  </li>
 
-                 <li>
-                     <a href="#">
+                 <li class="{{ Request::routeIs('categories-and-types') ? 'mm-active' : '' }}">
+                     <a href="{{route('categories-and-types')}}" class="{{ Request::routeIs('categories-and-types') ? 'active' : '' }}">
                          <img src="{{ asset('public/assets/images/icons/Inventory-icon.svg') }}" alt="">
                          <span>Inventory Management</span>
                      </a>
