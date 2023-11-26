@@ -8,7 +8,7 @@
  <!-- pace js -->
  <script src="{{ asset('public/assets/libs/pace-js/pace.min.js') }}"></script>
  <!-- choices js -->
- <script src="{{ asset('public/assets/libs/choices.js/public/assets/scripts/choices.min.js')}}"></script>
+ {{-- <script src="{{ asset('public/assets/libs/choices.js/public/assets/scripts/choices.min.js')}}"></script> --}}
  <!-- apexcharts -->
  <script src="{{ asset('public/assets/libs/apexcharts/apexcharts.min.js') }}"></script>
 
@@ -20,7 +20,7 @@
  <!-- dashboard init -->
  {{-- <script src="{{ asset('public/assets/js/pages/dashboard.init.js') }}"></script> --}}
  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
- <script src="{{ asset('public/assets/js/pages/form-advanced.init.js') }}"></script>
+ {{-- <script src="{{ asset('public/assets/js/pages/form-advanced.init.js') }}"></script> --}}
  <script src="{{ asset('public/assets/js/app.js') }}"></script>
  <script src="{{ asset('public/assets/js/common.js') }}"></script>
 
