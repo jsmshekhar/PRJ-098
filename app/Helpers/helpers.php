@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+
 if (!function_exists('successResponse')) {
     function successResponse($statusCode, $message = "", $result = [], $otherData = [])
     {
@@ -135,5 +137,14 @@ if (!function_exists('randomPassword')) {
         $randomPassword .= substr($symbols, 0, $randomCharLen);
 
         return str_shuffle($randomPassword);
+    }
+}
+
+if (!function_exists('dateFormat')) {
+    function dateFormat($dateTimeString)
+    {
+        $dateTime = Carbon::parse($dateTimeString);
+        $formattedDate = $dateTime->format('d-m-Y');
+        return $formattedDate;
     }
 }

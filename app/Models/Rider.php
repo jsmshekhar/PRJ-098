@@ -18,11 +18,31 @@ class Rider extends Authenticatable
     protected $table = "riders";
     protected $primaryKey = 'rider_id';
     protected $fillable = [
-        'name', 'email', 'password', 'phone', 'slug'
+        'slug', 'name', 'email', 'email_verified_at', 'activated_at', 'phone', 'password', 'current_address', 'permanent_address', 'state_id', 'city_id', 'vehicle_id', 'photo', 'subscription_days', 'joining_date', 'subscription_validity', 'api_token', 'status_id', 'created_by', 'updated_by', 'created_at', 'updated_at', 'deleted_at',
     ];
     protected $hidden = [
-        'api_token',
+        'api_token', 'password'
     ];
+
+    public function bankDetail()
+    {
+        return $this->hasOne(RiderBankDetail::class, 'rider_id', 'rider_id')->whereNull('deleted_at');
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(RiderDocument::class, 'rider_id', 'rider_id')->whereNull('deleted_at');
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(RiderTransactionHistory::class, 'rider_id', 'rider_id')->whereNull('deleted_at')->orderBy('rider_transaction_id', 'DESC');
+    }
+
+    public function complaints()
+    {
+        return $this->hasMany(Complain::class, 'rider_id', 'rider_id')->with('category')->whereNull('deleted_at')->orderBy('created_at', 'DESC');
+    }
 
     /*--------------------------------------------------
     Developer : Chandra Shekhar
