@@ -9,6 +9,8 @@ use App\Http\Controllers\ComplainController;
 use App\Http\Controllers\RoleUserController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Auth\PasswordSetController;
+use App\Http\Controllers\DataExportController;
+use App\Http\Controllers\LiveTrackingController;
 use App\Http\Controllers\ProductCategoryController;
 
 /*
@@ -85,8 +87,11 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/product/categories-and-types', [ProductCategoryController::class, 'getProductCategoryType'])->name('categories-and-types');
         Route::post('/add-update-product-category', [ProductCategoryController::class, 'addUpdateProductCategory'])->name('add-update-product-category');
         Route::post('/add-update-ev-type', [ProductCategoryController::class, 'addUpdateEvType'])->name('add-update-ev-type');
+
+        Route::get('/tracking', [LiveTrackingController::class, 'index'])->name('live-tracking');
     });
 
+    Route::get('/data-export', [DataExportController::class, 'dataExport'])->name('data-export');
     Route::get('password/set/{token}', [PasswordSetController::class, 'showSetPasswordForm'])->name('show-set-password-form');
     Route::post('password/set', [PasswordSetController::class, 'setPassword'])->name('set-password');
 });

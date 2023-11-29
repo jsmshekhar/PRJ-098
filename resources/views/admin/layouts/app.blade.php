@@ -53,6 +53,7 @@
             $('#perPageHidden').val(selectedValue);
             $("#searchForm").submit();
         }
+
         function clearSearch(pageUrl) {
             window.location.href = pageUrl;
         }
@@ -60,6 +61,7 @@
         function submitSearchForm() {
             var selectedValue = $('#perPageDropdown').val();
             $('#perPageHidden').val(selectedValue);
+            $('#isSearchHidden').val(1);
             $("#searchForm").submit();
         }
 
@@ -67,7 +69,48 @@
             $('#perPageHidden').val(select.value);
             $("#searchForm").submit();
         }
-    </script>
+
+        function exportData(refTableId) {
+            $('#isSearchHidden').val(0);
+            $('#isExportHidden').val(1);
+            $("#searchForm").submit();
+            // var formData = $('#searchForm').serializeArray();
+            // formData.push({
+            //     name: 'is_export',
+            //     value: 1
+            // });
+            // formData.push({
+            //     name: 'ref_table_id',
+            //     value: refTableId
+            // });
+            // $.ajax({
+            //     method: 'POST',
+            //     url: "{{ route('data-export') }}",
+            //     data: formData,
+            //     success: function(response) {
+            //         // window.location.reload();
+            //         console.log(response);
+            //     },
+            //     error: function(error) {
+            //         console.log(error);
+            //     }
+            // });
+        }
+
+    //     $(document).ready(function() {
+    //         // Function to update the query parameter
+    //         function updateQueryParam(key, value) {
+    //             var url = new URL(window.location.href);
+    //             url.searchParams.set(key, value);
+    //             window.history.replaceState({}, '', url);
+    //         }
+
+    //         // Example: Update the 'page' query parameter to '2'
+    //         // $('#updateQueryParamButton').click(function() {
+    //             updateQueryParam('is_export', '2');
+    //         // });
+    //     });
+    // </script>
 </body>
 
 </html>

@@ -34,7 +34,7 @@
                                 </button>
                                 <div class="collaps_btns">
                                     <button type="button" class="btn btn-outline-danger waves-effect waves-light" onclick="clearSearch('<?= url()->current() ?>');">Clear</button>
-                                    <button type="button" onclick="submitSearchForm()" class="btn btn-outline-success waves-effect waves-light">Search</button>
+                                    <button type="button" onclick="submitSearchForm();" class="btn btn-outline-success waves-effect waves-light">Search</button>
                                     @can('hub_list', $permission)
                                     <a class="btn btn-success waves-effect waves-light hubModelForm" data-toggle="modal" title="Add Hub">Add New Hub</a>
                                     @endcan

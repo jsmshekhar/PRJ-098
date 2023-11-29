@@ -146,4 +146,48 @@ class Rider extends Authenticatable
             return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
         }
     }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : validate-user
+    Request   : Object
+    Return    : Json
+    --------------------------------------------------*/
+    public function validateUser($request)
+    {
+        try {
+            $phoneNumber = $request->phone;
+            $rider = DB::table('riders')->select(['slug', 'name', 'email', 'phone'])->where('phone', $phoneNumber)->whereNull('deleted_at')->first();
+            if (!is_null($rider) && $rider) {
+                return successResponse(Response::HTTP_OK, Lang::get('messages.HTTP_FOUND'), $rider);
+            }
+            return errorResponse(Response::HTTP_NOT_FOUND, Lang::get('messages.INVALID_PHONE'), (object)[]);
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : validate-user
+    Request   : Object
+    Return    : Json
+    --------------------------------------------------*/
+    public function resetPassword($request)
+    {
+        $phoneNumber = $request->phone;
+        $rider = Rider::where('phone', $phoneNumber)->whereNull('deleted_at')->first();
+        if (!is_null($rider) && $rider) {
+            $status = $rider->update(['password' => Hash::make($request->password)]);
+            if ($status) {
+                return successResponse(Response::HTTP_OK, Lang::get('messages.PASSWORD_UPDATE'), (object)[]);
+            }
+        }
+        return errorResponse(Response::HTTP_NOT_FOUND, Lang::get('messages.INVALID_PHONE'), (object)[]);
+    }
 }

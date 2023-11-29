@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\DB;
 use App\Models\Notification;
 use App\Models\User;
 use App\Models\NotificationUserBase;
+use App\Http\Controllers\AdminAppController;
 
-class NotificationController extends ApiController
+class NotificationController extends AdminAppController
 {
     protected $notification;
 
@@ -61,8 +59,7 @@ class NotificationController extends ApiController
             $distance = $notification['result']['distance'];
             $days = $notification['result']['days'];
             $user_based = NotificationUserBase::where('status_id', 1)->get();
-            return view('admin.notification.create', compact('parameters', 'distance', 'days', 'user_based','permission'));
-           
+            return view('admin.notification.create', compact('parameters', 'distance', 'days', 'user_based', 'permission'));
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -98,7 +95,7 @@ class NotificationController extends ApiController
             $schedule_date = !empty($request->schedule_date) ? $request->schedule_date : null;
             $notification_type = !empty($request->notification_type) ? $request->notification_type : null;
             $auth = Auth::user();
-           
+
             $slug = slug();
             $notificationId = Notification::insertGetId([
                 "SLUG" => $slug,
@@ -113,10 +110,10 @@ class NotificationController extends ApiController
                 "is_send_charge" => $is_send_charge == 'on' ? 1 : 0,
                 "schedule_date" => $schedule_date,
                 "user_id" => $auth->user_id,
-                "user_slug" => $auth->slug, 
+                "user_slug" => $auth->slug,
                 "created_by" => $auth->user_id,
             ]);
-            
+
             if ($notificationId) {
                 $status = [
                     'status' => Response::HTTP_OK,
@@ -154,7 +151,7 @@ class NotificationController extends ApiController
             $distance = $notification['result']['distance'];
             $days = $notification['result']['days'];
             $notification = $notification['result']['notification'];
-            $user_based = NotificationUserBase::where('status_id', 1)->select('user_base_name','user_base_id')->get();
+            $user_based = NotificationUserBase::where('status_id', 1)->select('user_base_name', 'user_base_id')->get();
             return view('admin.notification.edit', compact('notification', 'parameters', 'distance', 'days', 'user_based'));
         } catch (\Throwable $ex) {
             $result = [
@@ -250,7 +247,7 @@ class NotificationController extends ApiController
                 $status = [
                     'status' => Response::HTTP_OK,
                     'url' => route('notifications'),
-                    'message' =>Lang::get('messages.INSERT'),
+                    'message' => Lang::get('messages.INSERT'),
                 ];
                 return response()->json($status);
             } else {

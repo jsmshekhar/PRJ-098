@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::namespace('Api')->prefix('v1')->group(function () {
     Route::post('register', [AuthApiController::class, 'register']);
     Route::post('login', [AuthApiController::class, 'login']);
+    Route::post('validate-user', [AuthApiController::class, 'validateUser']);
+    Route::post('reset-new-password', [AuthApiController::class, 'resetPassword']);
 });
 
 

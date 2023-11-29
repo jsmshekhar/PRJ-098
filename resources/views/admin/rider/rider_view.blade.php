@@ -26,6 +26,12 @@
                     </div>
                     <div class="card-body">
                         <div class="detail_cnt">
+                            <div class="profil_img">
+                                <img class="img-thumbnail rounded-circle avatar-xl" alt="200x200"
+                                    src="{{ asset('public/assets/images/users/avatar-3.jpg') }}"
+                                    data-holder-rendered="true">
+                                <span class="active"></span>
+                            </div>
                             <h5>User Id : <span>{{ $rider->slug }}</span></h5>
                             <h5>Name : <span>{{ $rider->name }}</span></h5>
                             <h5>Email Id : <span>{{ $rider->email }}</span></h5>
@@ -194,9 +200,13 @@
                             </a>
                         </div>
                     </div>
-                    <div class="card-body card_wall_bal">
-                        <div class="detail_cnt">
-                            {{ $walletBalence }}
+                    <div class="card-body card_wall_bal d-grid align-items-center">
+                        <div class="detail_cnt round-spa">
+                            <div class="text-center" dir="ltr">
+                                <span class="rond_cntr">{{ $walletBalence }}</span>
+                                <input class="knob" data-linecap=round data-fgColor="#7F56D9" value="10"
+                                    data-skin="tron" data-angleOffset="1000" data-readOnly=true data-thickness=".1" />
+                            </div>
                         </div>
                     </div><!-- end card-body -->
                 </div><!-- end card -->
@@ -254,5 +264,6 @@
     </div> <!-- container-fluid -->
 @endsection
 @section('js')
-
+<script src="{{ asset('public/assets/libs/jquery-knob/jquery.knob.min.js') }}"></script>
+<script src="{{ asset('public/assets/js/pages/jquery-knob.init.js') }}"></script>
 @endsection
