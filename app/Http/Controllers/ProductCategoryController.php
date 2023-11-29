@@ -2,19 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Api\ApiController;
 use App\Models\EvType;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\DB;
 use App\Models\ProductCategory;
 use App\Models\User;
+use App\Http\Controllers\AdminAppController;
 
-class ProductCategoryController extends ApiController
+class ProductCategoryController extends AdminAppController
 {
     protected $product_category;
     protected $ev_type;

@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
 use App\Models\Rider;
 use App\Models\User;
+use App\Http\Controllers\AdminAppController;
 
-class RiderController extends ApiController
+class RiderController extends AdminAppController
 {
     protected $rider;
     public $viewPath;
@@ -33,7 +31,29 @@ class RiderController extends ApiController
         try {
             $permission = User::getPermissions();
             if (Gate::allows('enable_disable_customer', $permission)) {
-                $riders = Rider::whereNull('deleted_at')->orderBy('created_at', 'DESC')->paginate(25);
+                $perPage = env('PER_PAGE');
+                if (isset($request->per_page) && $request->per_page > 0) {
+                    $perPage = $request->per_page;
+                }
+                $riders = Rider::whereNull('deleted_at');
+                if (isset($request->is_search) && $request->is_search == 1) {
+                    if (isset($request->customer_id) && !empty($request->customer_id)) {
+                        $riders = $riders->where('slug', $request->customer_id);
+                    }
+                    if (isset($request->name) && !empty($request->name)) {
+                        $riders = $riders->where('name', 'like', '%' . $request->name . '%');
+                    }
+                    if (isset($request->email) && !empty($request->email)) {
+                        $riders = $riders->where('email', 'like', '%' . $request->email . '%');
+                    }
+                    if (isset($request->phone) && !empty($request->phone)) {
+                        $riders = $riders->where('phone', $request->phone);
+                    }
+                    if (isset($request->joining_date) && !empty($request->joining_date)) {
+                        $riders = $riders->whereDate('created_at', $request->joining_date);
+                    }
+                }
+                $riders = $riders->orderBy('created_at', 'DESC')->paginate($perPage);
                 return view($this->viewPath . '/rider_list', compact('riders', 'permission'));
             } else {
                 return view('admin.401.401');

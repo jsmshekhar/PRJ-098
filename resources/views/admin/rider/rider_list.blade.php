@@ -25,73 +25,90 @@
                                         Advance Search
                                     </button>
                                     <div class="collaps_btns">
-                                        <button type="button"
-                                            class="btn btn-outline-danger waves-effect waves-light">Clear</button>
-                                        <button type="button"
-                                            class="btn btn-success waves-effect waves-light">Search</button>
+                                        <button type="button" class="btn btn-outline-danger waves-effect waves-light"
+                                            onclick="clearSearch('<?= url()->current() ?>');">Clear</button>
+                                        <button type="button" class="btn btn-success waves-effect waves-light"
+                                            onclick="submitSearchForm();">Search</button>
                                     </div>
                                 </h2>
                                 <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                                     data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
-                                        <form id="" method="post">
+                                        <form id="searchForm" method="get" action="<?= url()->current() ?>">
+                                            <input type="hidden" name="is_search" id="isSearchHidden" value="0" />
+                                            <input type="hidden" name="per_page" id="perPageHidden" />
+                                            <input type="hidden" name="is_export" id="isExportHidden" />
                                             <div class="row">
                                                 <div class="col-xl-3 col-md-6">
                                                     <div class="form-group mb-3">
                                                         <label class="form-label">Customer Id</label>
-                                                        <input type="text" required class="form-control" />
+                                                        <input type="text" class="form-control" name="customer_id"
+                                                            value="<?= isset($_GET['customer_id']) ? $_GET['customer_id'] : '' ?>" />
                                                     </div>
                                                 </div>
+
                                                 <div class="col-xl-3 col-md-6">
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label">Name</label>
+                                                        <input type="text" class="form-control" name="name"
+                                                            value="<?= isset($_GET['name']) ? $_GET['name'] : '' ?>" />
+                                                    </div>
+                                                </div>
+
+                                                {{-- <div class="col-xl-3 col-md-6">
                                                     <div class="form-group mb-3">
                                                         <label class="form-label">Mapped EV</label>
-                                                        <input type="text" required class="form-control" />
+                                                        <input type="text" class="form-control" name="customer_id"
+                                                            value="" />
                                                     </div>
-                                                </div>
-                                                <div class="col-xl-3 col-md-6">
-                                                    <div class="form-group mb-3">
-                                                        <label class="form-label">Rider Name</label>
-                                                        <input type="text" required class="form-control" />
-                                                    </div>
-                                                </div>
+                                                </div> --}}
+
                                                 <div class="col-xl-3 col-md-6">
                                                     <div class="form-group mb-3">
                                                         <label class="form-label">Email Address</label>
-                                                        <input type="text" required class="form-control" />
+                                                        <input type="text" class="form-control" name="email"
+                                                            value="<?= isset($_GET['email']) ? $_GET['email'] : '' ?>" />
                                                     </div>
                                                 </div>
                                                 <div class="col-xl-3 col-md-6">
                                                     <div class="form-group mb-3">
                                                         <label class="form-label">Phone Number</label>
-                                                        <input type="text" required class="form-control" />
+                                                        <input type="text" class="form-control" name="phone"
+                                                            value="<?= isset($_GET['phone']) ? $_GET['phone'] : '' ?>" />
                                                     </div>
                                                 </div>
-                                                <div class="col-xl-3 col-md-6">
+                                                {{-- <div class="col-xl-3 col-md-6">
                                                     <div class="form-group mb-3">
                                                         <label class="form-label">Wallet Balance</label>
-                                                        <input type="text" required class="form-control" />
+                                                        <input type="text" class="form-control" name="wallet_balence"
+                                                            value="" />
                                                     </div>
-                                                </div>
-                                                <div class="col-xl-3 col-md-6">
-                                                    <div class="form-group mb-3">
-                                                        <label class="form-label">Subscription
-                                                            Validity</label>
-                                                        <input type="text" required class="form-control" />
-                                                    </div>
-                                                </div>
+                                                </div> --}}
                                                 <div class="col-xl-3 col-md-6">
                                                     <div class="form-group mb-3">
                                                         <label class="form-label">Joining Date</label>
-                                                        <input type="text" required class="form-control" />
+                                                        <input type="date" class="form-control" name="joining_date"
+                                                            value="<?= isset($_GET['joining_date']) ? $_GET['joining_date'] : '' ?>" />
                                                     </div>
                                                 </div>
-                                                <div class="col-xl-3 col-md-6">
+
+                                                {{-- <div class="col-xl-3 col-md-6">
                                                     <div class="form-group mb-3">
-                                                        <label class="form-label">Verification
-                                                            Status</label>
-                                                        <input type="text" required class="form-control" />
+                                                        <label class="form-label">Subscription
+                                                            Validity</label>
+                                                        <input type="date" class="form-control"
+                                                            name="subscription_validity"
+                                                            value="" />
                                                     </div>
-                                                </div>
+                                                </div> --}}
+
+                                                {{-- <div class="col-xl-3 col-md-6">
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label">Verification Status</label>
+                                                        <input type="text" class="form-control" name="status"
+                                                            value="" />
+                                                    </div>
+                                                </div> --}}
                                             </div>
                                         </form>
                                     </div>
@@ -107,8 +124,9 @@
                         <div class="table-filter">
                             <ul>
                                 <li>
-                                    <a href="#" class="btn btn-link">
-                                        <img src="{{ asset('public/assets/images/icons/refresh.svg') }}" alt="">
+                                    <a href="javascript:void(0);" class="btn btn-link">
+                                        <img src="{{ asset('public/assets/images/icons/refresh.svg') }}" alt=""
+                                            onclick="refreshPage();">
                                     </a>
                                 </li>
                                 <li>
@@ -117,16 +135,13 @@
                                 <li>
                                     <p>Display up to :
                                     <div class="form-group">
-                                        <select class="form-control" name="choices-single-no-sorting"
-                                            id="choices-single-no-sorting">
-                                            <option value="Madrid">50</option>
-                                            <option value="Toronto">25</option>
-                                        </select>
+                                        @include('admin.layouts.per_page')
                                     </div>
                                     </p>
                                 </li>
                                 <li>
-                                    <button type="button" class="btn btn-success waves-effect waves-light">
+                                    <button type="button" class="btn btn-success waves-effect waves-light"
+                                        onclick="exportData('<?= config('table.REF_TABLE.RIDER') ?>');">
                                         <img src="{{ asset('public/assets/images/icons/download.svg') }}" alt="">
                                         Export
                                     </button>
@@ -139,13 +154,13 @@
                                     <table id="tech-companies-1" class="table">
                                         <thead>
                                             <tr>
-                                                <th>Rider Id</th>
-                                                <th>Mapped EV</th>
+                                                <th>Customer Id</th>
+                                                {{-- <th>Mapped EV</th> --}}
                                                 <th>Name</th>
                                                 <th>Email</th>
                                                 <th>Phone</th>
-                                                <th>Subscription Validity</th>
                                                 <th>Joining Date</th>
+                                                <th>Subscription Validity</th>
                                                 <th>Verification Status</th>
                                             </tr>
                                         </thead>
@@ -153,21 +168,17 @@
                                             @foreach ($riders as $key => $rider)
                                                 <tr>
                                                     <td>
-                                                        {{ $rider->rider_id }}
                                                         <a href="{{ route('customer-view', $rider->slug) }}"
                                                             title="View rider" style="cursor: pointer;margin-right: 5px;"
                                                             target="_blank">{{ $rider->slug }}
                                                         </a>
                                                     </td>
-                                                    <td>{{ $rider->name }}
-                                                        {{-- <a href="{{route('customer-view',$rider->slug)}}" title="View rider" style="cursor: pointer;margin-right: 5px;" target="_blank">{{$rider->name}}
-                                            </a> --}}
-                                                    </td>
+                                                    {{-- <td>ERF567GB</td> --}}
+                                                    <td>{{ $rider->name }}</td>
                                                     <td>{{ $rider->email }}</td>
                                                     <td>{{ $rider->phone }}</td>
-                                                    <td>{{ $rider->subscription_validity }}</td>
-                                                    <td>{{ date('d M, Y', strtotime($rider->joining_date)) }}</td>
-                                                    <td>ERF567GB</td>
+                                                    <td>{{ dateFormat($rider->created_at) }}</td>
+                                                    <td>{{ dateFormat($rider->created_at) }}</td>
                                                     <td>
                                                         @can('enable_disable_customer', $permission)
                                                             <div class="d-flex flex-wrap gap-2">

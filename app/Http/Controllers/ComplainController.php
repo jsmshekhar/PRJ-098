@@ -2,20 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
 use App\Models\Complain;
 use App\Models\ComplainCategory;
-use App\Models\Role;
 use App\Models\User;
+use App\Http\Controllers\AdminAppController;
 
-class ComplainController extends ApiController
+class ComplainController extends AdminAppController
 {
     protected $complain;
     protected $complain_category;
@@ -40,27 +38,27 @@ class ComplainController extends ApiController
                 $perPage = $request->per_page;
             }
             if (Gate::allows('view_complaint', $permission)) {
-                if($auth->role_id == 0){
-                    $complains = Complain::join('complain_categories as cc','complains.complain_category','=','cc.slug')
+                if ($auth->role_id == 0) {
+                    $complains = Complain::join('complain_categories as cc', 'complains.complain_category', '=', 'cc.slug')
                         ->whereNull('complains.deleted_at')
-                        ->select('complains.*','cc.category_name');
-                }else{
+                        ->select('complains.*', 'cc.category_name');
+                } else {
                     $complains = Complain::join('complain_categories as cc', 'complains.complain_category', '=', 'cc.slug')
                         ->whereNull('complains.deleted_at')
                         ->select('complains.*', 'cc.category_name');
                 }
                 if (isset($request->is_search) && $request->is_search == 1) {
                     if (isset($request->complain_id) && !empty($request->complain_id)) {
-                        $complains = $complains->where('complains.complain_number', 'LIKE',"%{$request->complain_id}%");
+                        $complains = $complains->where('complains.complain_number', 'LIKE', "%{$request->complain_id}%");
                     }
                     if (isset($request->name) && !empty($request->name)) {
-                        $complains = $complains->where('complains.name','LIKE', "%{$request->name}%");
+                        $complains = $complains->where('complains.name', 'LIKE', "%{$request->name}%");
                     }
                     if (isset($request->email) && !empty($request->email)) {
-                        $complains = $complains->where('complains.email','LIKE', "%{$request->email}%");
+                        $complains = $complains->where('complains.email', 'LIKE', "%{$request->email}%");
                     }
                     if (isset($request->phone) && !empty($request->phone)) {
-                        $complains = $complains->where('complains.phone','LIKE', "%{$request->phone}%");
+                        $complains = $complains->where('complains.phone', 'LIKE', "%{$request->phone}%");
                     }
                     if (isset($request->category) && !empty($request->category)) {
                         $complains = $complains->where('complains.complain_category', $request->category);
@@ -77,9 +75,9 @@ class ComplainController extends ApiController
                     ->select('roles.name', 'users.role_id', 'users.hub_id')
                     ->leftJoin('roles', 'users.role_id', '=', 'roles.role_id')
                     ->where('users.role_id', '!=', 0);
-                    if($auth->role_id != 0){
-                        $role->where('users.hub_id', $auth->hub_id);
-                    }
+                if ($auth->role_id != 0) {
+                    $role->where('users.hub_id', $auth->hub_id);
+                }
                 $roles = $role->whereNull('users.deleted_at')->whereNull('roles.deleted_at')->get();
                 $categories = ComplainCategory::whereNull('deleted_at')->get();
                 $compalinStatus = config('constants.COMPLAIN_STATUS');
@@ -195,8 +193,8 @@ class ComplainController extends ApiController
     Developer : Raj Kumar
     Action    : Add addComplainCategory
     --------------------------------------------------*/
-    public function addUpdateComplainCategories  (Request $request)
-   {
+    public function addUpdateComplainCategories(Request $request)
+    {
         try {
             $category_name = !empty($request->category_name) ? $request->category_name : "";
             $slug = !empty($request->slug) ? $request->slug : "";
@@ -220,7 +218,7 @@ class ComplainController extends ApiController
             }
             if ($category) {
                 return redirect()->back();
-            } 
+            }
         } catch (\Exception $ex) {
             $result = [
                 'line' => $ex->getLine(),

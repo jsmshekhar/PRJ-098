@@ -98,6 +98,7 @@ class AuthApiController extends ApiController
             return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
         }
     }
+
     /*--------------------------------------------------
     Developer : Chandra Shekhar
     Action    : login
@@ -109,6 +110,75 @@ class AuthApiController extends ApiController
         try {
             $result = $this->riderModel->getDetails($request);
             return finalResponse($result);
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : login
+    Request   : Object
+    Return    : Json
+    --------------------------------------------------*/
+    public function validateUser(Request $request)
+    {
+        try {
+            $requiredFields = [
+                'phone' => 'required|exists:riders,phone',
+            ];
+            $messages = [
+                'phone.required' => 'The phone number is required.',
+                'phone.exists' => 'The provided phone number is invalid.'
+            ];
+            if (!$this->checkValidation($request, $requiredFields, $messages)) {
+                return validationResponse(Response::HTTP_UNPROCESSABLE_ENTITY, Lang::get('messages.VALIDATION_ERROR'), $this->errorMessage);
+            } else {
+                $result = $this->riderModel->validateUser($request);
+                return finalResponse($result);
+            }
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : login
+    Request   : Object
+    Return    : Json
+    --------------------------------------------------*/
+    public function resetPassword(Request $request)
+    {
+        try {
+            $requiredFields = [
+                'phone' => 'required|exists:riders,phone',
+                'password' => 'required',
+                'password_confirmation' => 'required',
+                'password' => 'required|confirmed',
+            ];
+            $messages = [
+                'phone.required' => 'The phone number is required.',
+                'phone.exists' => 'The provided phone number is invalid.',
+                'password.required' => 'The password is required.',
+                'password_confirmation.required' => 'The password confirmation is required.',
+            ];
+            if (!$this->checkValidation($request, $requiredFields, $messages)) {
+                return validationResponse(Response::HTTP_UNPROCESSABLE_ENTITY, Lang::get('messages.VALIDATION_ERROR'), $this->errorMessage);
+            } else {
+                $result = $this->riderModel->resetPassword($request);
+                return finalResponse($result);
+            }
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),

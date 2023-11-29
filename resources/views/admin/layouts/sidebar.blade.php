@@ -14,8 +14,8 @@
                      </a>
                  </li>
 
-                 <li>
-                     <a href="#">
+                 <li class="{{ Request::routeIs('live-tracking') ? 'mm-active' : '' }}">
+                     <a href="{{ route('live-tracking') }}" class="{{ Request::routeIs('live-tracking') ? 'active' : '' }}">
                          <img src="{{ asset('public/assets/images/icons/tracking-icon.svg') }}" alt="">
                          <span>Live tracking</span>
                      </a>

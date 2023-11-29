@@ -12,6 +12,8 @@ return [
     'ERROR_UPDATE_IMAGE_DESC' => 'Image description not updated.',
     'HTTP_NOT_FOUND' => 'Data not found.',
     'HTTP_FOUND' => 'Data found.',
+    'PASSWORD_UPDATE' => "The password has been updated successfully.",
+    'INVALID_PHONE' => "The provided phone number is invalid.",
 
 
     'PUBLISH_ERROR' => 'Property not published getting some error.',
