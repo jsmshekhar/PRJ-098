@@ -96,6 +96,10 @@ body:not([data-sidebar-size="sm"]) #vertical-menu-btn {
     font-size: 16px;
 }
 
+.form-control{
+  font-size: 16px;
+}
+
 .app-search .form-control {
     border-radius: 24px;
     border: 1px solid rgba(0, 0, 0, 0.3);
@@ -6285,6 +6289,10 @@ table .dropdown-menu.show .dropdown-item:hover {
     font-size: 16px;
 }
 
+.select2-results__option{
+  font-size: 16px;
+}
+
 .select2-container--default .select2-results__option[aria-selected="true"],
 .select2-container--default .select2-results__option[data-selected="true"],
 .select2-container--default .select2-results__option--highlighted[aria-selected]:hover,
@@ -6381,38 +6389,6 @@ table .dropdown-menu.show .dropdown-item:hover {
     font-size: 16px;
 }
 
-.permission_tbl .col-md-3.border-bottom.py-2 h5 {
-    font-size: 16px;
-}
-
-.notify_btn_box {
-    text-align: end;
-}
-
-.notify_btn_box .btn {
-    font-size: 10.667px;
-    font-weight: 500;
-    line-height: 18.667px;
-    padding: 4px 10px;
-    margin-right: 5px;
-}
-
-.notify_text {
-    color: rgba(0, 0, 0, 0.70);
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    margin: 0;
-}
-
-.modal {
-    z-index: 9999;
-}
-
-.modal label {
-    font-weight: 500;
-}
-
 .round-spa .knob {
     display: none;
 }
@@ -6462,4 +6438,35 @@ table .dropdown-menu.show .dropdown-item:hover {
 
 .personal-info-h {
     min-height: 490px;
+}
+.permission_tbl .col-md-3.border-bottom.py-2 h5{
+  font-size: 16px;
+}
+
+.notify_btn_box{
+  text-align: end;
+}
+
+.notify_btn_box .btn{
+  font-size: 10.667px;
+  font-weight: 500;
+  line-height: 18.667px;
+  padding: 4px 10px;
+  margin-right: 5px;
+}
+
+.notify_text{
+  color: rgba(0, 0, 0, 0.70);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  margin: 0;
+}
+
+.modal{
+  z-index: 9999;
+}
+
+.modal label{
+  font-weight: 500;
 }

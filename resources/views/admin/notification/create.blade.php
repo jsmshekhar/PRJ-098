@@ -135,8 +135,8 @@
                                                 <input class="form-control" id="notification_type" type="hidden" name="notification_type" value="Manual">
                                             </div>
                                             @endif
-                                            <div class="mb-3">
-                                                <button type="button" class="btn btn-success mb-3" id="submitForm">{{ request()->route('param')=="automatic" ? 'Set Notification' : 'Schedule Notification'}}</button>
+                                            <div class="">
+                                                <button type="button" class="btn btn-success" id="submitForm">{{ request()->route('param')=="automatic" ? 'Set Notification' : 'Schedule Notification'}}</button>
                                                 <span class="text-success d-block" id="message" style="margin-right: 10px"></span>
                                             </div>
                                         </form>

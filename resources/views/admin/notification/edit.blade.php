@@ -23,17 +23,15 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
-            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0 font-size-18">Edit Notification</h4>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
             <div class="card">
-                <div class="card-body p-0">
+                <div class="card-header border-bottom bg-white">
+                    <h4>Edit Notification</h4>
+                    <div class="btn-card-header">
+                        <a href="!" class="btn btn-success waves-effect waves-light categoryModelForm invisible">1</a>
+                    </div>
+                </div>
+                <div class="card-body border-0">
                     <div class="table-rep-plugin">
-                        <div class="card-body p-4">
 
                             <div class="row">
                                 <div class="col-lg-6">
@@ -109,15 +107,14 @@
                                                 <input class="form-control" type="date" name="schedule_date" id="schedule_date" value="{{date('Y-m-d', strtotime($notification->schedule_date == null ? date('Y-m-d') : $notification->schedule_date))}}">
                                             </div>
                                             @endif
-                                            <div class="mb-3">
-                                                <button type="button" class="btn btn-success mb-3" id="submitForm">{{ request()->route('param')=="automatic" ? 'Update Notification' : 'Update Notification'}}</button>
+                                            <div class="">
+                                                <button type="button" class="btn btn-success " id="submitForm">{{ request()->route('param')=="automatic" ? 'Update Notification' : 'Update Notification'}}</button>
                                                 <span class="text-success d-block" id="message" style="margin-right: 10px"></span>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                     </div>
 
                 </div>
