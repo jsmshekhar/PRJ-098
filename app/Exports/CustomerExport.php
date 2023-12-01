@@ -32,7 +32,8 @@ class CustomerExport implements FromCollection, WithColumnFormatting, WithColumn
     public function columnFormats(): array
     {
         return [
-            'B' => NumberFormat::FORMAT_TEXT
+            'B' => NumberFormat::FORMAT_TEXT,
+            'E' => NumberFormat::FORMAT_TEXT
         ];
     }
 
@@ -47,7 +48,13 @@ class CustomerExport implements FromCollection, WithColumnFormatting, WithColumn
     {
         return [
             'Sr. No',
-            'Customer Name',
+            'Customer Id',
+            'Name',
+            'Email',
+            'Phone',
+            'Joining Date',
+            'Subscription Validity',
+            "Verification Status",
         ];
     }
 
@@ -55,8 +62,12 @@ class CustomerExport implements FromCollection, WithColumnFormatting, WithColumn
     {
         return [
             AfterSheet::class    => function (AfterSheet $event) {
-                $event->sheet->getDelegate()->getRowDimension('1')->setRowHeight(40);
+                $event->sheet->getDelegate()->getRowDimension('1')->setRowHeight(30);
                 $event->sheet->getDelegate()->getColumnDimension('A')->setWidth(10);
+
+
+                $event->sheet->getDelegate()->getStyle('1')->getFont()->setSize(14);
+                $event->sheet->getDelegate()->getStyle('A1:H1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
             },
         ];
     }

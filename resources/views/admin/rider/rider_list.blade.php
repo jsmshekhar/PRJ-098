@@ -130,7 +130,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <p>Total Record : <span>255</span></p>
+                                    <p>Total Record : <span>{{ count($riders) }}</span></p>
                                 </li>
                                 <li>
                                     <p>Display up to :
@@ -139,13 +139,16 @@
                                     </div>
                                     </p>
                                 </li>
-                                <li>
-                                    <button type="button" class="btn btn-success waves-effect waves-light"
-                                        onclick="exportData('<?= config('table.REF_TABLE.RIDER') ?>');">
-                                        <img src="{{ asset('public/assets/images/icons/download.svg') }}" alt="">
-                                        Export
-                                    </button>
-                                </li>
+                                @if (count($riders) > 0)
+                                    <li>
+                                        <button type="button" class="btn btn-success waves-effect waves-light"
+                                            onclick="exportData('<?= config('table.REF_TABLE.RIDER') ?>');">
+                                            <img src="{{ asset('public/assets/images/icons/download.svg') }}"
+                                                alt="">
+                                            Export
+                                        </button>
+                                    </li>
+                                @endif
                             </ul>
                         </div>
                         <div class="table-rep-plugin">
