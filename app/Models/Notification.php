@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\DB;
 
 class Notification extends Model
 {
@@ -136,5 +137,30 @@ class Notification extends Model
             ];
             return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
         }
+    }
+
+    /*--------------------------------------------------
+    Developer : Raj Kumar
+    Action    : Schedule Notification
+    --------------------------------------------------*/
+    public static function sendScheduleNotifications()
+    { 
+        // try {
+        //     $currentDate = date("Y-m-d");
+        //     $notifications = Notification::whereDate('schedule_date', $currentDate)
+        //         ->where('notification_type', 'Manual')
+        //         ->where('notification_parameter', 3) // 3=>scheduled
+        //         ->where('status_id', 1)
+        //         ->select('description', 'notification_user_based')
+        //         ->get(); 
+        //     $getCampaign = DB::table('rider_device_tokens')->join('rider', 'crm_campaigns.timezone', 'timezones.timezone_id');
+        // } catch (\Exception $ex) {
+        //     $result = [
+        //         'line' => $ex->getLine(),
+        //         'file' => $ex->getFile(),
+        //         'message' => $ex->getMessage(),
+        //     ];
+        //     return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        // }
     }
 }

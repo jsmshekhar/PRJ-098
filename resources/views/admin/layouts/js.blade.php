@@ -28,4 +28,10 @@
      window.addEventListener('load', () => {
          $('.select2').select2();
      });
+     window.addEventListener('load', () => {
+         $('.selectBasic').select2({
+            minimumResultsForSearch: -1
+         });
+         
+     });
  </script>

@@ -187,7 +187,9 @@
                             {{ $users->withQueryString()->links('pagination::bootstrap-4') }}
                         </div>
                         @else
-                        <p>No reords found</p>
+                        <div>
+                            @include('admin.common.no_record')
+                        </div>
                         @endif
                     </div>
 

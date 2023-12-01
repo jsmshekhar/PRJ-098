@@ -97,7 +97,9 @@
                         </div>
                     </div>
                     @else
-                    <p>No EV type found</p>
+                    <div>
+                        @include('admin.common.no_record')
+                    </div>
                     @endif
                 </div>
             </div>
@@ -303,7 +305,7 @@
                     $('#submitEvType').prop('disabled', false);
                     $('#submitEvType').html('Update');
                     setTimeout(function() {
-                        // window.location.reload();
+                        window.location.reload();
                     }, 1000);
 
                 },
