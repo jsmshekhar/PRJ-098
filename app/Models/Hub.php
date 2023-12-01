@@ -31,22 +31,22 @@ class Hub extends Model
             $hubs = Hub::where('user_id', $auth->user_id)->whereNull('deleted_at');
             if (isset($request->is_search) && $request->is_search == 1) {
                 if (isset($request->hub_id) && !empty($request->hub_id)) {
-                    $hubs = $hubs->where('hubId', $request->hub_id);
+                    $hubs = $hubs->where('hubId', 'LIKE', "%{$request->hub_id}%");
                 }
                 if (isset($request->city) && !empty($request->city)) {
-                    $hubs = $hubs->where('city', $request->city);
+                    $hubs = $hubs->where('city', 'LIKE', "%{$request->city}%");
                 }
                 if (isset($request->hub_capacity) && !empty($request->hub_capacity)) {
-                    $hubs = $hubs->where('hub_limit', $request->hub_capacity);
+                    $hubs = $hubs->where('hub_limit', 'LIKE', "%{$request->hub_capacity}%");
                 }
                 if (isset($request->vehicle) && !empty($request->vehicle)) {
-                    // $hubs = $hubs->where('hub_limit', $request->vehicle);
+                    // $hubs = $hubs->where('hub_limit', 'LIKE', "%{$request->vehicle}%");
                 }
             }
 
             $hubs = $hubs->orderBy('created_at', 'DESC')->paginate($perPage);
             $lastHub = Hub::orderBy('hub_id', 'DESC')->first();
-            $hubId = "NO101";
+            $hubId = "101";
             if ($lastHub) {
                 $length = 2;
                 $lastId = substr($lastHub->hubId, $length);

@@ -82,7 +82,7 @@
                                             </div>
                                             <div class="col-xl-3 col-md-6">
                                                 <label class="form-label">Complain Category</label>
-                                                <select class="form-control select2" name="category">
+                                                <select class="form-control selectBasic" name="category">
                                                     <option value="">Select Category</option>
                                                     @foreach($categories as $key => $category)
                                                     <option value="{{$category->slug}}" <?= (isset($_GET['category']) && $category->slug == $_GET['category']) ? 'selected' : '' ?>>{{$category->category_name}}</option>
@@ -91,7 +91,7 @@
                                             </div>
                                             <div class="col-xl-3 col-md-6">
                                                 <label class="form-label">Complain Status</label>
-                                                <select class="form-control select2" name="status">
+                                                <select class="form-control selectBasic" name="status">
                                                     <option value="">Select Status</option>
                                                     @foreach($compalinStatus as $key => $cs)
                                                     <option value="{{$key}}" <?= (isset($_GET['status']) && $key == $_GET['status']) ? 'selected' : '' ?>>{{$cs}}</option>
@@ -153,7 +153,7 @@
                                     @foreach($complains as $key => $complain)
                                     <tr>
                                         <td>
-                                            <a class="complainModelForm" data-toggle="modal" data-description="{{ $complain->description }}" data-name="{{ $complain->name }}" data-email="{{ $complain->email }}" data-phone="{{ $complain->phone }}" data-date="{{ date('d M, Y', strtotime($complain->created_at)) }}" data-category="{{ $complain->complain_category }}" data-cnumber="{{ $complain->complain_number }}" data-slug="{{ $complain->slug }}" data-cname="{{ $complain->category_name }}" data-userid="{{ $complain->user_id }}" data-role_id="{{ $complain->role_id }}" title="View Description" style="cursor: pointer;margin-right: 5px;">{{$complain->complain_number}}
+                                            <a class="complainModelForm" data-toggle="modal" data-description="{{ $complain->description }}" data-name="{{ $complain->name }}" data-email="{{ $complain->email }}" data-phone="{{ $complain->phone }}" data-date="{{ dateFormat($complain->created_at) }}" data-category="{{ $complain->complain_category }}" data-cnumber="{{ $complain->complain_number }}" data-slug="{{ $complain->slug }}" data-cname="{{ $complain->category_name }}" data-userid="{{ $complain->user_id }}" data-role_id="{{ $complain->role_id }}" title="View Description" style="cursor: pointer;margin-right: 5px;">{{$complain->complain_number}}
                                             </a>
                                         </td>
                                         <td>{{$complain->category_name}}
@@ -162,7 +162,7 @@
                                         </td>
                                         <td>{{$complain->email}}</td>
                                         <td>{{$complain->phone}}</td>
-                                        <td>{{date('d M, Y', strtotime($complain->created_at))}}</td>
+                                        <td>{{dateFormat($complain->created_at)}}</td>
                                         <td>
                                             @can('change_complaint_status', $permission)
                                             <div class="d-flex flex-wrap gap-2">
@@ -178,8 +178,10 @@
                             {{ $complains->withQueryString()->links('pagination::bootstrap-4') }}
                         </div>
                         @else
-                        <label class="p-3">No reords found</label>
-                        @endif
+                        <div>
+                            @include('admin.common.no_record')
+                        </div>
+                         @endif
                     </div>
 
                 </div>

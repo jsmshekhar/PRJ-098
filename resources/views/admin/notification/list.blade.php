@@ -77,7 +77,9 @@
                             {{ $notifications->withQueryString()->links('pagination::bootstrap-4') }}
                         </div>
                         @else
-                        <label class="p-3">No reords found</label>
+                        <div>
+                            @include('admin.common.no_record')
+                        </div>
                         @endif
                     </div>
 

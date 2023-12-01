@@ -155,8 +155,8 @@ class RoleUserController extends AdminAppController
                     ->leftJoin('roles', 'users.role_id', '=', 'roles.role_id');
 
                 if (isset($request->is_search) && $request->is_search == 1) {
-                    if (isset($request->user_id) && !empty($request->user_id)) {
-                        $users = $users->where('users.emp_id', $request->user_id);
+                    if (isset($request->emp_id) && !empty($request->emp_id)) {
+                        $users = $users->where('users.emp_id', $request->emp_id);
                     }
                     if (isset($request->first_name) && !empty($request->first_name)) {
                         $users = $users->where('users.first_name', 'LIKE', "%{$request->first_name}%");
