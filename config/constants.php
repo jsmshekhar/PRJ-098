@@ -45,19 +45,21 @@ return [
     ],
 
     'EV_CATEGORIES' => [
-        'two_wheeler' => 'Two Wheeler',
-        'three_wheeler' => 'Three Wheeler',
+        'TWO_WHEELER' => 1,
+        'THREE_WHEELER' => 2,
     ],
 
     'PROFILE_CATEGORIES' => [
-        'corporate' => 'Corporate',
-        'individual' => 'Individual',
-        'student' => 'Student',
-        'vendor' => 'Vendor',
+        'CORPORATE' => 1,
+        'INDIVIDUAL' => 2,
+        'STUDENT' => 3,
+        'VENDER' => 4,
     ],
 
     'COMPLAIN_STATUS' => [
-       1 => 'Resolved',
-       2 => 'Pending',
+        1 => 'Resolved',
+        2 => 'Pending',
     ],
+
+
 ];

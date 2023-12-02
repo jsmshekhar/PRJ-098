@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Support\Facades\Auth;
@@ -12,6 +13,9 @@ use App\Http\Controllers\Auth\PasswordSetController;
 use App\Http\Controllers\DataExportController;
 use App\Http\Controllers\LiveTrackingController;
 use App\Http\Controllers\ProductCategoryController;
+use App\Http\Controllers\RefundMgmtController;
+use App\Http\Controllers\TransactionMgmtController;
+use App\Http\Controllers\WalletMgmtController;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,6 +93,9 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/add-update-ev-type', [ProductCategoryController::class, 'addUpdateEvType'])->name('add-update-ev-type');
 
         Route::get('/tracking', [LiveTrackingController::class, 'index'])->name('live-tracking');
+        Route::get('/transaction-management', [TransactionMgmtController::class, 'index'])->name('transaction-management');
+        Route::get('/wallet-management', [WalletMgmtController::class, 'index'])->name('wallet-management');
+        Route::get('/refund-management', [RefundMgmtController::class, 'index'])->name('refund-management');
     });
 
     Route::get('/data-export', [DataExportController::class, 'dataExport'])->name('data-export');
