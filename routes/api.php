@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthApiController;
+use App\Http\Controllers\Api\KycApiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,4 +26,6 @@ Route::namespace('Api')->prefix('v1')->group(function () {
 Route::middleware(['auth:rider-api'])->namespace('Api')->prefix('v1')->group(function () {
     Route::get('/logout', [AuthApiController::class, 'logout']);
     Route::get('/rider-details', [AuthApiController::class, 'getRiderDetails']);
+    Route::get('/profile-category', [KycApiController::class, 'profileCategory']);
+    Route::get('/vehicle-preferences', [KycApiController::class, 'vehiclePreferences']);
 });
