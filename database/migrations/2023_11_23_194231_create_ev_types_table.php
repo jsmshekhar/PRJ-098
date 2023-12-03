@@ -16,6 +16,7 @@ class CreateEvTypesTable extends Migration
         Schema::create('ev_types', function (Blueprint $table) {
             $table->bigIncrements('ev_type_id');
             $table->string('slug', 12)->nullable();
+            $table->integer('ev_category')->nullable()->comment('1 => Two Wheeler, 2 => Three Wheeler');
             $table->string('ev_type_name')->nullable();
             $table->float('rs_perday')->nullable();
             $table->integer('range')->nullable();

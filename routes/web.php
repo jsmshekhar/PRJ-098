@@ -12,6 +12,7 @@ use App\Http\Controllers\Auth\PasswordSetController;
 use App\Http\Controllers\DataExportController;
 use App\Http\Controllers\LiveTrackingController;
 use App\Http\Controllers\ProductCategoryController;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,12 +81,15 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/add-user-base', [NotificationController::class, 'addUserBase'])->name('add-user-base');
 
         //Products Routes
-        Route::get('/products', [ProductController::class, 'getProducts'])->name('products');
-        Route::post('/add-update-product', [ProductController::class, 'addUpdateProduct'])->name('add-update-product');
+        Route::get('/products/{evtype}', [ProductController::class, 'getProducts'])->name('products');
+        Route::get('/product/create/{evtype}', [ProductController::class, 'createProduct'])->name('product-create');
+        Route::post('/add-product', [ProductController::class, 'addProduct'])->name('add-product');
+        Route::post('/update-product/{slug}', [ProductController::class, 'updateProduct'])->name('update-product');
         Route::post('/product-delete/{slug}', [ProductController::class, 'deleteProduct'])->name('product-delete');
 
-        Route::get('/product/categories-and-types', [ProductCategoryController::class, 'getProductCategoryType'])->name('categories-and-types');
+        Route::get('/product-categories', [ProductCategoryController::class, 'getProductCategoryType'])->name('product-categories');
         Route::post('/add-update-product-category', [ProductCategoryController::class, 'addUpdateProductCategory'])->name('add-update-product-category');
+        Route::get('/product-ev-types', [ProductCategoryController::class, 'getEvType'])->name('product-ev-types');
         Route::post('/add-update-ev-type', [ProductCategoryController::class, 'addUpdateEvType'])->name('add-update-ev-type');
 
         Route::get('/tracking', [LiveTrackingController::class, 'index'])->name('live-tracking');

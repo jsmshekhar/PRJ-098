@@ -36,6 +36,7 @@ class AuthServiceProvider extends ServiceProvider
         Complain::class => ComplaintPolicy::class,
         Notification::class => NotificationPolicy::class,
         ProductCategory::class => InventryPolicy::class,
+        Product::class => InventryPolicy::class,
     ];
 
     /**
@@ -84,6 +85,9 @@ class AuthServiceProvider extends ServiceProvider
         //Inventry Policies
         Gate::define('add_product_type', 'App\Policies\InventryPolicy@add_product_type');
         Gate::define('edit_product_type', 'App\Policies\InventryPolicy@edit_product_type');
+
+        //Inventry Product Policies
+        Gate::define('view_inventry', 'App\Policies\InventryPolicy@view_inventry');
 
         Passport::routes();
         Passport::tokensExpireIn(now()->addDays(7));
