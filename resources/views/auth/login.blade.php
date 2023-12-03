@@ -11,7 +11,7 @@
             <div class="position-relative">
                 <img src="{{ asset('public/assets/images/icons/mail.svg') }}" alt="" class="left-icon-form">
                 <input type="text" class="form-control" id="email" placeholder="Enter Email" name="email"
-                    value="raj75k@gmail.com">
+                    value="admin@admin.com">
             </div>
             @error('email')
                 <span class="text-danger">
@@ -22,7 +22,7 @@
                 <div class="input-group auth-pass-inputgroup">
                     <img src="{{ asset('public/assets/images/icons/lock.svg') }}" alt="" class="left-icon-form">
                     <input type="password" class="form-control" placeholder="Enter password" name="password"
-                        value="admin@123">
+                        value="admin123">
                     <button class="btn btn-light shadow-none ms-0" type="button" id="password-addon">
                         <img src="{{ asset('public/assets/images/icons/eye-off.svg') }}" alt="">
                     </button>

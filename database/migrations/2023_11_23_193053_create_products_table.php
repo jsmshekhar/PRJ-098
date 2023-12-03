@@ -25,7 +25,6 @@ class CreateProductsTable extends Migration
             $table->integer('ev_category')->nullable();
             $table->string('profile_category', 100)->nullable();
             $table->integer('hub_id')->nullable();
-            $table->integer('hub_id')->nullable();
             $table->text('description')->nullable();
             $table->tinyInteger('status_id')->default(1)->comment('1 => Active, 2 => Inactive');
             $table->string('user_slug')->nullable();
