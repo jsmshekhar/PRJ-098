@@ -2,40 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\EvType;
+use App\Http\Controllers\AdminAppController;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
-use App\Models\ProductCategory;
+use App\Models\Product;
 use App\Models\User;
-use App\Http\Controllers\AdminAppController;
 
-class ProductCategoryController extends AdminAppController
+class ProductController extends AdminAppController
 {
-    protected $product_category;
-    protected $ev_type;
+    protected $product;
 
     public function __construct()
     {
-        $this->product_category = new ProductCategory();
-        $this->ev_type = new EvType();
+        $this->product = new Product();
     }
 
     /*--------------------------------------------------
     Developer : Raj Kumar
-    Action    : Get product category
+    Action    : Get product
     --------------------------------------------------*/
-    public function getProductCategoryType(Request $request)
+    public function getProducts(Request $request)
     {
         try {
             $permission = User::getPermissions();
-            //if (Gate::allows('add_product_type', $permission)) {
-                $product_category = $this->product_category->getProductCategoryType($request);
-                $product_categories = $product_category['result']['product_categories'];
-                return view('admin.inventory.product_category', compact('product_categories', 'permission'));
-            //} else {
-                //return view('admin.401.401');
-           // }
+            if (Gate::allows('view_inventry', $permission)) {
+                $products = $this->product->getProducts($request);
+                $products = $products['result']['products'];
+                return view('admin.inventory.product_list', compact('products', 'permission'));
+            } else {
+                return view('admin.401.401');
+            }
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -48,16 +45,18 @@ class ProductCategoryController extends AdminAppController
 
     /*--------------------------------------------------
     Developer : Raj Kumar
-    Action    : Get product category
+    Action    : Create product
     --------------------------------------------------*/
-    public function getEvType(Request $request)
+    public function createProduct(Request $request, $evtype )
     {
         try {
             $permission = User::getPermissions();
-            $ev_types = $this->ev_type->getEvType($request);
-            $ev_categories = $ev_types['result']['ev_categories'];
-            $ev_types = $ev_types['result']['ev_types'];
-            return view('admin.inventory.ev_type', compact('ev_types', 'ev_categories', 'permission'));
+            $product_category = $this->product->createProduct($evtype);
+            $product_categories = $product_category['result']['product_categories'];
+            $ev_types = $product_category['result']['ev_types'];
+            $ev_categories = $product_category['result']['ev_categories'];
+            $hubs = $product_category['result']['hubs'];
+            return view('admin.inventory.create_product', compact('product_categories', 'ev_types', 'ev_categories', 'permission','hubs'));
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -70,13 +69,13 @@ class ProductCategoryController extends AdminAppController
 
     /*--------------------------------------------------
     Developer : Raj Kumar
-    Action    : add update product category
+    Action    : add product
     --------------------------------------------------*/
-    public function addUpdateProductCategory(Request $request)
+    public function addProduct(Request $request)
     {
         try {
             $requiredFields = [
-                'product_category_name' => 'required',
+                'title' => 'required',
             ];
             if (!$this->checkValidation($request, $requiredFields)) {
                 $msg = $this->errorMessage;
@@ -91,8 +90,8 @@ class ProductCategoryController extends AdminAppController
                 ];
                 return response()->json($status);
             } else {
-                $product_category = $this->product_category->addUpdateCategory($request);
-                $data = json_encode($product_category);
+                $product = $this->product->addProduct($request);
+                $data = json_encode($product);
                 $data = json_decode($data, true);
                 $status = [
                     'status' => $data['original']['status'],
@@ -113,13 +112,13 @@ class ProductCategoryController extends AdminAppController
 
     /*--------------------------------------------------
     Developer : Raj Kumar
-    Action    : add update product category
+    Action    : update product
     --------------------------------------------------*/
-    public function addUpdateEvType(Request $request)
+    public function updateProduct(Request $request, $slug)
     {
         try {
             $requiredFields = [
-                'ev_type_name' => 'required',
+                'title' => 'required',
             ];
             if (!$this->checkValidation($request, $requiredFields)) {
                 $msg = $this->errorMessage;
@@ -134,8 +133,8 @@ class ProductCategoryController extends AdminAppController
                 ];
                 return response()->json($status);
             } else {
-                $ev_type = $this->ev_type->addUpdateEvType($request);
-                $data = json_encode($ev_type);
+                $product = $this->product->updateProduct($request, $slug);
+                $data = json_encode($product);
                 $data = json_decode($data, true);
                 $status = [
                     'status' => $data['original']['status'],

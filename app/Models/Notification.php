@@ -24,7 +24,7 @@ class Notification extends Model
     {
         try {
             $auth = Auth::user();
-            $notifications = Notification::where('user_id', $auth->user_id)->whereNull('deleted_at')->orderBy('created_at', 'DESC')->paginate(25);
+            $notifications = Notification::where('user_slug', $auth->user_slug)->orWhere('user_id', $auth->user_id)->whereNull('deleted_at')->orderBy('created_at', 'DESC')->paginate(25);
             foreach ($notifications as $key => $notification) {
                 $notification->param = strtolower($notification->notification_type);
             }

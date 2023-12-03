@@ -28,7 +28,7 @@ class Hub extends Model
             if (isset($request->per_page) && $request->per_page > 0) {
                 $perPage = $request->per_page;
             }
-            $hubs = Hub::where('user_id', $auth->user_id)->whereNull('deleted_at');
+            $hubs = Hub::where('user_slug', $auth->user_slug)->orWhere('user_id', $auth->user_id)->whereNull('deleted_at');
             if (isset($request->is_search) && $request->is_search == 1) {
                 if (isset($request->hub_id) && !empty($request->hub_id)) {
                     $hubs = $hubs->where('hubId', 'LIKE', "%{$request->hub_id}%");
@@ -96,15 +96,15 @@ class Hub extends Model
                     'et.ev_type_name',
                     'et.slug as ev_type_slug',
                     DB::raw("CASE 
-                        WHEN products.ev_category='two_wheeler' THEN '" . config('constants.EV_CATEGORIES.two_wheeler') . "' 
-                        WHEN products.ev_category='three_wheeler' THEN '" . config('constants.EV_CATEGORIES.three_wheeler') . "' 
+                        WHEN products.ev_category=1 THEN 'Two Wheeler' 
+                        WHEN products.ev_category=1 THEN 'Three Wheeler')' 
                         ELSE '' 
                     END as ev_category_name"),
                     DB::raw("CASE 
-                        WHEN products.profile_category='individual' THEN '" . config('constants.PROFILE_CATEGORIES.individual') . "' 
-                        WHEN products.profile_category='corporate' THEN '" . config('constants.PROFILE_CATEGORIES.corporate') ."' 
-                        WHEN products.profile_category='vendor' THEN '" . config('constants.PROFILE_CATEGORIES.vendor') . "' 
-                        WHEN products.profile_category='student' THEN '" . config('constants.PROFILE_CATEGORIES.student') . "' 
+                        WHEN products.profile_category=1 THEN 'Corporate' 
+                        WHEN products.profile_category=2 THEN 'Individual' 
+                        WHEN products.profile_category=3 THEN 'Student' 
+                        WHEN products.profile_category=4 THEN 'Vendor' 
                         ELSE ''
                     END as profile_category_name")
                 )

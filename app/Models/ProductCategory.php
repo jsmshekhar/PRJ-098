@@ -26,12 +26,11 @@ class ProductCategory extends Model
     {
         try {
             $auth = Auth::user();
-            $product_categories = ProductCategory::where('user_id', $auth->user_id)->orderBy('created_at', 'DESC')->get();
-            $ev_types = EvType::where('user_id', $auth->user_id)->orderBy('created_at', 'DESC')->get();
-            if (count($product_categories) > 0 || count($ev_types) > 0) {
-                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['product_categories' => $product_categories, 'ev_types' => $ev_types]);
+            $product_categories = ProductCategory::where('user_slug', $auth->user_slug)->orWhere('user_id', $auth->user_id)->orderBy('created_at', 'DESC')->get();
+            if (count($product_categories) > 0) {
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['product_categories' => $product_categories]);
             } else {
-                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['product_categories' => [], 'ev_types' => []]);
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['product_categories' => []]);
             }
         } catch (\Throwable $ex) {
             $result = [
