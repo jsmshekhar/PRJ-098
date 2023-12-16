@@ -33,7 +33,7 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row d-none">
         <div class="col-lg-3">
             <div class="card">
                 <div class="row g-0 align-items-center">
@@ -99,7 +99,96 @@
             </div>
         </div><!-- end col -->
     </div>
+
     <div class="row">
+        <div class="col-lg-12">
+            <div class="card m-0 border-0">
+            <div class="card-header border-bottom bg-white py-3">
+                    <h4>Choose profile</h4>
+                </div>
+               <div class="cat_list">
+               <ul>
+                    <li class="active">
+                        <a href="#">
+                            <img class="card-img img-fluid" src="{{asset('public/assets/images/users/Individual.PNG')}}" alt="Card image">
+                            <span>Individual</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img class="card-img img-fluid" src="{{asset('public/assets/images/users/Vendor.PNG')}}" alt="Card image">
+                            <span>Vendor</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img class="card-img img-fluid" src="{{asset('public/assets/images/users/Student.PNG')}}" alt="Card image">
+                            <span>Student</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img class="card-img img-fluid" src="{{asset('public/assets/images/users/CorporateEmployee.PNG')}}" alt="Card image">
+                            <span>Corporate Employee</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img class="card-img img-fluid" src="{{asset('public/assets/images/users/Student.PNG')}}" alt="Card image">
+                            <span>Student</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img class="card-img img-fluid" src="{{asset('public/assets/images/users/CorporateEmployee.PNG')}}" alt="Card image">
+                            <span>Corporate Employee</span>
+                        </a>
+                    </li>
+                   
+                </ul>   
+               </div>     
+            </div>
+
+            <div class="card-header border-bottom bg-white py-3">
+                    <h4>Product</h4>
+                </div>
+               <div class="cat_list cat_sub">
+               <ul>
+                    <li class="active">
+                            <div class="cat_suv">Individual <a href="">Edit</a></div>
+                                <img class="card-img img-fluid" src="{{asset('public/assets/images/users/TVS.PNG')}}" alt="Card image">
+                            <span class="stock_in">In Stock</span>
+                    </li>
+                    <li >
+                            <div class="cat_suv">Hero Electrics <a href="">Edit</a></div>
+                                <img class="card-img img-fluid" src="{{asset('public/assets/images/users/HeroElectrics.PNG')}}" alt="Card image">
+                            <span class="stock_in">In Stock</span>
+                    </li>
+                    <li >
+                            <div class="cat_suv">Shema <a href="">Edit</a></div>
+                                <img class="card-img img-fluid" src="{{asset('public/assets/images/users/Shema.PNG')}}" alt="Card image">
+                    </li>
+                    <li >
+                            <div class="cat_suv">Quantum <a href="">Edit</a></div>
+                                <img class="card-img img-fluid" src="{{asset('public/assets/images/users/Quantum.PNG')}}" alt="Card image">
+                    </li>
+                    <li >
+                            <div class="cat_suv">Individual <a href="">Edit</a></div>
+                                <img class="card-img img-fluid" src="{{asset('public/assets/images/users/TVS.PNG')}}" alt="Card image">
+                            
+                    </li>
+                    <li >
+                            <div class="cat_suv">Individual <a href="">Edit</a></div>
+                                <img class="card-img img-fluid" src="{{asset('public/assets/images/users/TVS.PNG')}}" alt="Card image">
+                           
+                    </li>
+                   
+                </ul>   
+               </div>     
+            </div>
+            
+        </div>
+     
         <div class="col-12">
             <div class="card">
                 <div class="card-header border-bottom bg-white">
@@ -179,8 +268,9 @@
                 </div>
             </div>
         </div>
-        <!-- end card -->
-    </div> <!-- end col -->
+    </div>
+
+
 </div> <!-- end row -->
 @endsection
 @section('js')
