@@ -15,7 +15,8 @@ class CreateRiderTransactionHistoriesTable extends Migration
     {
         Schema::create('rider_transaction_histories', function (Blueprint $table) {
             $table->bigIncrements('rider_transaction_id');
-            $table->bigInteger('rider_id')->nullable();
+            $table->unsignedBigInteger('rider_id')->nullable();
+            $table->unsignedBigInteger('order_id')->nullable();
             $table->string('slug', 12)->nullable();
             $table->string('transaction_id',151)->nullable();
             $table->string('transaction_ammount',50)->nullable();
