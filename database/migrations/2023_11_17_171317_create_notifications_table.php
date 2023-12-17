@@ -16,9 +16,10 @@ class CreateNotificationsTable extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->bigIncrements('notification_id');
             $table->string('slug', 12)->nullable();
+            $table->string('title')->nullable();
             $table->text('description')->nullable();
-            $table->string('notification_type')->nullable();
             $table->integer('notification_parameter')->nullable();
+            $table->string('notification_type')->nullable();
             $table->integer('notification_user_based')->nullable();
             $table->integer('distance_remaining')->nullable();
             $table->integer('days_remaining')->nullable();

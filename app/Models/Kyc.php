@@ -16,7 +16,7 @@ class Kyc extends Model
     Developer : Chandra Shekhar
     Action    : profile-type
     Request   : Object
-    Return    : Json
+    Return    : Json - API
     --------------------------------------------------*/
     public function profileCategory($request)
     {

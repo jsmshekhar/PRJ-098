@@ -85,8 +85,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/add-user-base', [NotificationController::class, 'addUserBase'])->name('add-user-base');
 
         //Products Routes
-        Route::get('/products/{evtype}', [ProductController::class, 'getProducts'])->name('products');
-        Route::get('/product/create/{evtype}', [ProductController::class, 'createProduct'])->name('product-create');
+        Route::get('/products/{param}', [ProductController::class, 'getProducts'])->name('products');
+        Route::get('/product/create/{param}', [ProductController::class, 'createProduct'])->name('product-create');
         Route::post('/add-product', [ProductController::class, 'addProduct'])->name('add-product');
         Route::post('/update-product/{slug}', [ProductController::class, 'updateProduct'])->name('update-product');
         Route::post('/product-delete/{slug}', [ProductController::class, 'deleteProduct'])->name('product-delete');
