@@ -32,8 +32,8 @@ class CreateRiderOrdersTable extends Migration
             $table->text('client_address')->nullable()->comment('Incase of customer is vendor');
 
 
-            $table->varchar('accessories_id')->nullable()->comment('Multiples');
-            $table->varchar('accessories_items')->nullable()->comment('Store accessories json');
+            $table->string('accessories_id')->nullable()->comment('Multiples');
+            $table->string('accessories_items')->nullable()->comment('Store accessories json');
 
             $table->timestamp('order_date')->nullable()->useCurrent();
             $table->timestamp('assigned_date')->nullable();

@@ -20,10 +20,10 @@ class CreateProductsTable extends Migration
             $table->string('title')->nullable();
             $table->string('speed')->nullable();
             $table->integer('rent_cycle')->nullable()->comment('15-Days, 30-Days');
-            $table->varchar('per_day_rent')->nullable();
-            $table->varchar('total_rent')->nullable();
+            $table->string('per_day_rent')->nullable();
+            $table->string('total_rent')->nullable();
             $table->integer('bettery_type')->nullable()->comment('1-Swappable, 2-Fixed');
-            $table->varchar('km_per_charge')->nullable()->comment('Single charge Run Time');;
+            $table->string('km_per_charge')->nullable()->comment('Single charge Run Time');
             $table->unsignedBigInteger('hub_id')->nullable();
             $table->text('description')->nullable();
             $table->tinyInteger('is_display_on_app')->default(2)->comment('1 => Yes, 2 => No');
