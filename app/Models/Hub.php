@@ -28,7 +28,7 @@ class Hub extends Model
             if (isset($request->per_page) && $request->per_page > 0) {
                 $perPage = $request->per_page;
             }
-            $hubs = Hub::where('user_slug', $auth->user_slug)->orWhere('user_id', $auth->user_id)->whereNull('deleted_at');
+            $hubs = Hub::where('user_slug', $auth->user_slug)->whereNull('deleted_at');
             if (isset($request->is_search) && $request->is_search == 1) {
                 if (isset($request->hub_id) && !empty($request->hub_id)) {
                     $hubs = $hubs->where('hubId', 'LIKE', "%{$request->hub_id}%");

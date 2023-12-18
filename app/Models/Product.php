@@ -28,7 +28,7 @@ class Product extends Model
     {
         try {
             $auth = Auth::user();
-            $products = Product::where('user_slug', $auth->user_slug)->orWhere('user_id', $auth->user_id)->orderBy('created_at', 'DESC')->get();
+            $products = Product::where('user_slug', $auth->user_slug)->orderBy('created_at', 'DESC')->get();
             if (count($products)>0) {
                 return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['products' => $products]);
             } else {

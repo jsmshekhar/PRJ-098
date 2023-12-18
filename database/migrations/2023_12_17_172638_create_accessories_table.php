@@ -21,7 +21,8 @@ class CreateAccessoriesTable extends Migration
             $table->string('on_of_item', 20)->nullable();
             $table->string('price', 20)->nullable();
             $table->string('image')->nullable();
-
+            $table->string('user_slug')->nullable();
+            $table->integer('user_id')->nullable();
             $table->tinyInteger('status_id')->default(1)->comment('1 => Active, 2 => Inactive');
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();

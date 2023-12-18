@@ -12,11 +12,12 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Auth\PasswordSetController;
 use App\Http\Controllers\DataExportController;
 use App\Http\Controllers\LiveTrackingController;
-use App\Http\Controllers\ProductCategoryController;
+use App\Http\Controllers\EvTypeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RefundMgmtController;
 use App\Http\Controllers\TransactionMgmtController;
 use App\Http\Controllers\WalletMgmtController;
+use App\Http\Controllers\AccessoriesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -91,10 +92,10 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/update-product/{slug}', [ProductController::class, 'updateProduct'])->name('update-product');
         Route::post('/product-delete/{slug}', [ProductController::class, 'deleteProduct'])->name('product-delete');
 
-        Route::get('/product-categories', [ProductCategoryController::class, 'getProductCategoryType'])->name('product-categories');
-        Route::post('/add-update-product-category', [ProductCategoryController::class, 'addUpdateProductCategory'])->name('add-update-product-category');
-        Route::get('/product-ev-types', [ProductCategoryController::class, 'getEvType'])->name('product-ev-types');
-        Route::post('/add-update-ev-type', [ProductCategoryController::class, 'addUpdateEvType'])->name('add-update-ev-type');
+        Route::get('/accessories', [AccessoriesController::class, 'getAccessories'])->name('accessories');
+        Route::post('/add-update-product-category', [EvTypeController::class, 'addUpdateProductCategory'])->name('add-update-product-category');
+        Route::get('/product-ev-types', [EvTypeController::class, 'getEvType'])->name('product-ev-types');
+        Route::post('/add-update-ev-type', [EvTypeController::class, 'addUpdateEvType'])->name('add-update-ev-type');
 
         Route::get('/tracking', [LiveTrackingController::class, 'index'])->name('live-tracking');
         Route::get('/transaction-management', [TransactionMgmtController::class, 'index'])->name('transaction-management');

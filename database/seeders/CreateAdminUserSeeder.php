@@ -16,14 +16,16 @@ class CreateAdminUserSeeder extends Seeder
     public function run()
     {
         DB::table('users')->truncate();
+        $slug = slug();
         $user = User::create([
-            'slug' => slug(),
+            'slug' => $slug,
             'first_name' => 'Adminstrator',
             'last_name' => '',
             'phone' => '9935270134',
             'email' => 'admin@admin.com',
             'email_verified_at' => NOW(),
-            'password' => bcrypt('admin123')
+            'password' => bcrypt('admin123'),
+            'user_slug' => $slug
         ]);
     }
 }
