@@ -6704,3 +6704,64 @@ table .dropdown-menu.show .dropdown-item:hover {
     font-weight: 500;
     line-height: 150%;
 }
+
+.admin_profilt_pop{
+  padding: 20px;
+  border-radius: 12px;
+  background: var(--White, #FFF);
+  box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.34);
+}
+
+.admin_profilt_pop ul{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.admin_profilt_pop ul li{
+  color: #000;
+  text-align: left;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.48px;
+  padding-bottom: 12px;
+}
+
+.admin_profilt_pop ul li span{
+  color: #5A5A5A;
+}
+
+.dropdown-menu-lg-cust .profil_img .active{
+  right: 32%;
+}
+
+.btn-theme-drop{
+  color: #118845;
+  text-align: center;
+  font-size: 11.539px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 14.424px;
+  letter-spacing: 0.072px;
+  border-radius: 12px;
+  border: 1px solid #118845;
+  margin-right: 5px;
+}
+
+.btn-theme-drop:hover{
+  border: 1px solid #118845;
+  background:#118845 ;
+  color: #fff;
+}
+
+.btn-link-cust{
+  color: #118845;
+  text-align: center;
+  font-size: 11.539px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 14.424px;
+  letter-spacing: 0.072px;
+}
