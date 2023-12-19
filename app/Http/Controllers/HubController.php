@@ -138,7 +138,7 @@ class HubController extends AdminAppController
                 ];
                 return response()->json($status);
             }
-        } catch (\Exception $ex) {
+        } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
                 'file' => $ex->getFile(),
@@ -161,7 +161,7 @@ class HubController extends AdminAppController
             } else {
                 return redirect()->back()->with('message', Lang::get('messages.DELETE_ERROR'));
             }
-        } catch (\Exception $ex) {
+        } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
                 'file' => $ex->getFile(),
@@ -185,7 +185,7 @@ class HubController extends AdminAppController
                 'message' => Lang::get('messages.UPDATE'),
             ];
             return response()->json($status);
-        } catch (\Exception $ex) {
+        } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
                 'file' => $ex->getFile(),

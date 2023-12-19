@@ -18,7 +18,7 @@ class CreateAccessoriesTable extends Migration
             $table->integer('accessories_category_id')->nullable();
             $table->string('slug', 20)->nullable();
             $table->string('title')->nullable();
-            $table->string('on_of_item', 20)->nullable();
+            $table->string('no_of_item', 20)->nullable();
             $table->string('price', 20)->nullable();
             $table->string('image')->nullable();
             $table->string('user_slug')->nullable();

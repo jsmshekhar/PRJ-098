@@ -25,12 +25,18 @@ class Accessories extends Model
     {
         try {
             $auth = Auth::user();
-            $accessories = Accessories::where('user_slug', $auth->user_slug)->orderBy('created_at', 'DESC')->get();
-            if (count($accessories) > 0) {
-                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['accessories' => $accessories]);
-            } else {
-                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['accessories' => []]);
-            }
+            $accessories = Accessories::select(
+                'title', 'image','slug',
+                'no_of_item',
+                'price',
+                'accessories_category_id',
+                DB::raw('CASE WHEN accessories_category_id = 1 THEN "Helmet" WHEN accessories_category_id = 2 THEN "T-Shirt" WHEN accessories_category_id = 3 THEN "Mobile Holder" END AS accessories_category')
+            )
+            ->where('user_slug', $auth->user_slug)->orderBy('created_at', 'DESC')->get();
+            
+            $accessories_categories = config('constants.ACCESSORIES_CATEGORY');
+            return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['accessories' => $accessories, 'accessories_categories' => $accessories_categories]);
+           
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
