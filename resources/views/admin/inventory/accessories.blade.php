@@ -13,8 +13,8 @@
                 <ul>
                     <li><a href="{{ route('products', 'corporate') }}" class="" title="Products">Products</a></li>
                     {{-- @can('view_inventry', $permission)
-                <li><a href="" class="active" title="Products">Products</a></li>
-                @endcan --}}
+                    <li><a href="" class="" title="Products">Products</a></li>
+                    @endcan --}}
                     <li><a href="{{ route('product-ev-types') }}" class="" title="Ev Types">Ev Types</a></li>
                     <li><a href="{{ route('accessories') }}" class="active" title="Accessories">Accessories</a>
                     </li>
@@ -25,45 +25,92 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
+                <div class="card-body border-0">
+                    <div class="table-rep-plugin">
+                        <form method="post" enctype="multipart/form-data" id="addAccessories">
+                            @csrf
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="accessories_category" class="form-label">Accessories Category</label>
+                                    <select class="form-control selectBasic" name="accessories_category" id="accessories_category1">
+                                        @foreach($accessories_categories as $key => $accCat)
+                                        <option value="{{$accCat}}">{{$accCat == 1 ? "Helmet" : ($accCat == 2 ? "T-Shirt" : "Mobile Holder")}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="example-title-input" class="form-label">Title </label>
+                                    <input class="form-control" type="text" name="title" id="title1" value="">
+                                    <input type="hidden" class="form-control" name="slug" value="">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="no_of_item" class="form-label ">No. of Items &nbsp;<span class="spanColor onlyDigit_error"></span></label>
+                                    <input type="text" name="no_of_item" class="form-control onlyDigit" id="no_of_item1">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="example-title-input" class="form-label">Per Accessories Amount</label>
+                                    <input class="form-control" type="text" name="price" id="price1" value="">
+                                </div>
+                                <div class="col-md-2 mb-3 d-flex justify-content-center">
+                                    <div class="btn btn-primary btn-rounded">
+                                        <label class="form-label text-white m-1" for="customFile1">Choose Image</label>
+                                        <input type="file" class="form-control d-none" name="image" id="customFile1" onchange="displaySelectedImage(event, 'selectedImage')" />
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mb-3 d-flex justify-content-center">
+                                    <img id="selectedImage" src="{{ asset('public/assets/images/no-image.bmp') }}" alt="example placeholder" style="width: 120px;" />
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <button type="button" class="btn btn-success " id="submitForm">Add </button>
+                                    <span class="text-success d-block" id="message" style="margin-right: 10px"></span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
                 <div class="card-header border-bottom bg-white">
                     <h4>Accessories List</h4>
                 </div>
                 <div class="table-rep-plugin">
-                    {{--@if (count($product_categories) > 0)--}}
+                    @if (count($accessorieses) > 0)
                     <div class="table-responsive mb-0 fixed-solution" data-pattern="priority-columns">
                         <div class="sticky-table-header">
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Product Name</th>
-                                        <th>Serial No</th>
-                                        <th>Number of Unit</th>
+                                        <th>Image</th>
+                                        <th>Accessories Category</th>
+                                        <th>Title</th>
+                                        <th>No of Items</th>
+                                        <th>Price Per Item</th>
+                                        <th>Total Amount</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{--@foreach ($product_categories as $key => $pc)--}}
+                                    @foreach ($accessorieses as $key => $accessories)
                                     <tr>
-                                        <td>qww</td>
-                                        <td>dd</td>
-                                        <td>hh</td>
+                                        <td><img id="selectedImage" src="{{ asset('public/images/accessories/'.$accessories->image) }}" alt="image" style="width: 30px;"></td>
+                                        <td>{{$accessories->accessories_category}}</td>
+                                        <td>{{$accessories->title}}</td>
+                                        <td>{{$accessories->no_of_item}}</td>
+                                        <td>{{$accessories->price}}</td>
+                                        <td>{{ $accessories->price * $accessories->no_of_item }}</td>
                                         <td>
-                                           {{-- @can('edit_product_type', $permission)
-                                            <a class="categoryModelForm" data-toggle="modal" data-category_name="{{ $pc->product_category_name }}" data-slug="{{ $pc->slug }}" data-serial="{{ $pc->serial_number }}" data-item="{{ $pc->item_in_stock }}" title="Edit Product Category" style="cursor: pointer;margin-right: 5px;"><i class="fa fa-edit"></i>
+                                            <a class="accessoriesModelForm" data-toggle="modal" data-category="{{ $accessories->accessories_category_id }}" data-slug="{{ $accessories->slug }}" data-price="{{ $accessories->price }}" data-title="{{ $accessories->title }}" data-item="{{ $accessories->no_of_item }}" data-image="{{ $accessories->image }}" title="Edit Accessories" style="cursor: pointer;margin-right: 5px;">Edit
                                             </a>
-                                            @endcan--}}
                                         </td>
                                     </tr>
-                                   {{-- @endforeach --}}
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                   {{-- @else
+                    @else
                     <div>
                         @include('admin.common.no_record')
                     </div>
-                   @endif --}}
+                    @endif
                 </div>
             </div>
         </div>
@@ -71,7 +118,7 @@
     </div> <!-- end col -->
 </div> <!-- end row -->
 <!-- Add product category model -->
-{{--<div class="modal fade" id="categoryModelForm" role="dialog" aria-labelledby="modalLabel" data-keyboard="false" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade" id="accessoriesModelForm" role="dialog" aria-labelledby="modalLabel" data-keyboard="false" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -79,27 +126,46 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="post" enctype="multipart/form-data" id="addUpdateCategory" autocomplete="off">
+                <form method="post" enctype="multipart/form-data" id="addUpdateAccessories" autocomplete="off">
                     @csrf
                     <div class="row">
                         <div class="col-12">
                             <input type="hidden" class="form-control" name="slug" id="slug">
                             <div class="form-group mb-2">
-                                <label for="product_category_name" class="col-form-label">Product Category Name <sup class="compulsayField">*</sup> <span class="spanColor product_category_name_error"></span></label>
-                                <input type="text" name="product_category_name" class="form-control" id="product_category_name">
+                                <label for="accessories_category" class="form-label">Accessories Category</label>
+                                <select class="form-control selectBasic" name="accessories_category" id="accessories_category">
+                                    @foreach($accessories_categories as $key => $accCat)
+                                    <option value="{{$accCat}}">{{$accCat == 1 ? "Helmet" : ($accCat == 2 ? "T-Shirt" : "Mobile Holder")}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group mb-2">
-                                <label for="item_in_stock" class="col-form-label ">Item In Stock &nbsp;<span class="spanColor onlyDigit_error" id="item_in_stock_errors"></span></label>
-                                <input type="text" name="item_in_stock" class="form-control onlyDigit" id="item_in_stock">
+                                <label for="title" class="col-form-label ">Title </label>
+                                <input type="text" name="title" class="form-control" id="title">
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group mb-2">
-                                <label for="serial_number" class="col-form-label">Starting Serial Number</label>
-                                <input type="text" name="serial_number" class="form-control" id="serial_number">
+                                <label for="no_of_item" class="form-label ">No. of Items &nbsp;<span class="spanColor onlyDigit_error"></span></label>
+                                <input type="text" name="no_of_item" class="form-control onlyDigit" id="no_of_item">
                             </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group mb-2">
+                                <label for="example-title-input" class="form-label">Amount Per Item</label>
+                                <input class="form-control" type="text" name="price" id="price">
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3 d-flex justify-content-center">
+                            <div class="btn btn-primary btn-rounded">
+                                <label class="form-label text-white m-1" for="customFile2">Choose Image</label>
+                                <input type="file" class="form-control d-none" name="image" id="customFile2" onchange="displaySelectedImage1(event, 'selectedImage1')" />
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3 d-flex justify-content-center ImageID">
+                            <img id="selectedImage" src="{{ asset('public/assets/images/no-image.bmp') }}" alt="example placeholder" style="width: 120px;" />
                         </div>
                     </div>
                 </form>
@@ -107,63 +173,66 @@
             <div class="modal-footer d-flex justify-content-between">
                 <span class=" text-success d-block" id="message" style="margin-right: 10px"></span>
 
-                <button type="button" id="submitCategory" class="btn btn-success waves-effect waves-light">Add
+                <button type="button" id="submitAccessories" class="btn btn-success waves-effect waves-light">Add
                 </button>
                 <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
             </div>
         </div>
     </div>
-</div> --}}
+</div>
 @endsection
 @section('js')
-{{--<script type="text/javascript">
+<script type="text/javascript">
     $(document).ready(function() {
         // Model data
-        $('.categoryModelForm').click(function() {
-            $('#categoryModelForm').modal('show');
+        $('.accessoriesModelForm').click(function() {
+            $('#accessoriesModelForm').modal('show');
             var slug = $(this).data('slug');
             if (slug) {
-                var category_name = $(this).data('category_name');
-                var serial = $(this).data('serial');
-                var slug = $(this).data('slug');
+                var category = $(this).data('category');
+                var price = $(this).data('price');
+                var title = $(this).data('title');
                 var item = $(this).data('item');
+                var image = $(this).data('image');
 
                 $("#slug").val(slug);
-                $("#product_category_name").val(category_name);
-                $("#serial_number").val(serial);
-                $("#item_in_stock").val(item);
+                $("#title").val(title);
+                $("#no_of_item").val(item);
+                $("#price").val(price);
+                $('#accessories_category').val(category).trigger('change');
+                if (image) {
+                    var imageUrl = "{{ asset('public/images/accessories') }}/" + image;
+                    $("#ImageId").html('<img id="selectedImage" src="' + imageUrl + '" alt="image" style="width: 120px;">');
+                } else {
+                    $("#ImageId").html('<img id="selectedImage" src="{{ asset("public/assets/images/no-image.bmp") }}" alt="image" style="width: 120px;">');
+                }
             }
 
             if (slug) {
-                $('#submitCategory').html('Update')
-                $('#categoryModalLabel').html('Edit Product Category')
+                $('#submitAccessories').html('Update')
+                $('#categoryModalLabel').html('Edit Accessories')
             }
         });
-        $('#submitCategory').click(function(e) {
+        $('#submitAccessories').click(function(e) {
             e.preventDefault();
-            var product_category_name = $('#product_category_name').val();
-            if (product_category_name == "") {
-                $(".product_category_name_error").html('This field is required!');
-                $("input#product_category_name").focus();
-                return false;
-            }
-            $('#submitCategory').prop('disabled', true);
-            $('#submitCategory').html('Please wait...')
-            var formDatas = new FormData(document.getElementById('addUpdateCategory'));
+
+            $('#submitAccessories').prop('disabled', true);
+            $('#submitAccessories').html('Please wait...')
+            var formDatas = new FormData(document.getElementById('addUpdateAccessories'));
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 method: 'POST',
-                url: "{{ route('add-update-product-category') }}",
+                url: "{{ route('update-accessories') }}",
                 data: formDatas,
                 contentType: false,
                 processData: false,
                 success: function(data) {
                     $('#message').html("<span class='sussecmsg'>" + data.message +
                         "</span>");
-                    $('#submitCategory').prop('disabled', false);
-                    $('#submitCategory').html('Update');
+                    $('#submitAccessories').prop('disabled', false);
+                    $('#submitAccessories').html('Update');
                     setTimeout(function() {
                         window.location.reload();
                     }, 1000);
@@ -175,6 +244,60 @@
                 }
             });
         });
+        $('#submitForm').click(function(e) {
+            e.preventDefault();
+
+            $('#submitForm').prop('disabled', true);
+            $('#submitForm').html('Please wait...')
+            var formDatas = new FormData(document.getElementById('addAccessories'));
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                method: 'POST',
+                url: "{{ route('add-accessories') }}",
+                data: formDatas,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    $('#message').html("<span class='sussecmsg'>" + data.message +
+                        "</span>");
+                    $('#submitForm').prop('disabled', false);
+                    setTimeout(function() {
+                        //window.location.reload();
+                    }, 1000);
+
+                },
+                errors: function() {
+                    $('#message').html(
+                        "<span class='sussecmsg'>Somthing went wrong!</span>");
+                }
+            });
+        });
     });
-</script>--}}
+
+    function displaySelectedImage(event, elementId) {
+        const selectedImage = document.getElementById(elementId);
+        const fileInput = event.target;
+        if (fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                selectedImage.src = e.target.result;
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    }
+
+    function displaySelectedImage1(event, elementId) {
+        const selectedImage1 = document.getElementById(elementId);
+        const fileInput = event.target;
+        if (fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                selectedImage1.src = e.target.result;
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    }
+</script>
 @endsection

@@ -22,7 +22,6 @@
                 </div>
                 <div class="card-body border-0">
                     <div class="table-rep-plugin">
-
                         <form method="post" enctype="multipart/form-data" id="createProductForm">
                             @csrf
                             <div class="row">

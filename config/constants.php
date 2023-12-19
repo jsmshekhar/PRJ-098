@@ -68,6 +68,10 @@ return [
         "SWAPPABLE" => 1,
         "FIXED" => 2,
     ],
-
+    'ACCESSORIES_CATEGORY' => [
+        "HELMET" => 1,
+        "T_SHIRT" => 2,
+        "MOBILE_HOLDER" => 3,
+    ],
 
 ];

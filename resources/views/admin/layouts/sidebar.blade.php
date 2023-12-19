@@ -46,8 +46,8 @@
                      </a>
                  </li>
 
-                 <li class="{{ Request::routeIs('products', 'individual') ? 'mm-active' : '' }}">
-                     <a href="{{route('products', 'individual')}}" class="{{ Request::routeIs('products', 'individual') ? 'active' : '' }}">
+                 <li class="{{ Request::routeIs('products', 'corporate') ? 'mm-active' : '' }}">
+                     <a href="{{route('products', 'corporate')}}" class="{{ Request::routeIs('products', 'corporate') ? 'active' : '' }}">
                          <img src="{{ asset('public/assets/images/icons/Inventory-icon.svg') }}" alt="">
                          <span>Inventory Management</span>
                      </a>

@@ -94,7 +94,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/product-delete/{slug}', [ProductController::class, 'deleteProduct'])->name('product-delete');
 
         Route::get('/accessories', [AccessoriesController::class, 'getAccessories'])->name('accessories');
-        Route::post('/add-update-product-category', [EvTypeController::class, 'addUpdateProductCategory'])->name('add-update-product-category');
+        Route::post('/add-accessories', [AccessoriesController::class, 'addAccessories'])->name('add-accessories');
+        Route::post('/update-accessories', [AccessoriesController::class, 'updateAccessories'])->name('update-accessories');
         Route::get('/product-ev-types', [EvTypeController::class, 'getEvType'])->name('product-ev-types');
         Route::post('/add-update-ev-type', [EvTypeController::class, 'addUpdateEvType'])->name('add-update-ev-type');
 
