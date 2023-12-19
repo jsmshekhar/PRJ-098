@@ -60,6 +60,14 @@ return [
         1 => 'Resolved',
         2 => 'Pending',
     ],
+    'RENT_CYCLE' => [
+        "15_DAYS" => 15,
+        "30_DAYS" => 30,
+    ],
+    'BATTERY_TYPE' => [
+        "SWAPPABLE" => 1,
+        "FIXED" => 2,
+    ],
 
 
 ];

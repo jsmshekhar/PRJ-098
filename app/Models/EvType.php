@@ -79,7 +79,7 @@ class EvType extends Model
             if ($ev_types) {
                 $status = [
                     'status' => Response::HTTP_OK,
-                    'url' => route('add-update-product-category'),
+                    'url' => route('product-ev-types'),
                     'message' => !empty($slug) ? Lang::get('messages.UPDATE') : Lang::get('messages.INSERT'),
                 ];
                 return response()->json($status);
