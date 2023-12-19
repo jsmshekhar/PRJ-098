@@ -47,16 +47,17 @@ class ProductController extends AdminAppController
     Developer : Raj Kumar
     Action    : Create product
     --------------------------------------------------*/
-    public function createProduct(Request $request, $evtype )
+    public function createProduct(Request $request, $param )
     {
         try {
             $permission = User::getPermissions();
-            $product_category = $this->product->createProduct($evtype);
-            $product_categories = $product_category['result']['product_categories'];
-            $ev_types = $product_category['result']['ev_types'];
-            $ev_categories = $product_category['result']['ev_categories'];
-            $hubs = $product_category['result']['hubs'];
-            return view('admin.inventory.create_product', compact('product_categories', 'ev_types', 'ev_categories', 'permission','hubs'));
+            $data = $this->product->createProduct($param);
+            $rent_cycles = $data['result']['rent_cycles'];
+            $ev_types = $data['result']['ev_types'];
+            $ev_categories = $data['result']['ev_categories'];
+            $hubs = $data['result']['hubs'];
+            $battery_types = $data['result']['battery_types'];
+            return view('admin.inventory.create_product', compact('rent_cycles', 'ev_types', 'ev_categories', 'permission','hubs', 'battery_types'));
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -100,6 +101,32 @@ class ProductController extends AdminAppController
                 ];
                 return response()->json($status);
             }
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Raj Kumar
+    Action    : Edit product
+    --------------------------------------------------*/
+    public function editProduct($slug, $param)
+    {
+        try {
+            $permission = User::getPermissions();
+            $data = $this->product->editProduct($slug, $param);
+            $product = $data['result']['product'];
+            $rent_cycles = $data['result']['rent_cycles'];
+            $ev_types = $data['result']['ev_types'];
+            $ev_categories = $data['result']['ev_categories'];
+            $hubs = $data['result']['hubs'];
+            $battery_types = $data['result']['battery_types'];
+            return view('admin.inventory.edit_product', compact('product', 'rent_cycles', 'ev_types', 'ev_categories', 'permission', 'hubs', 'battery_types'));
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),

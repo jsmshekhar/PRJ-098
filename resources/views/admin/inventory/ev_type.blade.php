@@ -17,11 +17,11 @@
         <div class="col-12">
             <div class="nav_cust_menu">
                 <ul>
-                    <li><a href="{{ route('products', 'corporate') }}" class="active" title="Products">Products</a></li>
+                    <li><a href="{{ route('products', 'corporate') }}" class="" title="Products">Products</a></li>
                     {{-- @can('view_inventry', $permission)
                     <li><a href="" class="active" title="Products">Products</a></li>
                     @endcan --}}
-                    <li><a href="{{ route('product-ev-types') }}" class="" title="Ev Types">Ev Types</a></li>
+                    <li><a href="{{ route('product-ev-types') }}" class="active" title="Ev Types">Ev Types</a></li>
                     <li><a href="{{ route('accessories') }}" class="" title="Accessories">Accessories</a>
                     </li>
 
@@ -112,10 +112,16 @@
                                 <input type="text" name="ev_type_name" class="form-control" id="ev_type_name">
                             </div>
                         </div>
-                        <div class="col-12">
+                        {{--<div class="col-12">
                             <div class="form-group mb-2">
                                 <label for="range" class="col-form-label ">Range &nbsp;<span class="spanColor onlyDigit_error" id="range_errors"></span></label>
                                 <input type="text" name="range" class="form-control onlyDigit" id="range">
+                            </div>
+                        </div>--}}
+                        <div class="col-12">
+                            <div class="form-group mb-2">
+                                <label for="range" class="col-form-label ">Range &nbsp;<span class="spanColor" id="range_errors"></span></label>
+                                <input type="text" name="range" class="form-control" id="range">
                             </div>
                         </div>
                         <div class="col-12">
@@ -189,7 +195,7 @@
                     $('#submitEvType').prop('disabled', false);
                     $('#submitEvType').html('Update');
                     setTimeout(function() {
-                        window.location.reload();
+                         window.location.reload();
                     }, 1000);
 
                 },

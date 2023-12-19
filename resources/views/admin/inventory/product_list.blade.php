@@ -30,30 +30,32 @@
                 </div>
                 <div class="cat_list">
                     <ul>
-                        <li class="{{ request()->route('param') == 'individual' ? 'active' : '' }}">
-                            <a href="{{ route('products', 'individual') }}" title="Individual's Product">
-                                <img class="card-img img-fluid" src="{{ asset('public/assets/images/users/Individual.PNG') }}" alt="Card image">
-                                <span>Individual</span>
+                        <li class="{{ request()->route('param') == 'corporate' ? 'active' : '' }}">
+                            <a href="{{ route('products', 'corporate') }}" title="Corporate's Product">
+                                <img class="card-img img-fluid" src="{{ asset('public/assets/images/users/CorporateEmployee.PNG') }}" alt="Card image">
+                                <span>Corporate</span>
                             </a>
                         </li>
-                        <li class="{{ request()->route('param') == 'vendor' ? 'active' : '' }}">
-                            <a href="{{ route('products', 'vendor') }}" title="Vendor's Product">
-                                <img class="card-img img-fluid" src="{{ asset('public/assets/images/users/Vendor.PNG') }}" alt="Card image">
-                                <span>Vendor</span>
+                        <li class="{{ request()->route('param') == 'individual' ? 'active' : '' }}">
+                            <a href="{{ route('products', 'individual') }}" title="Individual's Product">
+                                <img class="card-img img-fluid" src="{{ asset('public/assets/images/users/Individual.PNG') }}" alt="product image">
+                                <span>Individual</span>
                             </a>
                         </li>
                         <li class="{{ request()->route('param') == 'student' ? 'active' : '' }}">
                             <a href="{{ route('products', 'student') }}" title="Student's Product">
-                                <img class="card-img img-fluid" src="{{ asset('public/assets/images/users/Student.PNG') }}" alt="Card image">
+                                <img class="card-img img-fluid" src="{{ asset('public/assets/images/users/Student.PNG') }}" alt="product image">
                                 <span>Student</span>
                             </a>
                         </li>
-                        <li class="{{ request()->route('param') == 'corporate' ? 'active' : '' }}">
-                            <a href="{{ route('products', 'corporate') }}" title="Corporate's Product">
-                                <img class="card-img img-fluid" src="{{ asset('public/assets/images/users/CorporateEmployee.PNG') }}" alt="Card image">
-                                <span>Corporate Employee</span>
+                        <li class="{{ request()->route('param') == 'vendor' ? 'active' : '' }}">
+                            <a href="{{ route('products', 'vendor') }}" title="Vendor's Product">
+                                <img class="card-img img-fluid" src="{{ asset('public/assets/images/users/Vendor.PNG') }}" alt="product image">
+                                <span>Vendor</span>
                             </a>
                         </li>
+
+
                     </ul>
                 </div>
             </div>
@@ -67,36 +69,15 @@
                 <div class="cat_list cat_sub">
                     @if (count($products) > 0)
                     <ul>
-                        <li class="active">
-                            <div class="cat_suv">Individual <a href="">Edit</a></div>
-                            <img class="card-img img-fluid" src="{{ asset('public/assets/images/users/TVS.PNG') }}" alt="Card image">
+                        @foreach($products as $key => $product)
+                        <li class="">
+                            <div class="cat_suv">{{$product->title}} <a href="{{ route('product-edit', ['slug' => $product->slug, 'param' => $product->profile_category]) }}" target="_blank">Edit</a></div>
+                            <img class="card-img img-fluid" src="{{ asset('public/images/product/'.$product->image) }}" alt="product image">
                             <span class="stock_in">In Stock</span>
                         </li>
-                        <li>
-                            <div class="cat_suv">Hero Electrics <a href="">Edit</a></div>
-                            <img class="card-img img-fluid" src="{{ asset('public/assets/images/users/HeroElectrics.PNG') }}" alt="Card image">
-                            <span class="stock_in">In Stock</span>
-                        </li>
-                        <li>
-                            <div class="cat_suv">Shema <a href="">Edit</a></div>
-                            <img class="card-img img-fluid" src="{{ asset('public/assets/images/users/Shema.PNG') }}" alt="Card image">
-                        </li>
-                        <li>
-                            <div class="cat_suv">Quantum <a href="">Edit</a></div>
-                            <img class="card-img img-fluid" src="{{ asset('public/assets/images/users/Quantum.PNG') }}" alt="Card image">
-                        </li>
-                        <li>
-                            <div class="cat_suv">Individual <a href="">Edit</a></div>
-                            <img class="card-img img-fluid" src="{{ asset('public/assets/images/users/TVS.PNG') }}" alt="Card image">
-
-                        </li>
-                        <li>
-                            <div class="cat_suv">Individual <a href="">Edit</a></div>
-                            <img class="card-img img-fluid" src="{{ asset('public/assets/images/users/TVS.PNG') }}" alt="Card image">
-
-                        </li>
-
+                        @endforeach
                     </ul>
+                    {{ $products->withQueryString()->links('pagination::bootstrap-4') }}
                     @else
                     <div>
                         @include('admin.common.no_record')
