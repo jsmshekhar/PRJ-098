@@ -164,8 +164,8 @@
                                 <input type="file" class="form-control d-none" name="image" id="customFile2" onchange="displaySelectedImage1(event, 'selectedImage1')" />
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3 d-flex justify-content-center ImageID">
-                            <img id="selectedImage" src="{{ asset('public/assets/images/no-image.bmp') }}" alt="example placeholder" style="width: 120px;" />
+                        <div class="col-md-6 mb-3" id="ImageID">
+                            <img id="selectedImage1" src="{{ asset('public/assets/images/no-image.bmp') }}" alt="image" style="width: 120px;">
                         </div>
                     </div>
                 </form>
@@ -194,18 +194,16 @@
                 var title = $(this).data('title');
                 var item = $(this).data('item');
                 var image = $(this).data('image');
-
+                if (image) {
+                    var imageUrl = "{{ asset('public/images/accessories') }}/" + image;
+                    $("#ImageID").html('<img id="selectedImage1" src="' + imageUrl + '" alt="image" style="width: 120px;">');
+                } 
                 $("#slug").val(slug);
                 $("#title").val(title);
                 $("#no_of_item").val(item);
                 $("#price").val(price);
                 $('#accessories_category').val(category).trigger('change');
-                if (image) {
-                    var imageUrl = "{{ asset('public/images/accessories') }}/" + image;
-                    $("#ImageId").html('<img id="selectedImage" src="' + imageUrl + '" alt="image" style="width: 120px;">');
-                } else {
-                    $("#ImageId").html('<img id="selectedImage" src="{{ asset("public/assets/images/no-image.bmp") }}" alt="image" style="width: 120px;">');
-                }
+
             }
 
             if (slug) {
