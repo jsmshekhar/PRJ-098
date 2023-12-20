@@ -16,7 +16,9 @@
                     <li><a href="" class="" title="Products">Products</a></li>
                     @endcan --}}
                     <li><a href="{{ route('product-ev-types') }}" class="" title="Ev Types">Ev Types</a></li>
+                     @if(Auth::user()->role_id == 0)
                     <li><a href="{{ route('accessories') }}" class="active" title="Accessories">Accessories</a>
+                    @endif
                     </li>
                 </ul>
             </div>
@@ -90,7 +92,7 @@
                                 <tbody>
                                     @foreach ($accessorieses as $key => $accessories)
                                     <tr>
-                                        <td><img id="selectedImage" src="{{ asset('public/images/accessories/'.$accessories->image) }}" alt="image" style="width: 30px;"></td>
+                                        <td><img id="selectedImage" src="{{ asset('public/upload/accessories/'.$accessories->image) }}" alt="image" style="width: 30px;"></td>
                                         <td>{{$accessories->accessories_category}}</td>
                                         <td>{{$accessories->title}}</td>
                                         <td>{{$accessories->no_of_item}}</td>
@@ -195,9 +197,9 @@
                 var item = $(this).data('item');
                 var image = $(this).data('image');
                 if (image) {
-                    var imageUrl = "{{ asset('public/images/accessories') }}/" + image;
+                    var imageUrl = "{{ asset('public/upload/accessories') }}/" + image;
                     $("#ImageID").html('<img id="selectedImage1" src="' + imageUrl + '" alt="image" style="width: 120px;">');
-                } 
+                }
                 $("#slug").val(slug);
                 $("#title").val(title);
                 $("#no_of_item").val(item);
@@ -262,7 +264,7 @@
                         "</span>");
                     $('#submitForm').prop('disabled', false);
                     setTimeout(function() {
-                        //window.location.reload();
+                        window.location.reload();
                     }, 1000);
 
                 },

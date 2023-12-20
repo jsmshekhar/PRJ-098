@@ -23,7 +23,6 @@
                         @can('set_automatic_notification', $permission)
                         <a href="{{route('create-notification','automatic')}}" class="btn btn-outline-success waves-effect waves-light" title="Add New Notification">Add New Notification</a>
                         @endcan
-                        <a class="btn btn-success waves-effect waves-light userBaseModelForm" data-toggle="modal" title="Add New User Base">Add New User Base</a>
                     </div>
                 </div>
 
@@ -34,6 +33,7 @@
                             <table id="tech-companies-1" class="table">
                                 <thead>
                                     <tr>
+                                        <th>Title</th>
                                         <th>Notification</th>
                                         <th>Notification Type</th>
                                         <th>Status</th>
@@ -43,7 +43,8 @@
                                 <tbody>
                                     @foreach($notifications as $key => $notification)
                                     <tr>
-                                        <td style="width: 60%;">{{$notification->description}}</td>
+                                        <td style="width: 25%;">{{$notification->title}}</td>
+                                        <td style="width: 45%;">{{$notification->description}}</td>
                                         <td>{{$notification->notification_type}}</td>
                                         <td>
                                             @if($notification->status_id == 1 && $notification->notification_parameter_value !== 3)

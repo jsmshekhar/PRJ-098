@@ -43,7 +43,12 @@ return [
         '-9 Days' => -9,
         '-10 Days' => -10,
     ],
-
+    'USER_BASE_NOTIFICATION' => [
+        'NEWLLY_ONBOARDED' => 1,
+        'RIDER_WITG_IMMOBILIZED_VEHICLE' => 2,
+        'RIDER_RAISED_EV_RETURN_REQUEST' => 3,
+        'ALL' => 4,
+    ],
     'EV_CATEGORIES' => [
         'TWO_WHEELER' => 1,
         'THREE_WHEELER' => 2,

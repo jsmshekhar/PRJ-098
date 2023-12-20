@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Notification;
 use App\Models\User;
-use App\Models\NotificationUserBase;
 use App\Http\Controllers\AdminAppController;
 
 class NotificationController extends AdminAppController
@@ -58,8 +57,9 @@ class NotificationController extends AdminAppController
             $parameters = $notification['result']['parameters'];
             $distance = $notification['result']['distance'];
             $days = $notification['result']['days'];
-            $user_based = NotificationUserBase::where('status_id', 1)->get();
-            return view('admin.notification.create', compact('parameters', 'distance', 'days', 'user_based', 'permission'));
+            $user_base = $notification['result']['user_base'];
+            
+            return view('admin.notification.create', compact('parameters', 'distance', 'days', 'user_base', 'permission'));
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -84,6 +84,7 @@ class NotificationController extends AdminAppController
             $is_send_charge = 0;
             $notification_user_based = null;
             $schedule_date = null;
+            $title = !empty($request->title) ? $request->title : null;
             $description = !empty($request->description) ? $request->description : null;
             $notification_parameter = !empty($request->notification_parameter) ? $request->notification_parameter : null;
             $distance_remaining = !empty($request->distance_remaining) ? $request->distance_remaining : null;
@@ -98,7 +99,8 @@ class NotificationController extends AdminAppController
 
             $slug = slug();
             $notificationId = Notification::insertGetId([
-                "SLUG" => $slug,
+                "slug" => $slug,
+                "title" => $title,
                 "description" => $description,
                 "notification_type" => $notification_type,
                 "notification_parameter" => $notification_parameter,
@@ -147,12 +149,12 @@ class NotificationController extends AdminAppController
     {
         try {
             $notification = $this->notification->editNotification($param, $slug);
+            $user_base = $notification['result']['user_base'];
             $parameters = $notification['result']['parameters'];
             $distance = $notification['result']['distance'];
             $days = $notification['result']['days'];
             $notification = $notification['result']['notification'];
-            $user_based = NotificationUserBase::where('status_id', 1)->select('user_base_name', 'user_base_id')->get();
-            return view('admin.notification.edit', compact('notification', 'parameters', 'distance', 'days', 'user_based'));
+            return view('admin.notification.edit', compact('notification', 'parameters', 'distance', 'days', 'user_base'));
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -177,6 +179,7 @@ class NotificationController extends AdminAppController
             $is_send_charge = 0;
             $notification_user_based = null;
             $schedule_date = null;
+            $title = !empty($request->title) ? $request->title : null;
             $description = !empty($request->description) ? $request->description : null;
             $notification_parameter = !empty($request->notification_parameter) ? $request->notification_parameter : null;
             $distance_remaining = !empty($request->distance_remaining) ? $request->distance_remaining : null;
@@ -189,6 +192,7 @@ class NotificationController extends AdminAppController
             $auth = Auth::user();
 
             $notificationId = Notification::where('slug', $slug)->update([
+                "title" => $title,
                 "description" => $description,
                 "notification_parameter" => $notification_parameter,
                 "notification_user_based" => $notification_user_based,
@@ -206,48 +210,6 @@ class NotificationController extends AdminAppController
                     'status' => Response::HTTP_OK,
                     'url' => route('notifications'),
                     'message' => Lang::get('messages.UPDATE'),
-                ];
-                return response()->json($status);
-            } else {
-                $status = [
-                    'status' => Response::HTTP_BAD_REQUEST,
-                    'url' => "",
-                    'message' => Lang::get('messages.INSERT_ERROR'),
-                ];
-                return response()->json($status);
-            }
-        } catch (\Exception $ex) {
-            $result = [
-                'line' => $ex->getLine(),
-                'file' => $ex->getFile(),
-                'message' => $ex->getMessage(),
-            ];
-            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
-        }
-    }
-
-    /*--------------------------------------------------
-    Developer : Raj Kumar
-    Action    : Add User Base
-    --------------------------------------------------*/
-    public function addUserBase(Request $request)
-    {
-        try {
-            $user_base = !empty($request->user_base) ? $request->user_base : "";
-            $auth = Auth::user();
-            $slug = slug();
-            $UserBaseId = NotificationUserBase::insertGetId([
-                "slug" => $slug,
-                "user_base_name" => $user_base,
-                "user_id" => $auth->user_id,
-                "user_slug" => $auth->slug,
-                "created_by" => $auth->user_id,
-            ]);
-            if ($UserBaseId) {
-                $status = [
-                    'status' => Response::HTTP_OK,
-                    'url' => route('notifications'),
-                    'message' => Lang::get('messages.INSERT'),
                 ];
                 return response()->json($status);
             } else {

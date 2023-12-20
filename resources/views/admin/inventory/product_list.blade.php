@@ -16,7 +16,9 @@
                     <li><a href="" class="active" title="Products">Products</a></li>
                     @endcan --}}
                     <li><a href="{{ route('product-ev-types') }}" class="" title="Ev Types">Ev Types</a></li>
+                    @if(Auth::user()->role_id == 0)
                     <li><a href="{{ route('accessories') }}" class="" title="Accessories">Accessories</a>
+                        @endif
                     </li>
                 </ul>
             </div>
@@ -72,7 +74,7 @@
                         @foreach($products as $key => $product)
                         <li class="">
                             <div class="cat_suv">{{$product->title}} <a href="{{ route('product-edit', ['slug' => $product->slug, 'param' => $product->profile_category]) }}" target="_blank">Edit</a></div>
-                            <img class="card-img img-fluid" src="{{ asset('public/images/product/'.$product->image) }}" alt="product image">
+                            <img class="card-img img-fluid" src="{{ asset('public/upload/product/'.$product->image) }}" alt="product image">
                             <span class="stock_in">In Stock</span>
                         </li>
                         @endforeach
