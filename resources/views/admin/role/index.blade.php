@@ -15,7 +15,7 @@
                             <li><a href="{{ route('users') }}" class="" title="User Panel">User Panel</a></li>
                         @endcan
                         @can('view_role', $permission)
-                            <li><a href="{{ route('roles') }}" class="active" title="Permission Panel">Permission Panel</a>
+                            <li><a href="{{ route('roles') }}" class="active" title="Permission Panel">Role Permission Panel</a>
                             </li>
                         @endcan
                     </ul>
