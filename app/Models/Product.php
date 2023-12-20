@@ -11,12 +11,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 use App\Models\Hub;
-use App\Models\ProductCategory;
+use App\Traits\UploadsImageTrait;
 use App\Models\EvType;
 use Nette\Utils\Image;
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, UploadsImageTrait;
 
     protected $table = "products";
     protected $primaryKey = 'product_id';
@@ -25,16 +25,28 @@ class Product extends Model
     Developer : Raj Kumar
     Get Product
     --------------------------------------------------*/
-    public function getProducts($request)
+    public function getProducts($request, $param)
     {
         try {
             $auth = Auth::user();
             $products = Product::select(
                     'title','slug','image',
                     DB::raw('CASE WHEN profile_category = 1 THEN "corporate" WHEN profile_category = 2 THEN "individual" WHEN profile_category = 3 THEN "student" WHEN profile_category = 4 THEN "vendor" END AS profile_category')
-                )
-                ->where('user_slug', $auth->user_slug)->orderBy('created_at', 'DESC')
-                ->paginate(20);
+            )->where('hub_id', $auth->hub_id)->orWhere('hub_id', '!=', $auth->hub_id);
+
+            if ($param == 'corporate') {
+                $products = $products->where('profile_category', 1);
+            }
+            if ($param == 'individual') {
+                $products = $products->where('profile_category', 2);
+            }
+            if ($param == 'student') {
+                $products = $products->where('profile_category', 3);
+            }
+            if ($param == 'vendor') {
+                $products = $products->where('profile_category', 4);
+            }
+             $products = $products->orderBy('created_at', 'DESC')->paginate(20);
             if (count($products)>0) {
                 return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['products' => $products]);
             } else {
@@ -97,18 +109,12 @@ class Product extends Model
             $km_per_charge = !empty($request->km_per_charge) ? $request->km_per_charge : "";
             $is_display_on_app = !empty($request->is_display_on_app) ? 1 : 2;
             $product_image = '';
-            if($request->image){ 
+            if ($request->image) {
                 $image = $request->file('image');
-                $original_name = $request->image->getClientOriginalName();
-                $filenames = $original_name;
-                $filename = time().'-'. $filenames;
-                $path = '/images/product/';
-                    if (!file_exists(public_path($path))) {
-                        mkdir(public_path($path), 777, true); 
-                    }
-                $image->move( public_path().$path, $filename );  
-                $product_image = $filename;
+                $folder = '/upload/product/';
+                $product_image = $this->uploadImage($image, $folder);
             }
+            
             $auth = Auth::user();
             
             $slug = slug();
@@ -129,7 +135,7 @@ class Product extends Model
                 "profile_category" => $profile_category,
                 "hub_id" => $hub_id,
                 "is_display_on_app" => $is_display_on_app,
-                'image' => $product_image,
+                'image' => !empty($product_image) ? $product_image : "",
                 "user_id" => $auth->user_id,
                 "user_slug" => $auth->slug,
                 "created_by" => $auth->user_id,
@@ -207,41 +213,57 @@ class Product extends Model
             $km_per_charge = !empty($request->km_per_charge) ? $request->km_per_charge : "";
             $is_display_on_app = !empty($request->is_display_on_app) ? 1 : 2;
             $product_image = '';
-            if ($request->hasFile('image')) {
+            if ($request->image) {
                 $image = $request->file('image');
-                $original_name = $request->image->getClientOriginalName();
-                $filenames = $original_name;
-                $filename = time() . '.' . $filenames;
-                $path = '/images/product/';
-                if (!file_exists(public_path($path))) {
-                    mkdir(public_path($path), 777, true);
-                }
-                $image->move(public_path() . $path, $filename);
-                $product_image = $filename;
+                $folder = '/upload/product/';
+                $product_image = $this->uploadImage($image, $folder);
             }
             $auth = Auth::user();
-
-            $product = Product::where('slug', $slug)->update([
-                "title" => $title,
-                "ev_number" => $ev_number,
-                "chassis_number" => $chassis_number,
-                "gps_emei_number" => $gps_emei_number,
-                "km_per_charge" => $km_per_charge,
-                "per_day_rent" => $per_day_rent,
-                "speed" => $speed,
-                "description" => $description,
-                "bettery_type" => $battery_type,
-                "rent_cycle" => $rent_cycle,
-                "ev_category_id" => $ev_category,
-                "ev_type_id" => $ev_type_id,
-                "profile_category" => $profile_category,
-                "hub_id" => $hub_id,
-                "is_display_on_app" => $is_display_on_app,
-                'image' => $product_image,
-                "user_id" => $auth->user_id,
-                "user_slug" => $auth->slug,
-                "updated_by" => $auth->user_id,
-            ]);
+            if( $product_image){
+                $product = Product::where('slug', $slug)->update([
+                    "title" => $title,
+                    "ev_number" => $ev_number,
+                    "chassis_number" => $chassis_number,
+                    "gps_emei_number" => $gps_emei_number,
+                    "km_per_charge" => $km_per_charge,
+                    "per_day_rent" => $per_day_rent,
+                    "speed" => $speed,
+                    "description" => $description,
+                    "bettery_type" => $battery_type,
+                    "rent_cycle" => $rent_cycle,
+                    "ev_category_id" => $ev_category,
+                    "ev_type_id" => $ev_type_id,
+                    "profile_category" => $profile_category,
+                    "hub_id" => $hub_id,
+                    "is_display_on_app" => $is_display_on_app,
+                    'image' => $product_image,
+                    "user_id" => $auth->user_id,
+                    "user_slug" => $auth->slug,
+                    "updated_by" => $auth->user_id,
+                ]);
+            }else{
+                $product = Product::where('slug', $slug)->update([
+                    "title" => $title,
+                    "ev_number" => $ev_number,
+                    "chassis_number" => $chassis_number,
+                    "gps_emei_number" => $gps_emei_number,
+                    "km_per_charge" => $km_per_charge,
+                    "per_day_rent" => $per_day_rent,
+                    "speed" => $speed,
+                    "description" => $description,
+                    "bettery_type" => $battery_type,
+                    "rent_cycle" => $rent_cycle,
+                    "ev_category_id" => $ev_category,
+                    "ev_type_id" => $ev_type_id,
+                    "profile_category" => $profile_category,
+                    "hub_id" => $hub_id,
+                    "is_display_on_app" => $is_display_on_app,
+                    "user_id" => $auth->user_id,
+                    "user_slug" => $auth->slug,
+                    "updated_by" => $auth->user_id,
+                ]);
+            }
+           
             $profileCategory = $profile_category == 1 ? 'corporate' : ($profile_category == 2 ? 'individual' : ($profile_category == 3 ? 'student' : 'vendor'));
             if ($product) {
                 $status = [

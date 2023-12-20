@@ -22,12 +22,12 @@ class ProductController extends AdminAppController
     Developer : Raj Kumar
     Action    : Get product
     --------------------------------------------------*/
-    public function getProducts(Request $request)
+    public function getProducts(Request $request, $param)
     {
         try {
             $permission = User::getPermissions();
             if (Gate::allows('view_inventry', $permission)) {
-                $products = $this->product->getProducts($request);
+                $products = $this->product->getProducts($request, $param);
                 $products = $products['result']['products'];
                 return view('admin.inventory.product_list', compact('products', 'permission'));
             } else {

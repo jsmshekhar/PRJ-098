@@ -20,6 +20,7 @@ class CreateRolesTable extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->string('user_slug')->nullable();
             $table->tinyInteger('status_id')->default(1)->comment('1 => Active, 2 => Inactive, 3 => Deleted');
+            $table->unsignedBigInteger('created_by')->nullable();
             $table->timestamp('created_at')->nullable()->useCurrent();
             $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
             $table->softDeletes();

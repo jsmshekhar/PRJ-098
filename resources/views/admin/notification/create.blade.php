@@ -65,6 +65,10 @@
                                     <form method="post" enctype="multipart/form-data" id="createNotificationForm">
                                         @csrf
                                         <div class="mb-3">
+                                            <label for="basicpill-address-input" class="form-label">Notification Message &nbsp; <span class="spanColor title_error"></span></label>
+                                            <input type="text" id="title" name="title" class="form-control">
+                                        </div>
+                                        <div class="mb-3">
                                             <label for="basicpill-address-input" class="form-label">Notification Message &nbsp; <span class="spanColor description_error"></span></label>
                                             <textarea id="description" name="description" class="form-control" rows="5" placeholder="Type notification message here."></textarea>
                                         </div>
@@ -114,8 +118,8 @@
                                         <div class="mb-3">
                                             <label for="role-name" class="col-form-label">Notification User Base</label>
                                             <select class="form-control selectBasic" name="notification_user_based" id="notification_user_based">
-                                                @foreach($user_based as $key => $uBased)
-                                                <option value="{{$uBased->user_base_id}}">{{$uBased->user_base_name }}</option>
+                                                @foreach($user_base as $key => $uBased)
+                                                <option value="{{$uBased}}">{{$uBased == 1 ? "Newly Onboarded" : ($uBased == 2 ? "Rider With Immobilized Vehicle" : ($uBased == 3 ? "Rider Raised Return EV Request" : "All"))}}</option>
                                                 @endforeach
                                             </select>
                                         </div>

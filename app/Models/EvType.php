@@ -62,6 +62,7 @@ class EvType extends Model
                     "range" => $range,
                     "speed" => $speed,
                     "ev_category" => $ev_category,
+                    "updated_by" => $auth->user_id,
                 ]);
             } else {
                 $slug = slug();

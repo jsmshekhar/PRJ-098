@@ -118,7 +118,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-3 d-flex justify-content-center">
-                                    <img id="selectedImage" src="{{ $product->image ? asset('public/images/product/'.$product->image) : asset('public/assets/images/no-image.bmp') }}" alt="example placeholder" style="width: 200px;" />
+                                    <img id="selectedImage" src="{{ $product->image ? asset('public/upload/product/'.$product->image) : asset('public/assets/images/no-image.bmp') }}" alt="example placeholder" style="width: 200px;" />
                                 </div>
                             </div>
                             <div class="row">

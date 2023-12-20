@@ -22,7 +22,9 @@
                     <li><a href="" class="active" title="Products">Products</a></li>
                     @endcan --}}
                     <li><a href="{{ route('product-ev-types') }}" class="active" title="Ev Types">Ev Types</a></li>
+                    @if(Auth::user()->role_id == 0)
                     <li><a href="{{ route('accessories') }}" class="" title="Accessories">Accessories</a>
+                    @endif
                     </li>
 
                 </ul>
@@ -195,7 +197,7 @@
                     $('#submitEvType').prop('disabled', false);
                     $('#submitEvType').html('Update');
                     setTimeout(function() {
-                         window.location.reload();
+                        window.location.reload();
                     }, 1000);
 
                 },

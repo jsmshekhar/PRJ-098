@@ -32,7 +32,7 @@ class Accessories extends Model
                 'accessories_category_id',
                 DB::raw('CASE WHEN accessories_category_id = 1 THEN "Helmet" WHEN accessories_category_id = 2 THEN "T-Shirt" WHEN accessories_category_id = 3 THEN "Mobile Holder" END AS accessories_category')
             )
-            ->where('user_slug', $auth->user_slug)->orderBy('created_at', 'DESC')->get();
+            ->where('created_by', $auth->user_id)->orderBy('created_at', 'DESC')->get();
             
             $accessories_categories = config('constants.ACCESSORIES_CATEGORY');
             return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['accessories' => $accessories, 'accessories_categories' => $accessories_categories]);

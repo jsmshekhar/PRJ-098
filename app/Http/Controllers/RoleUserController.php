@@ -38,7 +38,7 @@ class RoleUserController extends AdminAppController
         try {
             $permission = User::getPermissions();
             if (Gate::allows('view_role', $permission)) {
-                $roles = Role::where('user_id', Auth::user()->user_id)->whereNull('deleted_at')->orderBy('role_id', 'desc')->get();
+                $roles = Role::where('created_by', Auth::user()->user_id)->whereNull('deleted_at')->orderBy('role_id', 'desc')->get();
                 foreach ($roles as $key => $value) {
                     $value->roleUsers = User::where('role_id', $value->role_id)->count();
                 }
@@ -83,6 +83,7 @@ class RoleUserController extends AdminAppController
                     "name" => $role_name,
                     "user_slug" => $auth->slug,
                     "user_id" => $auth->user_id,
+                    "created_by" => $auth->user_id,
                 ]);
             }
             if ($roleId) {
@@ -149,8 +150,8 @@ class RoleUserController extends AdminAppController
             }
             if (Gate::allows('view_user', $permission)) {
                 $users = User::select('users.*', 'roles.name as role_name')
-                    ->where('users.user_slug', Auth::user()->slug)
-                    ->where('users.role_id', '!=', 0)
+                    ->where('users.hub_id', Auth::user()->hub_id)
+                    ->orWhere('users.role_id', '!=', 0)
                     ->whereNull('users.deleted_at')
                     ->leftJoin('roles', 'users.role_id', '=', 'roles.role_id');
 

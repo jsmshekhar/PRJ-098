@@ -24,12 +24,13 @@ class Notification extends Model
     {
         try {
             $auth = Auth::user();
-            $notifications = Notification::where('user_slug', $auth->user_slug)->whereNull('deleted_at')->orderBy('created_at', 'DESC')->paginate(25);
+            $notifications = Notification::where('created_by', $auth->user_id)->orWhere('created_by','!=', $auth->user_id)->whereNull('deleted_at')->orderBy('created_at', 'DESC')->paginate(25);
             foreach ($notifications as $key => $notification) {
                 $notification->param = strtolower($notification->notification_type);
             }
             $np = config('constants.NOTIFICATION_PARAMETER');
             $drtn = config('constants.DISTANCE_REMAINING_TO_NOTIFY');
+            $dayrtn = config('constants.DAYS_REMAINING_TO_NOTIFY');
             $dayrtn = config('constants.DAYS_REMAINING_TO_NOTIFY');
             foreach ($notifications as $key => $value) {
                 foreach ($np as $key => $nps) { // notification_parameter
@@ -77,7 +78,9 @@ class Notification extends Model
             $np = config('constants.NOTIFICATION_PARAMETER');
             $drtn = config('constants.DISTANCE_REMAINING_TO_NOTIFY');
             $dayrtn = config('constants.DAYS_REMAINING_TO_NOTIFY');
-            return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['parameters' => $np, 'distance' => $drtn, 'days' => $dayrtn]);
+            $userBase = config('constants.USER_BASE_NOTIFICATION');
+            
+            return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['parameters' => $np, 'distance' => $drtn, 'days' => $dayrtn, 'user_base' => $userBase]);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -100,7 +103,8 @@ class Notification extends Model
             $np = config('constants.NOTIFICATION_PARAMETER');
             $drtn = config('constants.DISTANCE_REMAINING_TO_NOTIFY');
             $dayrtn = config('constants.DAYS_REMAINING_TO_NOTIFY');
-            return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['parameters' => $np, 'distance' => $drtn, 'days' => $dayrtn, 'notification' => $notification]);
+            $userBase = config('constants.USER_BASE_NOTIFICATION');
+            return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['parameters' => $np, 'distance' => $drtn, 'days' => $dayrtn, 'notification' => $notification, 'user_base' => $userBase]);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
