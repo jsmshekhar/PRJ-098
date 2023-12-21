@@ -110,16 +110,27 @@
                                     <label for="title" class="form-label">Description &nbsp; <span class="spanColor description_error"></span></label>
                                     <textarea id="description" name="description" class="form-control" rows="5" placeholder="Write here."></textarea>
                                 </div>
-                                <div class="col-md-2 mb-3 d-flex justify-content-center">
-                                    <div class="btn btn-primary btn-rounded">
-                                        <label class="form-label text-white m-1" for="customFile1">Choose Image</label>
-                                        <input type="file" class="form-control d-none" name="image" id="customFile1" onchange="displaySelectedImage(event, 'selectedImage')" />
-                                    </div>
+
+                                <div class="col-md-6 mb-3 ">
+                                <label for="title" class="form-label">Image Upload</label>
+                                    <div class="">
+                                    <label for="customFile1">
+                                        <img id="selectedImage" src="{{ asset('public/assets/images/uploadimg.png') }}" alt="example placeholder" class="upload_des_preview clickable" />
+                                    </label>
+                                    <input type="file" class="form-control d-none" name="image" id="customFile1" onchange="displaySelectedImage(event, 'selectedImage')" />
+                                    </div>        
+                                </div> 
+                                
+                                <div>
+                                   
                                 </div>
-                                <div class="col-md-4 mb-3 d-flex justify-content-center">
-                                    <img id="selectedImage" src="{{ asset('public/assets/images/no-image.bmp') }}" alt="example placeholder" style="width: 200px;" />
-                                </div>
+                                
+
                             </div>
+
+
+
+
                             <div class="row">
                                 <div class="col-md-12 mb-3">
                                     <button type="button" class="btn btn-success " id="submitForm">Add </button>

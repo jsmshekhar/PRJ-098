@@ -6441,7 +6441,7 @@ table .dropdown-menu.show .dropdown-item:hover {
   color: #fff !important;
 }
 
-.select2-container{
+.select2-container--open{
     z-index: 9999;
 }
 
@@ -6619,15 +6619,17 @@ table .dropdown-menu.show .dropdown-item:hover {
 
 .cat_list ul li {
   width: 24%;
-  height: 70px;
-  padding: 15px;
   align-items: center;
-  padding: 20px 15px 15px 15px;
   display: grid;
   border-radius: 8px;
   border: 1px solid rgba(224, 224, 224, 0.05);
   background: var(--White, #FFF);
   box-shadow: 0px 2px 10px 0px rgba(0, 9, 4, 0.10) inset;
+}
+
+.cat_list ul li a{  
+  height: 70px;
+  padding: 22px 15px 15px 15px;
 }
 
 .cat_list ul li a span{
@@ -6764,4 +6766,23 @@ table .dropdown-menu.show .dropdown-item:hover {
   font-weight: 500;
   line-height: 14.424px;
   letter-spacing: 0.072px;
+}
+
+.upload_des{
+    width: 150px;
+    height: 150px;
+    cursor: pointer;
+    border: 1px dashed black;
+    border-radius: 10px;
+    display: grid;
+    place-content: center;
+    margin-right: 15px;
+}
+
+.upload_des_preview{
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 5px;
+  cursor: pointer;
 }

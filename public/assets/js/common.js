@@ -12,3 +12,13 @@ $(".onlyDigit").keypress(function (e) {
         return false;
     }
 });
+
+
+document.addEventListener(function() {
+    const imagePreview = document.getElementById('selectedImage');
+    const fileInput = document.getElementById('customFile1');
+
+    imagePreview.addEventListener('click', function() {
+        fileInput.click(); // Simulate click on the file input
+    });
+});
