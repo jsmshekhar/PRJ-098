@@ -101,7 +101,7 @@
                                     <label for="hub_id" class="form-label">Product Visivility</label>
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="remember-check" name="is_display_on_app" checked>
-                                        <label class="form-check-label mt-1" for="remember-check">
+                                        <label class="form-check-label" for="remember-check">
                                             &nbsp; The product is displayed on the app.
                                         </label>
                                     </div>
@@ -112,14 +112,19 @@
                                 </div>
 
                                 <div class="col-md-6 mb-3 ">
-                                <label for="title" class="form-label">Image Upload </label>
-                                    <div class="d-flex">
-                                    <label class="form-label upload_des" for="customFile1">Choose Image</label>
-                                      <input type="file" class="form-control d-none" name="image" id="customFile1" onchange="displaySelectedImage(event, 'selectedImage')" />
-                                      <img id="selectedImage" src="{{ asset('public/assets/images/no-image.bmp') }}" alt="example placeholder" class="upload_des_preview" />
-
+                                <label for="title" class="form-label">Image Upload</label>
+                                    <div class="">
+                                    <label for="customFile1">
+                                        <img id="selectedImage" src="{{ asset('public/assets/images/uploadimg.png') }}" alt="example placeholder" class="upload_des_preview clickable" />
+                                    </label>
+                                    <input type="file" class="form-control d-none" name="image" id="customFile1" onchange="displaySelectedImage(event, 'selectedImage')" />
                                     </div>        
-                                </div>            
+                                </div> 
+                                
+                                <div>
+                                   
+                                </div>
+                                
 
                             </div>
 
