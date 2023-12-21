@@ -101,7 +101,7 @@
                                     <label for="hub_id" class="form-label">Product Visivility</label>
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="remember-check" name="is_display_on_app" checked>
-                                        <label class="form-check-label" for="remember-check">
+                                        <label class="form-check-label mt-1" for="remember-check">
                                             &nbsp; The product is displayed on the app.
                                         </label>
                                     </div>
@@ -110,27 +110,22 @@
                                     <label for="title" class="form-label">Description &nbsp; <span class="spanColor description_error"></span></label>
                                     <textarea id="description" name="description" class="form-control" rows="5" placeholder="Write here."></textarea>
                                 </div>
+                                <div class="col-md-6">
+                                <label for="title" class="form-label">Upload file </label>
+                                    <div class="d-flex">
+                                    <label class="form-label upload_des" for="customFile1">Upload</label>
+                                    <div class="upload-preview-container">
+                                        <input type="file" class="form-control d-none" name="image" id="customFile1" onchange="displaySelectedImage(event, 'selectedImage')" />
+                                       <div class="img_upper">
+                                            <img id="selectedImage" class="upload_des_preview hidden" alt="Preview Image" />
+                                            <button id="removeImageBtn" class="remove-image-btn hidden">&times;</button>
+                                       </div>
+                                    </div>
 
-                                <div class="col-md-6 mb-3 ">
-                                <label for="title" class="form-label">Image Upload</label>
-                                    <div class="">
-                                    <label for="customFile1">
-                                        <img id="selectedImage" src="{{ asset('public/assets/images/uploadimg.png') }}" alt="example placeholder" class="upload_des_preview clickable" />
-                                    </label>
-                                    <input type="file" class="form-control d-none" name="image" id="customFile1" onchange="displaySelectedImage(event, 'selectedImage')" />
-                                    </div>        
-                                </div> 
-                                
-                                <div>
-                                   
+                                    </div>
+
                                 </div>
-                                
-
                             </div>
-
-
-
-
                             <div class="row">
                                 <div class="col-md-12 mb-3">
                                     <button type="button" class="btn btn-success " id="submitForm">Add </button>

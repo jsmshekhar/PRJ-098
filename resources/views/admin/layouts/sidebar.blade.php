@@ -46,6 +46,14 @@
                      </a>
                  </li>
 
+                 <li class="{{ Request::routeIs('refund-management') ? 'mm-active' : '' }}">
+                     <a href="{{ route('refund-management') }}"
+                         class="{{ Request::routeIs('refund-management') ? 'active' : '' }}">
+                         <img src="{{ asset('public/assets/images/icons/Vehicles.svg') }}" alt="">
+                         <span>Vehicles</span>
+                     </a>
+                 </li>
+
                  <li class="{{ Request::routeIs('products', 'corporate') ? 'mm-active' : '' }}">
                      <a href="{{route('products', 'corporate')}}" class="{{ Request::routeIs('products', 'corporate') ? 'active' : '' }}">
                          <img src="{{ asset('public/assets/images/icons/Inventory-icon.svg') }}" alt="">
@@ -91,6 +99,31 @@
                          class="{{ Request::routeIs('refund-management') ? 'active' : '' }}">
                          <img src="{{ asset('public/assets/images/icons/Refund-icon.svg') }}" alt="">
                          <span>Refund Management</span>
+                     </a>
+                 </li>
+
+                 <li class="{{ Request::routeIs('refund-management') ? 'mm-active' : '' }}">
+                     <a href="{{ route('refund-management') }}"
+                         class="{{ Request::routeIs('refund-management') ? 'active' : '' }}">
+                         <img src="{{ asset('public/assets/images/icons/HubAccessories.svg') }}" alt="">
+                         <span>Hub parts and Accessories</span>
+                     </a>
+                 </li>
+
+                 <li class="{{ Request::routeIs('refund-management') ? 'mm-active' : '' }}">
+                     <a href="{{ route('refund-management') }}"
+                         class="{{ Request::routeIs('refund-management') ? 'active' : '' }}">
+                         <img src="{{ asset('public/assets/images/icons/ReturnExchange.svg') }}" alt="">
+                         <span>Return Exchange Module</span>
+                     </a>
+                 </li>
+
+
+                 <li class="{{ Request::routeIs('refund-management') ? 'mm-active' : '' }}">
+                     <a href="{{ route('refund-management') }}"
+                         class="{{ Request::routeIs('refund-management') ? 'active' : '' }}">
+                         <img src="{{ asset('public/assets/images/icons/Order.svg') }}" alt="">
+                         <span>Order</span>
                      </a>
                  </li>
 

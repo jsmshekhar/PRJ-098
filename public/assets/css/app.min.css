@@ -617,7 +617,7 @@ body[data-layout="horizontal"] .footer {
   padding: 14px 16px;
   color: rgba(0, 0, 0, 0.8);
   position: relative;
-  font-size: 16px;
+  font-size: 14px;
   -webkit-transition: all 0.4s;
   transition: all 0.4s;
   font-weight: 400;
@@ -6777,6 +6777,7 @@ table .dropdown-menu.show .dropdown-item:hover {
     display: grid;
     place-content: center;
     margin-right: 15px;
+    position: relative;
 }
 
 .upload_des_preview{
@@ -6785,4 +6786,25 @@ table .dropdown-menu.show .dropdown-item:hover {
   object-fit: cover;
   border-radius: 5px;
   cursor: pointer;
+}
+.hidden {
+  display: none;
+}
+
+.upload-preview-container{
+  position: absolute;
+  left: 0;
+  left: 12px;
+  border-radius: 10px;
+}
+
+.remove-image-btn{
+  position: absolute;
+  right: 5px;
+  background-color: #eb0202;
+  border-radius: 20px;
+  border: 0;
+  padding: 0px 7px;
+  color: #fff;
+  top: 5px;
 }

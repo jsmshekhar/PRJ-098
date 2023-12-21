@@ -14,11 +14,28 @@ $(".onlyDigit").keypress(function (e) {
 });
 
 
-document.addEventListener(function() {
-    const imagePreview = document.getElementById('selectedImage');
+document.addEventListener('DOMContentLoaded', function() {
     const fileInput = document.getElementById('customFile1');
+    const imagePreview = document.getElementById('selectedImage');
+    const removeBtn = document.getElementById('removeImageBtn');
 
-    imagePreview.addEventListener('click', function() {
-        fileInput.click(); // Simulate click on the file input
+    fileInput.addEventListener('change', function(event) {
+        if (event.target.files.length > 0) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagePreview.src = e.target.result;
+                imagePreview.classList.remove('hidden'); // Show image after upload
+                removeBtn.classList.remove('hidden'); // Show remove button after upload
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    });
+
+    removeBtn.addEventListener('click', function() {
+        imagePreview.src = ''; // Clear image source
+        fileInput.value = null; // Reset file input
+        imagePreview.classList.add('hidden'); // Hide image after removal
+        removeBtn.classList.add('hidden'); // Hide remove button after removal
     });
 });
+
