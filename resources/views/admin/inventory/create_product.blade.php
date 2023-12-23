@@ -13,7 +13,8 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header border-bottom bg-white">
-                    <h4>Add Product &nbsp; <b>{ {{ucfirst(request()->route('param'))}} }</b></h4>
+                
+                    <h4> Add Product <span class="d-flex heading_label"> {{ucfirst(request()->route('param'))}} </span> </h4>
                     <div class="nav_cust_menu">
                         <ul>
                             <li><a href="{{ route('products', request()->route('param')) }}" class="active" title="Products">Go Back</a></li>
@@ -54,7 +55,7 @@
                                     <label for="example-title-input" class="form-label">Rent per Day(Rs)</label>
                                     <input class="form-control" type="text" name="per_day_rent" id="per_day_rent" value="">
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label for="rent_cycle" class="form-label">Rent Cycle</label>
                                     <select class="form-control selectBasic" name="rent_cycle" id="rent_cycle">
                                         @foreach($rent_cycles as $key => $rent_cycle)
@@ -62,7 +63,15 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
+                                    <label for="battery_type" class="form-label">Bike Type</label>
+                                    <select class="form-control selectBasic" name="battery_type" id="battery_type">
+                                        @foreach($battery_types as $key => $battery_type)
+                                        <option value="{{$battery_type}}">{{$battery_type == 1 ? "Swappable" : "Fixed"}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
                                     <label for="battery_type" class="form-label">Battery Type</label>
                                     <select class="form-control selectBasic" name="battery_type" id="battery_type">
                                         @foreach($battery_types as $key => $battery_type)
@@ -98,20 +107,20 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="hub_id" class="form-label">Product Visivility</label>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="remember-check" name="is_display_on_app" checked>
-                                        <label class="form-check-label" for="remember-check">
-                                            &nbsp; The product is displayed on the app.
-                                        </label>
-                                    </div>
+                                    <label for="status_id" class="form-label">Status</label>
+                                    <select class="form-control selectBasic" name="status_id" id="status_id">
+                                        @foreach($vehicleStatus as $key => $status_id)
+                                        <option value="{{$status_id}}">{{$status_id == 1 ? "Active" : ($status_id == 2 ? 'Inactive' : ($status_id == 3 ? 'Non Functional' : 'Not Available'))}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
+                               
                                 <div class="col-md-6 mb-3">
                                     <label for="title" class="form-label">Description &nbsp; <span class="spanColor description_error"></span></label>
                                     <textarea id="description" name="description" class="form-control" rows="5" placeholder="Write here."></textarea>
                                 </div>
 
-                                <div class="col-md-3 mb-3 ">
+                                <div class="col-md-6 mb-3 ">
                                     <label for="title" class="form-label">Image Upload</label>
                                     <div class="">
                                         <label for="customFile1" id="selectImageRemove">
@@ -120,13 +129,14 @@
                                         <input type="file" class="form-control d-none" name="image" id="customFile1" onchange="displaySelectedImage(event, 'selectedImage')" />
                                     </div>
                                 </div>
-                                <div class="col-md-3 mb-3">
-                                    <label for="status_id" class="form-label">Status</label>
-                                    <select class="form-control selectBasic" name="status_id" id="status_id">
-                                        @foreach($vehicleStatus as $key => $status_id)
-                                        <option value="{{$status_id}}">{{$status_id == 1 ? "Active" : ($status_id == 2 ? 'Inactive' : ($status_id == 3 ? 'Non Functional' : 'Not Available'))}}</option>
-                                        @endforeach
-                                    </select>
+                                <div class="col-md-6 mb-4">
+                                    <!-- <label for="hub_id" class="form-label">Product Visivility</label> -->
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="remember-check" name="is_display_on_app" checked>
+                                        <label class="form-check-label mt-1" for="remember-check">
+                                            &nbsp; The product is displayed on the app.
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">

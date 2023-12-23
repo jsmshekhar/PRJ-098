@@ -6769,8 +6769,8 @@ table .dropdown-menu.show .dropdown-item:hover {
 }
 
 .upload_des{
-    width: 150px;
-    height: 150px;
+    width: 140px;
+    height: 140px;
     cursor: pointer;
     border: 1px dashed black;
     border-radius: 10px;
@@ -6781,8 +6781,8 @@ table .dropdown-menu.show .dropdown-item:hover {
 }
 
 .upload_des_preview{
-  width: 150px;
-  height: 150px;
+  width: 140px;
+  height: 140px;
   object-fit: cover;
   border-radius: 5px;
   cursor: pointer;
@@ -6807,4 +6807,10 @@ table .dropdown-menu.show .dropdown-item:hover {
   padding: 0px 7px;
   color: #fff;
   top: 5px;
+}
+
+
+.heading_label{
+  font-size: 12px;
+  color: #49a257;
 }
