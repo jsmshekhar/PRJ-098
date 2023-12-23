@@ -28,7 +28,7 @@ class Hub extends Model
             if (isset($request->per_page) && $request->per_page > 0) {
                 $perPage = $request->per_page;
             }
-            $hubs = Hub::where('user_slug', $auth->user_slug)->whereNull('deleted_at');
+            $hubs = Hub::where('hub_id', $auth->hub_id)->orWhere('created_by',$auth->user_id)->whereNull('deleted_at');
             if (isset($request->is_search) && $request->is_search == 1) {
                 if (isset($request->hub_id) && !empty($request->hub_id)) {
                     $hubs = $hubs->where('hubId', 'LIKE', "%{$request->hub_id}%");
@@ -45,6 +45,11 @@ class Hub extends Model
             }
 
             $hubs = $hubs->orderBy('created_at', 'DESC')->paginate($perPage);
+            if(count($hubs)>0){
+                foreach ($hubs as $key => $value) {
+                    $value->vehicle_count = DB::table('products')->where('hub_id', $value->hub_id)->count();
+                }
+            }
             $lastHub = Hub::orderBy('hub_id', 'DESC')->first();
             $hubId = "101";
             if ($lastHub) {
@@ -82,33 +87,40 @@ class Hub extends Model
             $vehicles = [];
             $employees = [];
             $roles = [];
+            $rent_cycles = [];
+            $ev_types = [];
+            $ev_categories = [];
+            $battery_types = [];
             $hub = Hub::where('slug', $slug)->whereNull('deleted_at')->first();
             if($param == 'vehicle'){
-                $vehicles = Product::join('product_categories as pc', 'products.product_category_id', '=', 'pc.product_category_id')
-                ->join('ev_types as et', 'products.ev_type_id', '=', 'et.ev_type_id')
+                $vehicles = Product::join('ev_types as et', 'products.ev_type_id', '=', 'et.ev_type_id')
                 ->where('products.hub_id', $hub->hub_id)
                 ->whereNull('products.deleted_at')
-                ->where('products.product_category_id', 1)
                 ->select(
-                    'products.*',
-                    'pc.product_category_name',
-                    'pc.slug as pc_slug',
-                    'et.ev_type_name',
-                    'et.slug as ev_type_slug',
-                    DB::raw("CASE 
-                        WHEN products.ev_category=1 THEN 'Two Wheeler' 
-                        WHEN products.ev_category=1 THEN 'Three Wheeler')' 
-                        ELSE '' 
-                    END as ev_category_name"),
-                    DB::raw("CASE 
-                        WHEN products.profile_category=1 THEN 'Corporate' 
-                        WHEN products.profile_category=2 THEN 'Individual' 
-                        WHEN products.profile_category=3 THEN 'Student' 
-                        WHEN products.profile_category=4 THEN 'Vendor' 
-                        ELSE ''
-                    END as profile_category_name")
-                )
+                        'products.*',
+                        'et.ev_type_name',
+                        'et.slug as ev_type_slug',
+                        DB::raw('CASE 
+                                WHEN products.ev_category_id = 1 THEN "Two Wheeler" 
+                                WHEN products.ev_category_id = 2 THEN "Three Wheeler" 
+                                ELSE "" 
+                            END as ev_category_name'),
+                        DB::raw('CASE 
+                                WHEN products.profile_category = 1 THEN "Corporate" 
+                                WHEN products.profile_category = 2 THEN "Individual" 
+                                WHEN products.profile_category = 3 THEN "Student" 
+                                WHEN products.profile_category = 4 THEN "Vendor" 
+                                ELSE "" 
+                            END as profile_category_name')
+                        )
+                ->orderBy('products.created_at', 'DESC')
                 ->paginate($perPage);
+                $ev_types = EvType::orderBy('created_at', 'DESC')->get();
+                $ev_categories = config('constants.EV_CATEGORIES');
+                $rent_cycles = config('constants.RENT_CYCLE');
+                $battery_types = config('constants.BATTERY_TYPE');
+                $profile_categories = config('constants.PROFILE_CATEGORIES');
+                $vehicleStatus = config('constants.VEHICLE_STATUS');
             }
             if ($param == 'employee') {
                 $employees = User::select('users.*', 'roles.name as role_name')
@@ -119,11 +131,16 @@ class Hub extends Model
                     ->leftJoin('roles', 'users.role_id', '=', 'roles.role_id')
                     ->paginate($perPage);
                 $roles = Role::whereNull('deleted_at')->get();
+                $maxEmpId = User::select('emp_id')->orderBy('emp_id','DESC')->first();
+                 $hub->max_emp_id = $maxEmpId ? $maxEmpId->emp_id : 101;
             }
+           
+
             if ($hub) {
-                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => $hub, 'vehicles' => $vehicles, 'employees' => $employees, 'roles' => $roles]);
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => $hub, 'vehicles' => $vehicles, 'employees' => $employees, 'roles' => $roles,'rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'battery_types' => $battery_types, 'profile_categories' => $profile_categories, 'vehicleStatus' => $vehicleStatus]);
             } else {
-                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => [], 'vehicles' => [], 'employees' => [], 'roles' => []]);
+                
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => [], 'vehicles' => [], 'employees' => [], 'roles' => [],'rent_cycles' => [], 'ev_types' => [], 'ev_categories' =>[], 'battery_types' => [], 'profile_categories' => [], 'vehicleStatus' => []]);
             }
         } catch (\Throwable $ex) {
             $result = [

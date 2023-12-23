@@ -49,11 +49,11 @@
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="example-title-input" class="form-label">Single charge Run Time(km)</label>
-                                    <input class="form-control" type="text" name="per_day_rent" id="per_day_rent" value="{{$product->per_day_rent}}">
+                                    <input class="form-control" type="text" name="km_per_charge" id="km_per_charge" value="{{$product->km_per_charge}}">
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="example-title-input" class="form-label">Rent per Day(Rs)</label>
-                                    <input class="form-control" type="text" name="km_per_charge" id="km_per_charge" value="{{$product->km_per_charge}}">
+                                    <input class="form-control" type="text" name="per_day_rent" id="per_day_rent" value="{{$product->per_day_rent}}">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="rent_cycle" class="form-label">Rent Cycle</label>
@@ -111,14 +111,22 @@
                                     <label for="title" class="form-label">Description &nbsp; <span class="spanColor description_error"></span></label>
                                     <textarea id="description" name="description" class="form-control" rows="5" placeholder="Write here.">{{$product->description}}</textarea>
                                 </div>
-                                <div class="col-md-2 mb-3 d-flex justify-content-center">
-                                    <div class="btn btn-primary btn-rounded">
-                                        <label class="form-label text-white m-1" for="customFile1">Choose Image</label>
-                                        <input type="file" class="form-control d-none" name="image" id="customFile1" onchange="displaySelectedImage(event, 'selectedImage')" />
+                                <div class="col-md-3 mb-3 ">
+                                    <label for="title" class="form-label">Image Upload</label>
+                                    <div class="">
+                                        <label for="customFile" id="selectImageRemove">
+                                            <img id="selectedImage" src="{{ asset('public/assets/images/uploadimg.png') }}" alt="example placeholder" class="upload_des_preview clickable" />
+                                        </label>
+                                        <input type="file" class="form-control d-none" name="image" id="customFile" onchange="displaySelectedImage(event, 'selectedImage')" />
                                     </div>
                                 </div>
-                                <div class="col-md-4 mb-3 d-flex justify-content-center">
-                                    <img id="selectedImage" src="{{ $product->image ? asset('public/upload/product/'.$product->image) : asset('public/assets/images/no-image.bmp') }}" alt="example placeholder" style="width: 200px;" />
+                                <div class="col-md-3 mb-3">
+                                    <label for="status_id" class="form-label">Status</label>
+                                    <select class="form-control selectBasic" name="status_id" id="status_id">
+                                        @foreach($vehicleStatus as $key => $status_id)
+                                        <option value="{{$status_id}}" @if($status_id==$product->status_id) selected @endif>{{$status_id == 1 ? "Active" : ($status_id == 2 ? 'Inactive' : ($status_id == 3 ? 'Non Functional' : 'Not Available'))}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="row">
@@ -189,9 +197,19 @@
     function displaySelectedImage(event, elementId) {
         const selectedImage = document.getElementById(elementId);
         const fileInput = event.target;
+
+        console.log('File Input:', fileInput);
+        console.log('Files:', fileInput.files);
+        console.log('fileInput.files.length', fileInput.files.length)
+        if (fileInput.files.length == 0) {
+            var imageUrl = "{{ asset('public/assets/images/uploadimg.png') }}";
+            $('#selectImageRemove').html('<img id = "selectedImage" src="' + imageUrl + '" alt = "vehicle image" class = "upload_des_preview clickable">');
+        }
+
         if (fileInput.files && fileInput.files[0]) {
             const reader = new FileReader();
             reader.onload = function(e) {
+                console.log('Reader result:', e.target.result);
                 selectedImage.src = e.target.result;
             };
             reader.readAsDataURL(fileInput.files[0]);

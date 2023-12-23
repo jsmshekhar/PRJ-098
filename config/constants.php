@@ -53,7 +53,10 @@ return [
         'TWO_WHEELER' => 1,
         'THREE_WHEELER' => 2,
     ],
-
+    'BIKE_TYPE' => [
+        'CARGO_BIKE' => 1,
+        'NORMAL_BIKE' => 2,
+    ],
     'PROFILE_CATEGORIES' => [
         'CORPORATE' => 1,
         'INDIVIDUAL' => 2,
@@ -77,6 +80,13 @@ return [
         "HELMET" => 1,
         "T_SHIRT" => 2,
         "MOBILE_HOLDER" => 3,
+    ],
+
+    'VEHICLE_STATUS' => [
+        'ACTIVE' => 1,
+        'INACTIVE' => 2,
+        'NON_FUNCTIONAL' => 3,
+        'NOT_AVAILABLE' => 4,
     ],
 
 ];

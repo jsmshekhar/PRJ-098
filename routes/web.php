@@ -103,6 +103,9 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/transaction-management', [TransactionMgmtController::class, 'index'])->name('transaction-management');
         Route::get('/wallet-management', [WalletMgmtController::class, 'index'])->name('wallet-management');
         Route::get('/refund-management', [RefundMgmtController::class, 'index'])->name('refund-management');
+
+        /* Shekhar's - Route */
+        @include('admin.php');
     });
 
     Route::get('/data-export', [DataExportController::class, 'dataExport'])->name('data-export');

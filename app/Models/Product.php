@@ -75,7 +75,8 @@ class Product extends Model
             $ev_categories = config('constants.EV_CATEGORIES');
             $rent_cycles = config('constants.RENT_CYCLE');
             $battery_types = config('constants.BATTERY_TYPE');
-            return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'hubs' => $hubs, 'battery_types' => $battery_types]);
+            $vehicleStatus = config('constants.VEHICLE_STATUS');
+            return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'hubs' => $hubs, 'battery_types' => $battery_types, 'vehicleStatus' => $vehicleStatus]);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -108,6 +109,7 @@ class Product extends Model
             $gps_emei_number = !empty($request->gps_emei_number) ? $request->gps_emei_number : "";
             $km_per_charge = !empty($request->km_per_charge) ? $request->km_per_charge : "";
             $is_display_on_app = !empty($request->is_display_on_app) ? 1 : 2;
+            $status_id = !empty($request->status_id) ? $request->status_id : 1;
             $product_image = '';
             if ($request->image) {
                 $image = $request->file('image');
@@ -139,6 +141,7 @@ class Product extends Model
                 "user_id" => $auth->user_id,
                 "user_slug" => $auth->slug,
                 "created_by" => $auth->user_id,
+                "status_id" => $status_id,
             ]);
             $profileCategory = $profile_category == 1 ? 'corporate' : ($profile_category == 2 ? 'individual' : ($profile_category == 3 ? 'student' : 'vendor'));
             if ($product) {
@@ -180,7 +183,8 @@ class Product extends Model
             $ev_categories = config('constants.EV_CATEGORIES');
             $rent_cycles = config('constants.RENT_CYCLE');
             $battery_types = config('constants.BATTERY_TYPE');
-            return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['product'=> $product, 'rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'hubs' => $hubs, 'battery_types' => $battery_types]);
+            $vehicleStatus = config('constants.VEHICLE_STATUS');
+            return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['product'=> $product, 'rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'hubs' => $hubs, 'battery_types' => $battery_types, 'vehicleStatus' => $vehicleStatus]);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -212,6 +216,8 @@ class Product extends Model
             $gps_emei_number = !empty($request->gps_emei_number) ? $request->gps_emei_number : "";
             $km_per_charge = !empty($request->km_per_charge) ? $request->km_per_charge : "";
             $is_display_on_app = !empty($request->is_display_on_app) ? 1 : 2;
+            $status_id = !empty($request->status_id) ? $request->status_id : 1;
+            
             $product_image = '';
             if ($request->image) {
                 $image = $request->file('image');
@@ -240,6 +246,7 @@ class Product extends Model
                     "user_id" => $auth->user_id,
                     "user_slug" => $auth->slug,
                     "updated_by" => $auth->user_id,
+                    "status_id" => $status_id,
                 ]);
             }else{
                 $product = Product::where('slug', $slug)->update([
@@ -261,6 +268,7 @@ class Product extends Model
                     "user_id" => $auth->user_id,
                     "user_slug" => $auth->slug,
                     "updated_by" => $auth->user_id,
+                    "status_id" => $status_id,
                 ]);
             }
            

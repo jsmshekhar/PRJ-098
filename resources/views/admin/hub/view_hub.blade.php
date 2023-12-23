@@ -9,6 +9,10 @@
     input[switch]:checked+label:after {
         left: 54px !important;
     }
+
+    .readOnlyClass {
+        background: #E6E6E6;
+    }
 </style>
 @endsection
 @section('content')
@@ -26,6 +30,10 @@
                         @can('edit_hub', $permission)
                         <a class="btn btn-success waves-effect waves-light hubModelForm" data-toggle="modal" data-hub_id="{{ $hub->hub_Id }}" data-hubid="{{ $hub->hubId }}" data-city="{{ $hub->city }}" data-state="{{ $hub->state }}" data-country="{{ $hub->country }}" data-slug="{{ $hub->slug }}" data-address1="{{ $hub->address_1 }}" data-address2="{{ $hub->address_2 }}" data-zipcode="{{ $hub->zip_code }}" data-hublimit="{{ $hub->hub_limit }}" data-fulladdress="{{ $hub->full_address }}" title="Edit Hub" style="cursor: pointer;margin-right: 5px;">Edit Hub</a>
                         @endcan
+                        @can('add_inventry', $permission)
+                        <a class="btn btn-outline-success waves-effect waves-light vehicleModelForm" data-toggle="modal" data-operation="add" data-hub_id="{{ $hub->hub_id }}" title="Add New NotVehicleification">Add Vehicle</a>
+                        @endcan
+                        <a href="" class="btn btn-outline-success waves-effect waves-light" title="Add New Notification">Assign an EV</a>
                     </div>
                 </div>
                 <div class="card-body pb-0">
@@ -69,7 +77,7 @@
             <div class="col-12">
                 <div class="nav_cust_menu">
                     <ul>
-                        <li><a href="{{route('hub-view',['slug' => request()->route('slug'), 'param' => 'vehicle'])}}" class="{{request()->route('param')=='vehicle' ? 'active' : ''}}">EV Vehicles</a></li>
+                        <li><a href="{{route('hub-view',['slug' => request()->route('slug'), 'param' => 'vehicle'])}}" class="{{request()->route('param')=='vehicle' ? 'active' : ''}}">Hub Inventory</a></li>
                         <li><a href="{{route('hub-view',['slug' => request()->route('slug'), 'param' => 'employee'])}}" class="{{request()->route('param')=='employee' ? 'active' : ''}}">Employees</a></li>
                         {{--<li><a href="{{route('hub-view',['slug' => request()->route('slug'), 'param' => 'accessories'])}}" class="{{request()->route('param')=='accessories' ? 'active' : ''}}">Accessories</a></li>--}}
                     </ul>
@@ -101,6 +109,13 @@
                                         <img src="{{asset('public/assets/images/icons/download.svg')}}" alt=""> Export
                                     </button>
                                 </li>
+                                @can('add_user', $permission)
+                                @if(request()->route('param') == 'employee')
+                                <li style="float:right">
+                                    <a href="" class="btn btn-success waves-effect waves-light userModelForm" data-toggle="modal" data-operation="add" data-hub_id="{{ $hub->hub_id }}" data-empid="{{ $hub->max_emp_id }}" data-target="#userModelForm">Create New Employee</a></h1>
+                                </li>
+                                @endif
+                                @endcan
                             </ul>
                         </div>
                         <div class="table-rep-plugin">
@@ -184,6 +199,10 @@
 @section('js')
 <script type="text/javascript">
     $(document).ready(function() {
+        function toggleReadOnly(state) {
+            $('.readOnlyClass').prop('readonly', state);
+        }
+
         // Model data
         $('.hubModelForm').click(function() {
             $('#hubModelForm').modal('show');
@@ -256,7 +275,28 @@
 
         // employee model
 
-        $('.userModelForm').click(function() {
+        $('.userModelForm').on('click', function(event) {
+            event.preventDefault();
+            var operationType = $(this).data('operation'); // Retrieve the operation type from data attribute
+            if (operationType === 'add') {
+                var hub_id = $(this).data('hub_id');
+                var empid = $(this).data('empid');
+                $('#first_name').removeAttr('readonly');
+                $('#first_name').removeClass('readOnlyClass');
+                $('#last_name').removeAttr('readonly');
+                $('#last_name').removeClass('readOnlyClass');
+                $('#email').removeAttr('readonly');
+                $('#email').removeClass('readOnlyClass');
+                $('#hub_id').val(hub_id);
+                $('#employee_id').val(empid);
+
+            } else if (operationType === 'update') {
+                $('#first_name').attr('readonly', true);
+                $('#last_name').attr('readonly', true);
+                $('#email').attr('readonly', true);
+                $('#employee_id').attr('readonly', true);
+            }
+
             $('#userModelForm').modal('show');
             var first_name = $(this).data('fname');
             var last_name = $(this).data('lname');
@@ -266,6 +306,7 @@
             var roleid = $(this).data('roleid');
             var rolename = $(this).data('rolename');
             var hub_id = $(this).data('hub_id');
+            var empid = $(this).data('empid');
 
             $("#first_name").val(first_name);
             $("#last_name").val(last_name);
@@ -276,6 +317,7 @@
             $("#role_id").val(roleid);
             $("#rolename").val(rolename);
             $("#hub_id").val(hub_id);
+            $("#employee_id").val(empid);
 
         });
         $('#submitUser').click(function(e) {
@@ -317,7 +359,145 @@
                 }
             });
         });
+
+        // vehicle model
+
+        $('.vehicleModelForm').on('click', function(event) {
+            event.preventDefault();
+            var operationType = $(this).data('operation'); // Retrieve the operation type from data attribute
+            if (operationType === 'add') {
+                var hub_id = $(this).data('hub_id');
+                $('#chassis_number').removeAttr('readonly');
+                $('#chassis_number').removeClass('readOnlyClass');
+                $('#hub_id').val(hub_id);
+
+            } else if (operationType === 'update') {
+                $('#chassis_number').attr('readonly', true);
+            }
+
+            $('#vehicleModelForm').modal('show');
+            var slug = $(this).data('slug');
+            if (slug) {
+                var hub_id = $(this).data('hub_id');
+                var title = $(this).data('title');
+                var ev_number = $(this).data('ev_number');
+                var ev_type_id = $(this).data('ev_type_id');
+                var ev_category_id = $(this).data('ev_category_id');
+                var profile_category = $(this).data('profile_category');
+                var speed = $(this).data('speed');
+                var rent_cycle = $(this).data('rent_cycle');
+                var per_day_rent = $(this).data('per_day_rent');
+                var battery_type = $(this).data('bettery_type');
+                var km_per_charge = $(this).data('km_per_charge');
+                var description = $(this).data('description');
+                var is_display_on_app = $(this).data('is_display_on_app');
+                var chassis_number = $(this).data('chassis_number');
+                var gps_emei_number = $(this).data('gps_emei_number');
+                var image = $(this).data('image');
+                var status_id = $(this).data('status');
+                var updateurl = $(this).data('updateurl');
+
+                $("#title").val(title);
+                $("#hub_id").val(hub_id);
+                $("#ev_number").val(ev_number);
+                $("#speed").val(speed);
+                $("#slug").val(slug);
+                $("#chassis_number").val(chassis_number);
+                $("#per_day_rent").val(per_day_rent);
+                $("#km_per_charge").val(km_per_charge);
+                $("#gps_emei_number").val(gps_emei_number);
+                $("#description").val(description);
+                $('#ev_type_id').val(ev_type_id).trigger('change');
+                $('#ev_category').val(ev_category_id).trigger('change');
+                $('#profile_category').val(profile_category).trigger('change');
+                $('#rent_cycle').val(rent_cycle).trigger('change');
+                $('#battery_type').val(battery_type).trigger('change');
+                $('#status_id').val(status_id).trigger('change');
+                $("#updateurl").val(updateurl);
+                var imageUrl = "{{ asset('public/upload/product')}}/" + image;
+                $('#selectImageRemove').html('<img id = "selectedImage" src="' + imageUrl + '" alt = "vehicle image" class = "upload_des_preview clickable">');
+                if (is_display_on_app == 1) {
+                    $('#is_display_on_app').prop('checked', true);
+                } else {
+                    $('#is_display_on_app').prop('checked', false);
+                }
+                $("#userModalLabel").html('Update Vehicle');
+                $("#submitVehicle").html('Update');
+            }
+
+        });
+
+        $('#submitVehicle').click(function(e) {
+            e.preventDefault();
+            var slug = $('#slug').val();
+            var updateurl = $('#updateurl').val();
+            var name = $('#title').val();
+            if (name == "") {
+                $(".title_error").html('This field is required!');
+                $("input#title").focus();
+                return false;
+            }
+            var name = $('#ev_number').val();
+            if (name == "") {
+                $(".ev_number_error").html('This field is required!');
+                $("input#ev_number").focus();
+                return false;
+            }
+            var name = $('#chassis_number').val();
+            if (name == "") {
+                $(".chassis_number_error").html('This field is required!');
+                $("input#chassis_number").focus();
+                return false;
+            }
+            $('#submitForm').prop('disabled', true);
+            $('#submitForm').html('Please wait...')
+            var formDatas = new FormData(document.getElementById('vehiclForm'));
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                method: 'POST',
+                url: slug ? updateurl : "{{route('add-product')}}",
+                data: formDatas,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    $('#message').html("<span class='sussecmsg'>" + data.message + "</span>");
+                    $('#submitForm').prop('disabled', false);
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 1000);
+
+                },
+                errors: function() {
+                    $('#message').html("<span class='sussecmsg'>Somthing went wrong!</span>");
+                }
+            });
+        });
+
     });
+
+    function displaySelectedImage(event, elementId) {
+        const selectedImage = document.getElementById(elementId);
+        const fileInput = event.target;
+
+        console.log('File Input:', fileInput);
+        console.log('Files:', fileInput.files);
+        console.log('fileInput.files.length', fileInput.files.length)
+        if (fileInput.files.length == 0) {
+            var imageUrl = "{{ asset('public/assets/images/uploadimg.png') }}";
+            $('#selectImageRemove').html('<img id = "selectedImage" src="' + imageUrl + '" alt = "vehicle image" class = "upload_des_preview clickable">');
+        }
+
+        if (fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                console.log('Reader result:', e.target.result);
+                selectedImage.src = e.target.result;
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    }
 
     // Active inactive status toggle
     function toggleStatus(toggleId, params) {
