@@ -16,9 +16,9 @@
                     <li><a href="" class="" title="Products">Products</a></li>
                     @endcan --}}
                     <li><a href="{{ route('product-ev-types') }}" class="" title="Ev Types">Ev Types</a></li>
-                     @if(Auth::user()->role_id == 0)
+                    @if(Auth::user()->role_id == 0)
                     <li><a href="{{ route('accessories') }}" class="active" title="Accessories">Accessories</a>
-                    @endif
+                        @endif
                     </li>
                 </ul>
             </div>
@@ -96,8 +96,8 @@
                                         <td>{{$accessories->accessories_category}}</td>
                                         <td>{{$accessories->title}}</td>
                                         <td>{{$accessories->no_of_item}}</td>
-                                        <td>{{$accessories->price}}</td>
-                                        <td>{{ $accessories->price * $accessories->no_of_item }}</td>
+                                        <td>₹{{$accessories->price}}</td>
+                                        <td>₹{{ $accessories->price * $accessories->no_of_item }}</td>
                                         <td>
                                             <a class="accessoriesModelForm" data-toggle="modal" data-category="{{ $accessories->accessories_category_id }}" data-slug="{{ $accessories->slug }}" data-price="{{ $accessories->price }}" data-title="{{ $accessories->title }}" data-item="{{ $accessories->no_of_item }}" data-image="{{ $accessories->image }}" title="Edit Accessories" style="cursor: pointer;margin-right: 5px;">Edit
                                             </a>
