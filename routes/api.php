@@ -1,10 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\KycApiController;
 use App\Http\Controllers\Api\AuthApiController;
-use App\Http\Controllers\Api\ApiCommonController;
 
 /*
 |--------------------------------------------------------------------------
