@@ -27,6 +27,7 @@ class CreateProductsTable extends Migration
             $table->unsignedBigInteger('hub_id')->nullable();
             $table->text('description')->nullable();
             $table->tinyInteger('is_display_on_app')->default(2)->comment('1 => Yes, 2 => No');
+            $table->tinyInteger('bike_type')->default(2)->comment('1 => Cargo bike, 2 => bike');
             $table->string('image')->nullable();
             $table->string('chassis_number')->nullable();
             $table->string('ev_number')->nullable();

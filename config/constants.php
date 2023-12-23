@@ -53,7 +53,10 @@ return [
         'TWO_WHEELER' => 1,
         'THREE_WHEELER' => 2,
     ],
-
+    'BIKE_TYPE' => [
+        'CARGO_BIKE' => 1,
+        'NORMAL_BIKE' => 2,
+    ],
     'PROFILE_CATEGORIES' => [
         'CORPORATE' => 1,
         'INDIVIDUAL' => 2,

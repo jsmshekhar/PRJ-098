@@ -28,4 +28,7 @@ Route::middleware(['auth:rider-api'])->namespace('Api')->prefix('v1')->group(fun
     Route::get('/rider-details', [AuthApiController::class, 'getRiderDetails']);
     Route::get('/profile-category', [KycApiController::class, 'profileCategory']);
     Route::get('/vehicle-preferences', [KycApiController::class, 'vehiclePreferences']);
+    Route::get('/vehicle-details/{slug}', [KycApiController::class, 'vehicleDetails']);
+
+    Route::post('create-order', [KycApiController::class, 'createOrder']);
 });
