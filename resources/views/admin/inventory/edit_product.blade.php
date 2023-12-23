@@ -49,11 +49,11 @@
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="example-title-input" class="form-label">Single charge Run Time(km)</label>
-                                    <input class="form-control" type="text" name="per_day_rent" id="per_day_rent" value="{{$product->per_day_rent}}">
+                                    <input class="form-control" type="text" name="km_per_charge" id="km_per_charge" value="{{$product->km_per_charge}}">
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="example-title-input" class="form-label">Rent per Day(Rs)</label>
-                                    <input class="form-control" type="text" name="km_per_charge" id="km_per_charge" value="{{$product->km_per_charge}}">
+                                    <input class="form-control" type="text" name="per_day_rent" id="per_day_rent" value="{{$product->per_day_rent}}">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="rent_cycle" class="form-label">Rent Cycle</label>

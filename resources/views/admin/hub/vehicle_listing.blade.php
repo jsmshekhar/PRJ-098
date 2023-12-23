@@ -112,11 +112,11 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="example-title-input" class="form-label">Single charge Run Time(km)</label>
-                            <input class="form-control" type="text" name="per_day_rent" id="per_day_rent" value="">
+                            <input class="form-control" type="text" name="km_per_charge" id="km_per_charge" value="">
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="example-title-input" class="form-label">Rent per Day(Rs)</label>
-                            <input class="form-control" type="text" name="km_per_charge" id="km_per_charge" value="">
+                            <input class="form-control" type="text" name="per_day_rent" id="per_day_rent" value="">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="profile_category" class="form-label">Profile Category</label>
