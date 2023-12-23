@@ -34,7 +34,7 @@ class CreateProductsTable extends Migration
             $table->integer('ev_category_id')->nullable();
             $table->integer('ev_type_id')->nullable();
             $table->integer('profile_category')->nullable()->comment('1 => CORPORATE, 2 => INDIVIDUAL, 3 => STUDENT, 4 => VENDER');
-            $table->tinyInteger('status_id')->default(1)->comment('1 => Active, 2 => Inactive');
+            $table->tinyInteger('status_id')->default(1)->comment('1 => Active, 2 => Inactive, 3 => Non-Functional, 4 => Not Assigned');
 
             $table->string('user_slug')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();

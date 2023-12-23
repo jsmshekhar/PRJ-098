@@ -79,4 +79,11 @@ return [
         "MOBILE_HOLDER" => 3,
     ],
 
+    'VEHICLE_STATUS' => [
+        'ACTIVE' => 1,
+        'INACTIVE' => 2,
+        'NON_FUNCTIONAL' => 3,
+        'NOT_AVAILABLE' => 4,
+    ],
+
 ];

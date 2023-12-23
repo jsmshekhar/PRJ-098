@@ -10,7 +10,7 @@ use App\Models\Hub;
 use App\Models\Complain;
 use App\Models\Rider;
 use App\Models\Notification;
-use App\Models\ProductCategory;
+use App\Models\Product;
 use App\Policies\UserPolicy;
 use App\Policies\HubPolicy;
 use App\Policies\InventryPolicy;
@@ -35,7 +35,7 @@ class AuthServiceProvider extends ServiceProvider
         Rider::class => CustomerPolicy::class,
         Complain::class => ComplaintPolicy::class,
         Notification::class => NotificationPolicy::class,
-        ProductCategory::class => InventryPolicy::class,
+        //ProductCategory::class => InventryPolicy::class,
         Product::class => InventryPolicy::class,
     ];
 
@@ -87,7 +87,12 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('edit_product_type', 'App\Policies\InventryPolicy@edit_product_type');
 
         //Inventry Product Policies
+        Gate::define('add_inventry', 'App\Policies\InventryPolicy@add_inventry');
+        Gate::define('edit_inventry', 'App\Policies\InventryPolicy@edit_inventry');
         Gate::define('view_inventry', 'App\Policies\InventryPolicy@view_inventry');
+        Gate::define('delete_inventry', 'App\Policies\InventryPolicy@delete_inventry');
+        Gate::define('map_inventry_rider', 'App\Policies\InventryPolicy@map_inventry_rider');
+        Gate::define('map_inventry_to_hub', 'App\Policies\InventryPolicy@map_inventry_to_hub');
 
         Passport::routes();
         Passport::tokensExpireIn(now()->addDays(7));

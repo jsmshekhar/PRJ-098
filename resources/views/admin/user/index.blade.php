@@ -9,6 +9,10 @@
     input[switch]:checked+label:after {
         left: 54px !important;
     }
+
+    .modelWidth {
+        max-width: 45%;
+    }
 </style>
 @endsection
 @section('content')
@@ -201,8 +205,8 @@
 
 </div>
 <!-- Add role model -->
-<div class="modal fade" id="userModelForm" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog">
+<div class="modal fade" id="userModelForm" role="dialog" aria-labelledby="modalLabel" data-keyboard="false" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modelWidth">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="userModalLabel">Add User</h5>
@@ -211,38 +215,44 @@
             <div class="modal-body">
                 <form method="post" enctype="multipart/form-data" id="addUpdateUser">
                     @csrf
-                    <input type="hidden" class="form-control" name="slug" id="slug">
-                    <div class="form-group mb-2">
-                        <label for="role-name" class="col-form-label">First Name <sup class="compulsayField">*</sup> <span class="spanColor name_error"></span></label>
-                        <input type="text" name="first_name" class="form-control" id="first_name">
-                    </div>
-                    <div class="form-group mb-2">
-                        <label for="role-name" class="col-form-label">Last Name</label>
-                        <input type="text" name="last_name" class="form-control" id="last_name">
-                    </div>
-                    <div class="form-group mb-2">
-                        <label for="role-name" class="col-form-label">Email <sup class="compulsayField">*</sup> <span class="spanColor email_error"></span></label>
-                        <input type="text" name="email" class="form-control" id="email">
-                    </div>
-                    <div class="form-group mb-2">
-                        <label for="role-name" class="col-form-label">Phone No.</label>
-                        <input type="text" name="phone" class="form-control" id="phone">
-                    </div>
-                    <div class="form-group mb-2">
-                        <label for="choices-single-no-search" class="form-label font-size-13 text-muted">Role</label>
-                        <select class="form-control select2" name="role_id" id="role_id">
-                            @foreach($roles as $role)
-                            <option value="{{$role->role_id}}">{{ucfirst($role->name)}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group mb-2">
-                        <label for="choices-single-no-search" class="form-label font-size-13 text-muted">Hub</label>
-                        <select class="form-control select2" name="hub_id" id="hub_id">
-                            @foreach($hubs as $hub)
-                            <option value="{{$hub->hub_id}}">{{$hub->city}}</option>
-                            @endforeach
-                        </select>
+                    <div class="row">
+                        <input type="hidden" class="form-control" name="slug" id="slug">
+                        <div class="col-md-6 form-group mb-1">
+                            <label for="role-name" class="col-form-label">First Name <sup class="compulsayField">*</sup> <span class="spanColor name_error"></span></label>
+                            <input type="text" name="first_name" class="form-control" id="first_name">
+                        </div>
+                        <div class="col-md-6 form-group mb-1">
+                            <label for="role-name" class="col-form-label">Last Name</label>
+                            <input type="text" name="last_name" class="form-control" id="last_name">
+                        </div>
+                        <div class="col-md-6 form-group mb-1">
+                            <label for="role-name" class="col-form-label">Email <sup class="compulsayField">*</sup> <span class="spanColor email_error"></span></label>
+                            <input type="text" name="email" class="form-control" id="email">
+                        </div>
+                        <div class="col-md-6 form-group mb-1">
+                            <label for="role-name" class="col-form-label">Phone No.</label>
+                            <input type="text" name="phone" class="form-control" id="phone">
+                        </div>
+                        <div class="col-md-6 form-group mb-1">
+                            <label for="role-name" class="col-form-label">Password</label>
+                            <input type="text" name="password" class="form-control" id="password">
+                        </div>
+                        <div class="col-md-6 form-group mb-1">
+                            <label for="choices-single-no-search" class="col-form-label font-size-13 text-muted">Role</label>
+                            <select class="form-control select2" name="role_id" id="role_id">
+                                @foreach($roles as $role)
+                                <option value="{{$role->role_id}}">{{ucfirst($role->name)}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 form-group mb-1">
+                            <label for="choices-single-no-search" class="col-form-label font-size-13 text-muted">Hub</label>
+                            <select class="form-control select2" name="hub_id" id="hub_id">
+                                @foreach($hubs as $hub)
+                                <option value="{{$hub->hub_id}}">{{$hub->city}}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </form>
             </div>

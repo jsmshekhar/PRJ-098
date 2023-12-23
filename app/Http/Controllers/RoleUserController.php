@@ -148,10 +148,19 @@ class RoleUserController extends AdminAppController
             if (isset($request->per_page) && $request->per_page > 0) {
                 $perPage = $request->per_page;
             }
+            $auth = Auth::user();
             if (Gate::allows('view_user', $permission)) {
                 $users = User::select('users.*', 'roles.name as role_name')
-                    ->where('users.hub_id', Auth::user()->hub_id)
-                    ->orWhere('users.role_id', '!=', 0)
+                    ->where(function ($query) {
+                        $query->where('users.hub_id', Auth::user()->hub_id)
+                            ->where('users.role_id', '!=', 0)
+                            ->where('users.user_id', '!=', Auth::user()->user_id);
+                    })
+                    ->orWhere(function ($query) {
+                        $query->where('users.created_by', Auth::user()->user_id)
+                            ->where('users.role_id', '!=', 0)
+                            ->where('users.user_id', '!=', Auth::user()->user_id);
+                    })
                     ->whereNull('users.deleted_at')
                     ->leftJoin('roles', 'users.role_id', '=', 'roles.role_id');
 
@@ -206,17 +215,31 @@ class RoleUserController extends AdminAppController
             $role_id = !empty($request->role_id) ? $request->role_id : "";
             $slug = !empty($request->slug) ? $request->slug : "";
             $hub_id = !empty($request->hub_id) ? $request->hub_id : "";
+            $password = !empty($request->password) ? $request->password : "";
             $last_empId = User::latest()->select('emp_id')->where('users.role_id', '!=', 0)->first();
             $auth = Auth::user();
             if (!empty($request->slug)) {
-                $userId = User::where('slug', $slug)->update([
-                    "first_name" => $first_name,
-                    "last_name" => $last_name,
-                    "email" => $email,
-                    "phone" => $phone,
-                    "role_id" => $role_id,
-                    "hub_id" => $hub_id,
-                ]);
+                if($password){
+                    $userId = User::where('slug', $slug)->update([
+                        "first_name" => $first_name,
+                        "last_name" => $last_name,
+                        "email" => $email,
+                        "phone" => $phone,
+                        "role_id" => $role_id,
+                        "hub_id" => $hub_id,
+                        "password" => Hash::make($password),
+                    ]);
+                }else{
+                    $userId = User::where('slug', $slug)->update([
+                        "first_name" => $first_name,
+                        "last_name" => $last_name,
+                        "email" => $email,
+                        "phone" => $phone,
+                        "role_id" => $role_id,
+                        "hub_id" => $hub_id,
+                    ]);
+                }
+                
             } else {
                 $slug = slug();
                 $token = Str::random(60); // generate a random token
@@ -230,8 +253,9 @@ class RoleUserController extends AdminAppController
                     "hub_id" => $hub_id,
                     "user_slug" => $auth->slug,
                     "emp_id" => $last_empId ? $last_empId->emp_id + 1 : 101,
-                    "password" => Hash::make($slug),
+                    "password" => Hash::make($password),
                     "set_password_token" => $token,
+                    "created_by" => $auth->user_id,
                 ]);
                 $user = User::where('user_id', $userId)->first();
                 // $user->notify(new SetPasswordNotification($token));
