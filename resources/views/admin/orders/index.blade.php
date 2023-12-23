@@ -126,10 +126,25 @@
                                                     <td>{{ $order->rider->name }}</td>
                                                     <td>{{ dateFormat($order->order_date) }}</td>
                                                     <td>{{ $order->slug }}</td>
-                                                    <td>{{ $order->phone }}</td>
-                                                    <td>{{ dateFormat($order->created_at) }}</td>
                                                     <td>
+                                                        {{ $order->product_name . ',' }}
+
+                                                        @php
+                                                            $accessoriesItems = [];
+                                                        @endphp
+                                                        @if (!is_null($order->accessories_items))
+                                                            @php
+
+                                                                foreach (json_decode($order->accessories_items) as $items) {
+                                                                    $accessoriesItems[] = ucwords($items->title);
+                                                                }
+                                                                sort($accessoriesItems);
+                                                                echo implode(', ', $accessoriesItems);
+                                                            @endphp
+                                                        @endif
                                                     </td>
+                                                    <td>{{ count($accessoriesItems) + 1 }}</td>
+                                                    <td>{{ $order->ordered_ammount }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

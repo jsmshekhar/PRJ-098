@@ -92,7 +92,7 @@ class Rider extends Authenticatable
                 config(['auth.guards.rider-api.driver' => 'session']);
                 $rider = Auth::guard('rider')->user();
                 $token = $rider->createToken('rider')->accessToken;
-                $result = ['headerToken' => $token, 'rider' => $rider];
+                $result = ['headerToken' => $token, 'isKycDone' => 1, 'rider' => $rider];
                 return successResponse(Response::HTTP_OK, Lang::get('messages.LOGIN_SUCCESS'), $result);
             }
             return errorResponse(Response::HTTP_UNAUTHORIZED, Lang::get('messages.UNAUTHORIZED'), (object)[]);
