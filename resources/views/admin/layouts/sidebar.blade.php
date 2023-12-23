@@ -94,6 +94,14 @@
                      </a>
                  </li>
 
+                 <li class="{{ Request::routeIs('order-list') ? 'mm-active' : '' }}">
+                     <a href="{{ route('order-list') }}"
+                         class="{{ Request::routeIs('order-list') ? 'active' : '' }}">
+                         <img src="{{ asset('public/assets/images/icons/Refund-icon.svg') }}" alt="">
+                         <span>Order</span>
+                     </a>
+                 </li>
+
              </ul>
          </div>
          <!-- Sidebar -->

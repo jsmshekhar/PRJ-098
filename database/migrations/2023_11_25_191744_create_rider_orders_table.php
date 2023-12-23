@@ -40,6 +40,10 @@ class CreateRiderOrdersTable extends Migration
             $table->integer('subscription_days')->nullable();
             $table->timestamp('subscription_validity')->nullable();
 
+            $table->string('ordered_ammount')->nullable();
+            $table->string('security_ammount')->nullable();
+            $table->text('requested_payload')->nullable();
+
             $table->tinyInteger('status_id')->default(2)->comment('1 => Assigned, 2 => Pending, 3 => Rejected');
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
