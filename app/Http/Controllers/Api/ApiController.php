@@ -13,7 +13,7 @@ class ApiController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api-rider');
+        $this->middleware('auth:rider-api');
     }
 
     /*--------------------------------------------------

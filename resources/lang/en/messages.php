@@ -25,6 +25,8 @@ return [
     'PROXY_AUTHENTICATION_EQUIRED' => 'Proxy authentication required.',
     'INVALID_REQUEST_METHOD' => "This method is not supported this route.",
     'ORDER_CREATED' => "Order created successfully.",
-    'ORDER_ERROR' => "Unable to create order."
+    'ORDER_ERROR' => "Unable to create order.",
+    "UPLOAD_SUCCESS" => "File uploaded successfully.",
+    "UPLOAD_ERROR" => "Unable to upload file.",
 
 ];
