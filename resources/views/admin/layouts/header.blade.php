@@ -63,25 +63,25 @@ if ($roles) {
                 </div>
             </div>
 
-            
+
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item noti-icon position-relative" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <img src="{{ asset('public/assets/images/icons/setting-icon.svg') }}" alt="">
                 </button>
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end admin_profilt_pop">
-                <div data-simplebar>
-                    <div class="w-100 text-end">
-                        <a href="#" class="btn btn-link-cust"> Edit </a>
-                    </div>
+                    <div data-simplebar>
+                        <div class="w-100 text-end">
+                            <a href="#" class="btn btn-link-cust" data-bs-toggle="modal" data-bs-target="#Editcompany"> Edit </a>
+                        </div>
                         <div class="profil_img">
                             <img class="img-thumbnail border-0 p-0 avatar-xl" alt="200x200" src="http://localhost/PRJ-098/public/assets/images/logo-sm.svg" data-holder-rendered="true">
                         </div>
-                       <ul>
-                        <li>Company name :  <span>Evatoz Solutions</span></li>
-                        <li>Company Address : <span> flat No121, sector 63, Noida</span></li>
-                       </ul>
-                   </div>
-                   
+                        <ul>
+                            <li>Company name : <span>Evatoz Solutions</span></li>
+                            <li>Company Address : <span> flat No121, sector 63, Noida</span></li>
+                        </ul>
+                    </div>
+
                 </div>
             </div>
             <div class="dropdown d-inline-block">
@@ -90,9 +90,9 @@ if ($roles) {
                     <span class="badge bg-danger rounded-pill"></span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0 admin_profilt_pop" aria-labelledby="page-header-notifications-dropdown">
-                    
+
                     <div data-simplebar style="max-height: 230px;">
-                       
+
                         <a href="#!" class="text-reset notification-item">
                             <div class="d-flex">
                                 <div class="flex-grow-1 p-3 border-bottom">
@@ -138,25 +138,25 @@ if ($roles) {
                     <span class="d-grid d-grid justify-content-start">{{$role}}</span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end admin_profilt_pop">
-                <div data-simplebar>
-                    <div class="w-100 text-end">
-                        <a href="#" class="btn btn-link-cust"> Edit </a>
-                    </div>
+                    <div data-simplebar>
+                        <div class="w-100 text-end">
+                            <a href="#" class="btn btn-link-cust" data-bs-toggle="modal" data-bs-target="#Editprofile"> Edit </a>
+                        </div>
                         <div class="profil_img">
                             <img class="img-thumbnail rounded-circle avatar-xl" alt="200x200" src="http://localhost/PRJ-098/public/assets/images/users/avatar-3.jpg" data-holder-rendered="true">
                             <span class="active"></span>
                         </div>
-                       <ul>
-                        <li>Name : <span>Ankit Lodhi</span></li>
-                        <li>Email : <span> Ankit@gmail.com</span></li>
-                        <li>Mobile number : <span> +91 789 456 7786</span></li>
-                        <li> Designation : <span> Admin</span></li>
-                       </ul>
-                       <div class="d-flex">
-                        <a href="#" class="btn btn-theme-drop mr-2"> Change Password </a>
-                        <a href="#" class="btn btn-theme-drop"> Logout </a>
-                       </div>
-                   </div>
+                        <ul>
+                            <li>Name : <span>Ankit Lodhi</span></li>
+                            <li>Email : <span> Ankit@gmail.com</span></li>
+                            <li>Mobile number : <span> +91 789 456 7786</span></li>
+                            <li> Designation : <span> Admin</span></li>
+                        </ul>
+                        <div class="d-flex">
+                            <a href="#" class="btn btn-theme-drop mr-2"> Change Password </a>
+                            <a href="#" class="btn btn-theme-drop"> Logout </a>
+                        </div>
+                    </div>
                     <!-- item-->
                     <!-- <a class="dropdown-item" href="#">Profile</a>
                     <a class="dropdown-item" href="#">Lock Screen</a>
@@ -169,4 +169,82 @@ if ($roles) {
             </div>
         </div>
     </div>
+
 </header>
+
+<div id="Editprofile" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" data-bs-scroll="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header">
+                <h5 class="modal-title" id="typeModalLabel">Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" enctype="multipart/form-data" id="addUpdateEvType" autocomplete="off">
+                    @csrf
+                    <div class="row">
+                        
+                        <div class="col-12">
+                            <input type="hidden" class="form-control" name="slug" id="evslug">
+                            <div class="form-group mb-2">
+                                <label for="ev_type_name" class="col-form-label">Email <sup class="compulsayField">*</sup> <span class="spanColor ev_type_name_error"></span></label>
+                                <input type="text" name="ev_type_name" class="form-control" id="ev_type_name">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group mb-2">
+                                <label for="range" class="col-form-label ">Phone Number &nbsp;<span class="spanColor" id="range_errors"></span></label>
+                                <input type="text" name="range" class="form-control" id="range">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+                <span class=" text-success d-block" id="messageEvType" style="margin-right: 10px"></span>
+                <button type="button" id="submitEvType" class="btn btn-success waves-effect waves-light">Save
+                </button>
+                <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<div id="Editcompany" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" data-bs-scroll="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header">
+                <h5 class="modal-title" id="typeModalLabel">Edit Company Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" enctype="multipart/form-data" id="addUpdateEvType" autocomplete="off">
+                    @csrf
+                    <div class="row">
+                        
+                        <div class="col-12">
+                            <input type="hidden" class="form-control" name="slug" id="evslug">
+                            <div class="form-group mb-2">
+                                <label for="ev_type_name" class="col-form-label">Company Name <sup class="compulsayField">*</sup> <span class="spanColor ev_type_name_error"></span></label>
+                                <input type="text" name="ev_type_name" class="form-control" id="ev_type_name">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group mb-2">
+                                <label for="range" class="col-form-label ">Company Address &nbsp;<span class="spanColor" id="range_errors"></span></label>
+                                <input type="text" name="range" class="form-control" id="range">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+                <span class=" text-success d-block" id="messageEvType" style="margin-right: 10px"></span>
+                <button type="button" id="submitEvType" class="btn btn-success waves-effect waves-light">Save
+                </button>
+                <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

@@ -97,7 +97,7 @@
                  <li class="{{ Request::routeIs('order-list') ? 'mm-active' : '' }}">
                      <a href="{{ route('order-list') }}"
                          class="{{ Request::routeIs('order-list') ? 'active' : '' }}">
-                         <img src="{{ asset('public/assets/images/icons/Refund-icon.svg') }}" alt="">
+                         <img src="{{ asset('public/assets/images/icons/Order.svg') }}" alt="">
                          <span>Order</span>
                      </a>
                  </li>

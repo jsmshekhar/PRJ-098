@@ -38,4 +38,3 @@ document.addEventListener('DOMContentLoaded', function() {
         removeBtn.classList.add('hidden'); // Hide remove button after removal
     });
 });
-

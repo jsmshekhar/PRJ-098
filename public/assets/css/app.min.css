@@ -6658,7 +6658,7 @@ table .dropdown-menu.show .dropdown-item:hover {
 
 .cat_list.cat_sub ul li{
   height: 267px;
-  padding: 0 20px;
+  padding:0 20px;
   cursor: pointer;
 }
 
@@ -6682,7 +6682,8 @@ table .dropdown-menu.show .dropdown-item:hover {
   color: #009745;
   font-size: 16px;
   font-style: normal;
-  font-weight: 500; 
+  font-weight: 500;
+  padding: 0;
 }
 
 .cat_list ul li .stock_in{
@@ -6700,8 +6701,8 @@ table .dropdown-menu.show .dropdown-item:hover {
 
 .dz-message.needsclick.text-center h5{
   margin: 0;
-    color: #009745;
-    font-size: 12px;
+    color: gray;
+    font-size: 14px;
     font-style: normal;
     font-weight: 500;
     line-height: 150%;
@@ -6813,4 +6814,60 @@ table .dropdown-menu.show .dropdown-item:hover {
 .heading_label{
   font-size: 12px;
   color: #49a257;
+}
+
+.sub_btns a{
+  padding: 0 5px !important; 
+}
+
+.fa-edit{
+    color: #008c34;
+}
+
+.fa-trash{
+  color: #fd625e;
+}
+
+.fa-info-circle{
+  color: #5156be;
+}
+
+
+@media (max-width:1523px) {
+  .cat_list ul li {
+    width: 32%;
+  }
+}
+
+@media (max-width:1149px) {
+  .cat_list ul li {
+    width: 48%;
+  }
+}
+
+@media (max-width:767px) {
+  .page-content{
+    padding: 100px 0 10px;
+  }
+  .nav_cust_menu ul li{
+    display: block;
+  }
+  .nav_cust_menu ul li a{
+    padding: 10px 25px;
+  }
+  .cat_list ul li{
+    width: 100%;
+  }
+  .nav_cust_menu ul li{
+    border: 0;
+  }
+  .header-item{
+    padding: 0 5px;
+  }
+  body:not([data-sidebar-size="sm"]) #vertical-menu-btn{
+    margin-right: 5px;
+  }
+  .noti-icon img{
+    padding: 5px;
+  }
 }
