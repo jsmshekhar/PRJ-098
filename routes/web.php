@@ -18,6 +18,7 @@ use App\Http\Controllers\RefundMgmtController;
 use App\Http\Controllers\TransactionMgmtController;
 use App\Http\Controllers\WalletMgmtController;
 use App\Http\Controllers\AccessoriesController;
+use App\Http\Controllers\HubPartAccessoriesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -103,6 +104,10 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/transaction-management', [TransactionMgmtController::class, 'index'])->name('transaction-management');
         Route::get('/wallet-management', [WalletMgmtController::class, 'index'])->name('wallet-management');
         Route::get('/refund-management', [RefundMgmtController::class, 'index'])->name('refund-management');
+
+        Route::get('/hub-part-accessories', [HubPartAccessoriesController::class, 'getHubPartAccessories'])->name('hub-part-accessories');
+        Route::post('/add-accessories-hub-part', [HubPartAccessoriesController::class, 'addRequestHubPart'])->name('add-accessories-hub-part');
+        Route::post('/update-accessories-hub-part', [HubPartAccessoriesController::class, 'updateAssignedAccessories'])->name('update-accessories-hub-part');
 
         /* Shekhar's - Route */
         @include('admin.php');

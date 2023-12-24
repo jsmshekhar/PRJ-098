@@ -23,7 +23,7 @@ class CreateHubPartAccessoriesTable extends Migration
             $table->integer('accessories_category_id')->nullable();
             $table->string('accessories_title', 20)->nullable();
             $table->string('accessories_price', 20)->nullable();
-
+            $table->string('assigned_price', 50)->nullable();
             $table->string('requested_qty', 20)->nullable();
             $table->string('assigned_qty', 20)->nullable();
 

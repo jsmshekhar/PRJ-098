@@ -54,6 +54,10 @@ class ModuleTableSeeder extends Seeder
                 'slug' => "REFUNDMGT",
                 'name' => "Refund Management",
             ],
+            [
+                'slug' => "HUBPARTACCESSORIS",
+                'name' => "Hub Part Accessories",
+            ],
         ]; 
         Module::insert($modules);
     }
