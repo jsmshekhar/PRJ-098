@@ -93,7 +93,7 @@ class Hub extends Model
             $battery_types = [];
             $hub = Hub::where('slug', $slug)->whereNull('deleted_at')->first();
             if($param == 'vehicle'){
-                $vehicles = Product::join('ev_types as et', 'products.ev_type_id', '=', 'et.ev_type_id')
+                $vehicles = Product::leftJoin('ev_types as et', 'products.ev_type_id', '=', 'et.ev_type_id')
                 ->where('products.hub_id', $hub->hub_id)
                 ->whereNull('products.deleted_at')
                 ->select(
@@ -121,6 +121,7 @@ class Hub extends Model
                 $battery_types = config('constants.BATTERY_TYPE');
                 $profile_categories = config('constants.PROFILE_CATEGORIES');
                 $vehicleStatus = config('constants.VEHICLE_STATUS');
+                $bike_types = config('constants.BIKE_TYPE');
             }
             if ($param == 'employee') {
                 $employees = User::select('users.*', 'roles.name as role_name')
@@ -132,15 +133,15 @@ class Hub extends Model
                     ->paginate($perPage);
                 $roles = Role::whereNull('deleted_at')->get();
                 $maxEmpId = User::select('emp_id')->orderBy('emp_id','DESC')->first();
-                 $hub->max_emp_id = $maxEmpId ? $maxEmpId->emp_id : 101;
+                $hub->max_emp_id = $maxEmpId ? $maxEmpId->emp_id : 101;
             }
            
 
             if ($hub) {
-                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => $hub, 'vehicles' => $vehicles, 'employees' => $employees, 'roles' => $roles,'rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'battery_types' => $battery_types, 'profile_categories' => $profile_categories, 'vehicleStatus' => $vehicleStatus]);
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => $hub, 'vehicles' => $vehicles, 'employees' => $employees, 'roles' => $roles,'rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'battery_types' => $battery_types, 'profile_categories' => $profile_categories, 'vehicleStatus' => $vehicleStatus, 'bike_types' => $bike_types]);
             } else {
                 
-                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => [], 'vehicles' => [], 'employees' => [], 'roles' => [],'rent_cycles' => [], 'ev_types' => [], 'ev_categories' =>[], 'battery_types' => [], 'profile_categories' => [], 'vehicleStatus' => []]);
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => [], 'vehicles' => [], 'employees' => [], 'roles' => [],'rent_cycles' => [], 'ev_types' => [], 'ev_categories' =>[], 'battery_types' => [], 'profile_categories' => [], 'bike_types' => []]);
             }
         } catch (\Throwable $ex) {
             $result = [

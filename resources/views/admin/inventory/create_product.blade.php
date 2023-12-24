@@ -13,7 +13,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header border-bottom bg-white">
-                
+
                     <h4> Add Product <span class="d-flex heading_label"> {{ucfirst(request()->route('param'))}} </span> </h4>
                     <div class="nav_cust_menu">
                         <ul>
@@ -32,11 +32,11 @@
                                     <input class="form-control" type="hidden" name="profile_category" id="profile_category" value="{{request()->route('param') == 'corporate' ? 1 :(request()->route('param') == 'individual' ? 2 : (request()->route('param') == 'student' ? 3 : 4))}}">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="example-title-input" class="form-label">EV Number* &nbsp; <span class="spanColor ev_number_error"></label>
+                                    <label for="example-title-input" class="form-label">EV Number* &nbsp; <span class="spanColor ev_number_error"></span></label>
                                     <input class="form-control" type="text" name="ev_number" id="ev_number" value="">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="example-title-input" class="form-label">Chassis Number* &nbsp; <span class="spanColor chassis_number_error"></label>
+                                    <label for="example-title-input" class="form-label">Chassis Number* &nbsp; <span class="spanColor chassis_number_error"></span></label>
                                     <input class="form-control" type="text" name="chassis_number" id="chassis_number" value="">
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -52,8 +52,8 @@
                                     <input class="form-control" type="text" name="km_per_charge" id="km_per_charge" value="">
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <label for="example-title-input" class="form-label">Rent per Day(Rs)</label>
-                                    <input class="form-control" type="text" name="per_day_rent" id="per_day_rent" value="">
+                                    <label for="example-title-input" class="form-label">Rent per Day(Rs) &nbsp; <span class="spanColor onlyDigit_error"> </span></label>
+                                    <input class="form-control onlyDigit" type="text" name="per_day_rent" id="per_day_rent" value="">
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="rent_cycle" class="form-label">Rent Cycle</label>
@@ -64,10 +64,10 @@
                                     </select>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <label for="battery_type" class="form-label">Bike Type</label>
-                                    <select class="form-control selectBasic" name="battery_type" id="battery_type">
-                                        @foreach($battery_types as $key => $battery_type)
-                                        <option value="{{$battery_type}}">{{$battery_type == 1 ? "Swappable" : "Fixed"}}</option>
+                                    <label for="bike_type" class="form-label">Bike Type</label>
+                                    <select class="form-control selectBasic" name="bike_type" id="bike_type">
+                                        @foreach($bike_types as $key => $bike_type)
+                                        <option value="{{$bike_type}}">{{$bike_type == 1 ? "Cargo Bike" : "Normal Bike"}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -114,23 +114,22 @@
                                         @endforeach
                                     </select>
                                 </div>
-                               
+
                                 <div class="col-md-6 mb-3">
                                     <label for="title" class="form-label">Description &nbsp; <span class="spanColor description_error"></span></label>
                                     <textarea id="description" name="description" class="form-control" rows="5" placeholder="Write here."></textarea>
                                 </div>
 
-                                <div class="col-md-6 mb-3 ">
+                                <div class="col-md-3 mb-3">
                                     <label for="title" class="form-label">Image Upload</label>
                                     <div class="">
-                                        <label for="customFile1" id="selectImageRemove">
-                                            <img id="selectedImage" src="{{ asset('public/assets/images/uploadimg.png') }}" alt="example placeholder" class="upload_des_preview clickable" />
+                                        <label for="customFile" class="selectImageRemove">
+                                            <img class="upload_des_preview clickable selectedImage " src="{{asset('public/assets/images/uploadimg.png')}}" alt="example placeholder" />
                                         </label>
-                                        <input type="file" class="form-control d-none" name="image" id="customFile1" onchange="displaySelectedImage(event, 'selectedImage')" />
+                                        <input type="file" class="form-control d-none customFile" name="image" id="customFile" />
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <!-- <label for="hub_id" class="form-label">Product Visivility</label> -->
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="remember-check" name="is_display_on_app" checked>
                                         <label class="form-check-label mt-1" for="remember-check">
@@ -203,27 +202,5 @@
             });
         });
     });
-
-    function displaySelectedImage(event, elementId) {
-        const selectedImage = document.getElementById(elementId);
-        const fileInput = event.target;
-
-        console.log('File Input:', fileInput);
-        console.log('Files:', fileInput.files);
-        console.log('fileInput.files.length', fileInput.files.length)
-        if (fileInput.files.length == 0) {
-            var imageUrl = "{{ asset('public/assets/images/uploadimg.png') }}";
-            $('#selectImageRemove').html('<img id = "selectedImage" src="' + imageUrl + '" alt = "vehicle image" class = "upload_des_preview clickable">');
-        }
-
-        if (fileInput.files && fileInput.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                console.log('Reader result:', e.target.result);
-                selectedImage.src = e.target.result;
-            };
-            reader.readAsDataURL(fileInput.files[0]);
-        }
-    }
 </script>
 @endsection

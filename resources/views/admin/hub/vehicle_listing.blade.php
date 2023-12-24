@@ -44,7 +44,7 @@
 
                             <div class="dropdown-menu">
                                 @can('edit_inventry', $permission)
-                                <a class="dropdown-item vehicleModelForm" data-toggle="modal" data-product_id="{{ $vehicle->product_Id }}" data-slug="{{ $vehicle->slug }}" data-hub_id="{{ $vehicle->hub_id }}" data-title="{{ $vehicle->title }}" data-ev_number="{{ $vehicle->ev_number }}" data-ev_type_id="{{ $vehicle->ev_type_id }}" data-ev_category_id="{{ $vehicle->ev_category_id }}" data-profile_category="{{ $vehicle->profile_category }}" data-speed="{{ $vehicle->speed }}" data-rent_cycle="{{ $vehicle->rent_cycle }}" data-per_day_rent="{{ $vehicle->per_day_rent }}" data-bettery_type="{{ $vehicle->bettery_type }}" data-km_per_charge="{{ $vehicle->km_per_charge }}" data-description="{{ $vehicle->description }}" data-is_display_on_app="{{ $vehicle->is_display_on_app }}" data-chassis_number="{{ $vehicle->chassis_number }}" data-gps_emei_number="{{ $vehicle->gps_emei_number }}" data-image="{{ $vehicle->image }}" data-status="{{ $vehicle->status_id }}" data-updateurl="{{ route('update-product',['slug'=>$vehicle->slug]) }}" title="Edit Vehicle" style="cursor: pointer;margin-right: 5px;"></i><i class="fa fa-edit"></i> Edit
+                                <a class="dropdown-item vehicleModelForm" data-toggle="modal" data-product_id="{{ $vehicle->product_Id }}" data-slug="{{ $vehicle->slug }}" data-hub_id="{{ $vehicle->hub_id }}" data-title="{{ $vehicle->title }}" data-ev_number="{{ $vehicle->ev_number }}" data-ev_type_id="{{ $vehicle->ev_type_id }}" data-ev_category_id="{{ $vehicle->ev_category_id }}" data-profile_category="{{ $vehicle->profile_category }}" data-speed="{{ $vehicle->speed }}" data-rent_cycle="{{ $vehicle->rent_cycle }}" data-per_day_rent="{{ $vehicle->per_day_rent }}" data-bettery_type="{{ $vehicle->bettery_type }}" data-km_per_charge="{{ $vehicle->km_per_charge }}" data-description="{{ $vehicle->description }}" data-is_display_on_app="{{ $vehicle->is_display_on_app }}" data-chassis_number="{{ $vehicle->chassis_number }}" data-gps_emei_number="{{ $vehicle->gps_emei_number }}" data-image="{{ $vehicle->image }}" data-bike_type="{{ $vehicle->bike_type }}" data-status="{{ $vehicle->status_id }}" data-updateurl="{{ route('update-product',['slug'=>$vehicle->slug]) }}" title="Edit Vehicle" style="cursor: pointer;margin-right: 5px;"></i><i class="fa fa-edit"></i> Edit
                                 </a>
                                 @endcan
                                 @can('delete_inventry', $permission)
@@ -135,6 +135,14 @@
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
+                            <label for="bike_type" class="form-label">Bike Type</label>
+                            <select class="form-control selectBasic" name="bike_type" id="bike_type">
+                                @foreach($bike_types as $key => $bike_type)
+                                <option value="{{$bike_type}}">{{$bike_type == 1 ? "Cargo Bike" : "Normal Bike"}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
                             <label for="battery_type" class="form-label">Battery Type</label>
                             <select class="form-control selectBasic" name="battery_type" id="battery_type">
                                 @foreach($battery_types as $key => $battery_type)
@@ -159,26 +167,17 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="hub_id" class="form-label">Product Visivility</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="is_display_on_app" name="is_display_on_app">
-                                <label class="form-check-label" for="remember-check">
-                                    &nbsp; The product is displayed on the app.
-                                </label>
-                            </div>
-                        </div>
                         <div class="col-md-8 mb-3">
                             <label for="title" class="form-label">Description &nbsp; <span class="spanColor description_error"></span></label>
                             <textarea id="description" name="description" class="form-control" rows="6" placeholder="Write here." style="height: 150px;"></textarea>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label for="title" class="form-label">Image Upload</label>
                             <div class="">
-                                <label for="customFile" id="selectImageRemove">
-                                    <img id="selectedImage" src="{{ asset('public/assets/images/uploadimg.png') }}" alt="example placeholder" class="upload_des_preview clickable" />
+                                <label for="customFile" class="selectImageRemove">
+                                    <img class="upload_des_preview clickable selectedImage " src="{{asset('public/assets/images/uploadimg.png')}}" alt="example placeholder" />
                                 </label>
-                                <input type="file" class="form-control d-none" name="image" id="customFile" onchange="displaySelectedImage(event, 'selectedImage')" />
+                                <input type="file" class="form-control d-none customFile" name="image" id="customFile" />
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
@@ -188,6 +187,15 @@
                                 <option value="{{$status_id}}">{{$status_id == 1 ? "Active" : ($status_id == 2 ? 'Inactive' : ($status_id == 3 ? 'Non Functional' : 'Not Available'))}}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label for="hub_id" class="form-label">Product Visivility on App</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="remember-check" name="is_display_on_app" checked>
+                                <label class="form-check-label mt-1" for="remember-check">
+                                    &nbsp; The product is displayed on the app.
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </form>

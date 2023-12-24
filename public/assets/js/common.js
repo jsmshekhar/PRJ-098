@@ -14,28 +14,39 @@ $(".onlyDigit").keypress(function (e) {
 });
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    const fileInput = document.getElementById('customFile1');
-    const imagePreview = document.getElementById('selectedImage');
-    const removeBtn = document.getElementById('removeImageBtn');
+document.addEventListener("DOMContentLoaded", function () {
+    const fileInputs = document.querySelectorAll(".customFile");
+    const imagePreviews = document.querySelectorAll(".selectedImage");
+    const removeBtns = document.querySelectorAll(".removeImageBtn");
 
-    fileInput.addEventListener('change', function(event) {
-        if (event.target.files.length > 0) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                imagePreview.src = e.target.result;
-                imagePreview.classList.remove('hidden'); // Show image after upload
-                removeBtn.classList.remove('hidden'); // Show remove button after upload
-            };
-            reader.readAsDataURL(event.target.files[0]);
-        }
+    fileInputs.forEach(function (fileInput, index) {
+        fileInput.addEventListener("change", function (event) {
+            const imagePreview = imagePreviews[index];
+            const removeBtn = removeBtns[index];
+
+            if (event.target.files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.classList.remove("hidden"); // Show image after upload
+                    removeBtn.classList.remove("hidden"); // Show remove button after upload
+                };
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        });
     });
 
-    removeBtn.addEventListener('click', function() {
-        imagePreview.src = ''; // Clear image source
-        fileInput.value = null; // Reset file input
-        imagePreview.classList.add('hidden'); // Hide image after removal
-        removeBtn.classList.add('hidden'); // Hide remove button after removal
+    removeBtns.forEach(function (removeBtn, index) {
+        removeBtn.addEventListener("click", function () {
+            const imagePreview = imagePreviews[index];
+            const fileInput = fileInputs[index];
+
+            imagePreview.src = ""; // Clear image source
+            fileInput.value = null; // Reset file input
+            imagePreview.classList.add("hidden"); // Hide image after removal
+            removeBtn.classList.add("hidden"); // Hide remove button after removal
+        });
     });
 });
+
 

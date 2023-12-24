@@ -53,7 +53,7 @@ class EvType extends Model
             $range = !empty($request->range) ? $request->range : "";
             $speed = !empty($request->speed) ? $request->speed : "";
             $slug = !empty($request->slug) ? $request->slug : "";
-            $ev_category = !empty($request->ev_category) ? $request->ev_category : "";
+            $ev_category = !empty($request->ev_category) ? $request->ev_category : null;
 
             $auth = Auth::user();
             if (!empty($request->slug)) {
