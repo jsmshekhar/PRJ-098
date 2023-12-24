@@ -38,15 +38,9 @@ class ComplainController extends AdminAppController
                 $perPage = $request->per_page;
             }
             if (Gate::allows('view_complaint', $permission)) {
-                if ($auth->role_id == 0) {
-                    $complains = Complain::join('complain_categories as cc', 'complains.complain_category', '=', 'cc.slug')
+                $complains = Complain::leftJoin('complain_categories as cc', 'complains.complain_category', '=', 'cc.slug')
                         ->whereNull('complains.deleted_at')
                         ->select('complains.*', 'cc.category_name');
-                } else {
-                    $complains = Complain::join('complain_categories as cc', 'complains.complain_category', '=', 'cc.slug')
-                        ->whereNull('complains.deleted_at')
-                        ->select('complains.*', 'cc.category_name');
-                }
                 if (isset($request->is_search) && $request->is_search == 1) {
                     if (isset($request->complain_id) && !empty($request->complain_id)) {
                         $complains = $complains->where('complains.complain_number', 'LIKE', "%{$request->complain_id}%");
@@ -73,12 +67,12 @@ class ComplainController extends AdminAppController
                 $complains = $complains->orderBy('complains.created_at', 'DESC')->paginate($perPage);
                 $role = DB::table('users')
                     ->select('roles.name', 'users.role_id', 'users.hub_id')
-                    ->leftJoin('roles', 'users.role_id', '=', 'roles.role_id')
+                    ->Join('roles', 'users.role_id', '=', 'roles.role_id')
                     ->where('users.role_id', '!=', 0);
                 if ($auth->role_id != 0) {
                     $role->where('users.hub_id', $auth->hub_id);
                 }
-                $roles = $role->whereNull('users.deleted_at')->whereNull('roles.deleted_at')->get();
+                $roles = $role->whereNull('users.deleted_at')->whereNull('roles.deleted_at')->distinct()->get();
                 $categories = ComplainCategory::whereNull('deleted_at')->get();
                 $compalinStatus = config('constants.COMPLAIN_STATUS');
                 return view('admin.complain.complain', compact('complains', 'roles', 'categories', 'compalinStatus', 'permission'));
@@ -172,9 +166,9 @@ class ComplainController extends AdminAppController
                 ->get();
             $roles = DB::table('users')
                 ->select('roles.name', 'users.role_id', 'users.hub_id')
-                ->leftJoin('roles', 'users.role_id', '=', 'roles.role_id')
+                ->rightJoin('roles', 'users.role_id', '=', 'roles.role_id')
                 ->where('users.role_id', '!=', 0)
-                ->whereNull('users.deleted_at')->whereNull('roles.deleted_at')->get();
+                ->whereNull('users.deleted_at')->whereNull('roles.deleted_at')->distinct()->get();
             foreach ($roles as $key => $value) {
                 $value->city = DB::table('hubs')->where('hub_id', $value->hub_id)->value('city');
             }
