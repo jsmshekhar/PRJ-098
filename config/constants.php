@@ -79,7 +79,7 @@ return [
     'ACCESSORIES_CATEGORY' => [
         "HELMET" => 1,
         "T_SHIRT" => 2,
-        "MOBILE_HOLDER" => 3,
+        //"MOBILE_HOLDER" => 3,
     ],
 
     'VEHICLE_STATUS' => [

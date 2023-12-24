@@ -252,6 +252,24 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'Change Assignment',
                 "permission_slug" => "change-assignment",
             ],
+            [
+                'module_slug' => "HUBPARTACCESSORIS",
+                'module_id' => 10,
+                'name' => 'View',
+                "permission_slug" => "view",
+            ],
+            [
+                'module_slug' => "HUBPARTACCESSORIS",
+                'module_id' => 10,
+                'name' => 'Raise Request',
+                "permission_slug" => "raise-request",
+            ],
+            [
+                'module_slug' => "HUBPARTACCESSORIS",
+                'module_id' => 10,
+                'name' => 'Assiegn Request',
+                "permission_slug" => "assiegn-request",
+            ],
         ];
         Permission::insert($permissions);
     }
