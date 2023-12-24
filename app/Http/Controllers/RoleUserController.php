@@ -212,9 +212,9 @@ class RoleUserController extends AdminAppController
             $last_name = !empty($request->last_name) ? $request->last_name : "";
             $email = !empty($request->email) ? $request->email : "";
             $phone = !empty($request->phone) ? $request->phone : "";
-            $role_id = !empty($request->role_id) ? $request->role_id : "";
+            $role_id = !empty($request->role_id) ? $request->role_id : null;
             $slug = !empty($request->slug) ? $request->slug : "";
-            $hub_id = !empty($request->hub_id) ? $request->hub_id : "";
+            $hub_id = !empty($request->hub_id) ? $request->hub_id : null;
             $password = !empty($request->password) ? $request->password : "";
             $last_empId = User::latest()->select('emp_id')->where('users.role_id', '!=', 0)->first();
             $auth = Auth::user();

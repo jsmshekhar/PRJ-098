@@ -76,7 +76,8 @@ class Product extends Model
             $rent_cycles = config('constants.RENT_CYCLE');
             $battery_types = config('constants.BATTERY_TYPE');
             $vehicleStatus = config('constants.VEHICLE_STATUS');
-            return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'hubs' => $hubs, 'battery_types' => $battery_types, 'vehicleStatus' => $vehicleStatus]);
+            $bike_types = config('constants.BIKE_TYPE');
+            return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'hubs' => $hubs, 'battery_types' => $battery_types, 'vehicleStatus' => $vehicleStatus, 'bike_types' => $bike_types]);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -99,17 +100,18 @@ class Product extends Model
             $ev_number = !empty($request->ev_number) ? $request->ev_number : "";
             $per_day_rent = !empty($request->per_day_rent) ? $request->per_day_rent : "";
             $description = !empty($request->description) ? $request->description : "";
-            $ev_category = !empty($request->ev_category) ? $request->ev_category : "";
-            $ev_type_id = !empty($request->ev_type_id) ? $request->ev_type_id : "";
-            $profile_category = !empty($request->profile_category) ? $request->profile_category : "";
-            $battery_type = !empty($request->battery_type) ? $request->battery_type : "";
-            $rent_cycle = !empty($request->rent_cycle) ? $request->rent_cycle : "";
-            $hub_id = !empty($request->hub_id) ? $request->hub_id : "";
+            $ev_category = !empty($request->ev_category) ? $request->ev_category : null;
+            $ev_type_id = !empty($request->ev_type_id) ? $request->ev_type_id : null;
+            $profile_category = !empty($request->profile_category) ? $request->profile_category : null;
+            $battery_type = !empty($request->battery_type) ? $request->battery_type : null;
+            $rent_cycle = !empty($request->rent_cycle) ? $request->rent_cycle : null;
+            $hub_id = !empty($request->hub_id) ? $request->hub_id : null;
             $chassis_number = !empty($request->chassis_number) ? $request->chassis_number : "";
             $gps_emei_number = !empty($request->gps_emei_number) ? $request->gps_emei_number : "";
             $km_per_charge = !empty($request->km_per_charge) ? $request->km_per_charge : "";
             $is_display_on_app = !empty($request->is_display_on_app) ? 1 : 2;
             $status_id = !empty($request->status_id) ? $request->status_id : 1;
+            $bike_type = !empty($request->bike_type) ? $request->bike_type : 2;
             $product_image = '';
             if ($request->image) {
                 $image = $request->file('image');
@@ -137,6 +139,7 @@ class Product extends Model
                 "profile_category" => $profile_category,
                 "hub_id" => $hub_id,
                 "is_display_on_app" => $is_display_on_app,
+                "bike_type" => $bike_type,
                 'image' => !empty($product_image) ? $product_image : "",
                 "user_id" => $auth->user_id,
                 "user_slug" => $auth->slug,
@@ -184,7 +187,8 @@ class Product extends Model
             $rent_cycles = config('constants.RENT_CYCLE');
             $battery_types = config('constants.BATTERY_TYPE');
             $vehicleStatus = config('constants.VEHICLE_STATUS');
-            return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['product'=> $product, 'rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'hubs' => $hubs, 'battery_types' => $battery_types, 'vehicleStatus' => $vehicleStatus]);
+            $bike_types = config('constants.BIKE_TYPE');
+            return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['product'=> $product, 'rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'hubs' => $hubs, 'battery_types' => $battery_types, 'vehicleStatus' =>$vehicleStatus, 'bike_types' => $bike_types]);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -206,17 +210,18 @@ class Product extends Model
             $ev_number = !empty($request->ev_number) ? $request->ev_number : "";
             $per_day_rent = !empty($request->per_day_rent) ? $request->per_day_rent : "";
             $description = !empty($request->description) ? $request->description : "";
-            $ev_category = !empty($request->ev_category) ? $request->ev_category : "";
-            $ev_type_id = !empty($request->ev_type_id) ? $request->ev_type_id : "";
-            $profile_category = !empty($request->profile_category) ? $request->profile_category : "";
-            $battery_type = !empty($request->battery_type) ? $request->battery_type : "";
-            $rent_cycle = !empty($request->rent_cycle) ? $request->rent_cycle : "";
-            $hub_id = !empty($request->hub_id) ? $request->hub_id : "";
+            $ev_category = !empty($request->ev_category) ? $request->ev_category : null;
+            $ev_type_id = !empty($request->ev_type_id) ? $request->ev_type_id : null;
+            $profile_category = !empty($request->profile_category) ? $request->profile_category : null;
+            $battery_type = !empty($request->battery_type) ? $request->battery_type : null;
+            $rent_cycle = !empty($request->rent_cycle) ? $request->rent_cycle : null;
+            $hub_id = !empty($request->hub_id) ? $request->hub_id : null;
             $chassis_number = !empty($request->chassis_number) ? $request->chassis_number : "";
             $gps_emei_number = !empty($request->gps_emei_number) ? $request->gps_emei_number : "";
             $km_per_charge = !empty($request->km_per_charge) ? $request->km_per_charge : "";
             $is_display_on_app = !empty($request->is_display_on_app) ? 1 : 2;
             $status_id = !empty($request->status_id) ? $request->status_id : 1;
+            $bike_type = !empty($request->bike_type) ? $request->bike_type : 2;
             
             $product_image = '';
             if ($request->image) {
@@ -242,6 +247,7 @@ class Product extends Model
                     "profile_category" => $profile_category,
                     "hub_id" => $hub_id,
                     "is_display_on_app" => $is_display_on_app,
+                    "bike_type" => $bike_type,
                     'image' => $product_image,
                     "user_id" => $auth->user_id,
                     "user_slug" => $auth->slug,
@@ -265,6 +271,7 @@ class Product extends Model
                     "profile_category" => $profile_category,
                     "hub_id" => $hub_id,
                     "is_display_on_app" => $is_display_on_app,
+                    "bike_type" => $bike_type,
                     "user_id" => $auth->user_id,
                     "user_slug" => $auth->slug,
                     "updated_by" => $auth->user_id,
