@@ -69,8 +69,8 @@ class HubController extends AdminAppController
                 $battery_types = $hubs['result']['battery_types'];
                 $profile_categories = $hubs['result']['profile_categories'];
                 $vehicleStatus = $hubs['result']['vehicleStatus'];
-
-                return view('admin.hub.view_hub', compact('hub', 'vehicles', 'employees', 'roles','rent_cycles', 'ev_types', 'ev_categories', 'battery_types', 'profile_categories', 'vehicleStatus', 'permission'));
+                $bike_types = $hubs['result']['bike_types'];
+                return view('admin.hub.view_hub', compact('hub', 'vehicles', 'employees', 'roles','rent_cycles', 'ev_types', 'ev_categories', 'battery_types', 'profile_categories', 'vehicleStatus', 'permission', 'bike_types'));
             } else {
                 return view('admin.401.401');
             }
@@ -98,7 +98,7 @@ class HubController extends AdminAppController
             $address1 = !empty($request->address1) ? $request->address1 : "";
             $address2 = !empty($request->address2) ? $request->address2 : "";
             $full_address = !empty($request->full_address) ? $request->full_address : "";
-            $hub_limit = !empty($request->hub_limit) ? $request->hub_limit : "";
+            $hub_limit = !empty($request->hub_limit) ? $request->hub_limit : null;
             $zip_code = !empty($request->zip_code) ? $request->zip_code : "";
             $slug = !empty($request->slug) ? $request->slug : "";
             $auth = Auth::user();

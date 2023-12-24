@@ -25,7 +25,7 @@ class EvType extends Model
     {
         try {
             $auth = Auth::user();
-            $ev_types = EvType::where('user_slug', $auth->user_slug)->orderBy('created_at', 'DESC')->get();
+            $ev_types = EvType::where('created_by', $auth->user_id)->orderBy('created_at', 'DESC')->get();
             $ev_categories = config('constants.EV_CATEGORIES');
             if (count($ev_types) > 0) {
                 return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['ev_types' => $ev_types, 'ev_categories' => $ev_categories]);
@@ -53,7 +53,7 @@ class EvType extends Model
             $range = !empty($request->range) ? $request->range : "";
             $speed = !empty($request->speed) ? $request->speed : "";
             $slug = !empty($request->slug) ? $request->slug : "";
-            $ev_category = !empty($request->ev_category) ? $request->ev_category : "";
+            $ev_category = !empty($request->ev_category) ? $request->ev_category : null;
 
             $auth = Auth::user();
             if (!empty($request->slug)) {

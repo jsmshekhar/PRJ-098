@@ -394,6 +394,7 @@
                 var chassis_number = $(this).data('chassis_number');
                 var gps_emei_number = $(this).data('gps_emei_number');
                 var image = $(this).data('image');
+                var bike_type = $(this).data('bike_type');
                 var status_id = $(this).data('status');
                 var updateurl = $(this).data('updateurl');
 
@@ -412,10 +413,16 @@
                 $('#profile_category').val(profile_category).trigger('change');
                 $('#rent_cycle').val(rent_cycle).trigger('change');
                 $('#battery_type').val(battery_type).trigger('change');
+                $('#bike_type').val(bike_type).trigger('change');
                 $('#status_id').val(status_id).trigger('change');
                 $("#updateurl").val(updateurl);
                 var imageUrl = "{{ asset('public/upload/product')}}/" + image;
-                $('#selectImageRemove').html('<img id = "selectedImage" src="' + imageUrl + '" alt = "vehicle image" class = "upload_des_preview clickable">');
+                if (image) {
+                    $('.selectImageRemove').html('<img class="upload_des_preview clickable selectedImage" src="' + imageUrl + '" alt = "vehicle image" >');
+                } else {
+                    $('.selectImageRemove').html('<img class="upload_des_preview clickable selectedImage" src="{{asset("public/assets/images/uploadimg.png")}}" alt = "vehicle image" >');
+                }
+
                 if (is_display_on_app == 1) {
                     $('#is_display_on_app').prop('checked', true);
                 } else {
@@ -476,28 +483,6 @@
         });
 
     });
-
-    function displaySelectedImage(event, elementId) {
-        const selectedImage = document.getElementById(elementId);
-        const fileInput = event.target;
-
-        console.log('File Input:', fileInput);
-        console.log('Files:', fileInput.files);
-        console.log('fileInput.files.length', fileInput.files.length)
-        if (fileInput.files.length == 0) {
-            var imageUrl = "{{ asset('public/assets/images/uploadimg.png') }}";
-            $('#selectImageRemove').html('<img id = "selectedImage" src="' + imageUrl + '" alt = "vehicle image" class = "upload_des_preview clickable">');
-        }
-
-        if (fileInput.files && fileInput.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                console.log('Reader result:', e.target.result);
-                selectedImage.src = e.target.result;
-            };
-            reader.readAsDataURL(fileInput.files[0]);
-        }
-    }
 
     // Active inactive status toggle
     function toggleStatus(toggleId, params) {
