@@ -185,4 +185,25 @@ class HubPartAccessoriesController extends AdminAppController
             return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
         }
     }
+
+    /*--------------------------------------------------
+    Developer : Raj Kumar
+    Action    : Hub part reject
+    --------------------------------------------------*/
+    public function rejectRequestAccessories($slug)
+    {
+        try {
+            HubPartAccessories::where('slug', $slug)->update([
+                "status_id" => 4,  //rejct status 4
+            ]);
+            return redirect()->back();
+        } catch (\Exception $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
 }
