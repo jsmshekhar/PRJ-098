@@ -39,33 +39,50 @@
                                             <div class="col-xl-3 col-md-6">
                                                 <div class="form-group mb-3">
                                                     <label class="form-label">Hub Id</label>
-                                                    <input type="text" class="form-control" name="hubid" value="" />
+                                                    <input type="text" class="form-control" name="hubid" value="<?= isset($_GET['hubid']) ? $_GET['hubid'] : '' ?>" />
                                                 </div>
                                             </div>
 
                                             <div class="col-xl-3 col-md-6">
                                                 <div class="form-group mb-3">
                                                     <label class="form-label">Hub Location</label>
-                                                    <input type="text" class="form-control" name="city" value="" />
+                                                    <input type="text" class="form-control" name="hub_loc" value="<?= isset($_GET['hub_loc']) ? $_GET['hub_loc'] : '' ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-3 col-md-6">
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label">Manager First Name</label>
+                                                    <input type="text" class="form-control" name="fname" value="<?= isset($_GET['fname']) ? $_GET['fname'] : '' ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-3 col-md-6">
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label">Manager Last Name</label>
+                                                    <input type="text" class="form-control" name="lname" value="<?= isset($_GET['lname']) ? $_GET['lname'] : '' ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-3 col-md-6">
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label">Accessories Category</label>
+                                                    <select class="form-control selectBasic" name="aci" id="accessoriesCategoryId">
+                                                        <option value="">Select</option>
+                                                        @foreach($accessories_categories as $key => $accCat)
+                                                        <option value="{{$accCat}}" <?= (isset($_GET['aci']) && $_GET['aci'] == $accCat) ? 'selected' : '' ?>>{{$accCat == 1 ? "Helmet" : ($accCat == 2 ? "T-Shirt" : "Mobile Holder")}}</option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
                                             </div>
 
                                             <div class="col-xl-3 col-md-6">
                                                 <div class="form-group mb-3">
-                                                    <label class="form-label">Accessories</label>
-                                                    <input type="text" class="form-control" name="accessories_id" value="" />
-                                                </div>
-                                            </div>
-                                            <div class="col-xl-3 col-md-6">
-                                                <div class="form-group mb-3">
-                                                    <label class="form-label">Hub Manager</label>
-                                                    <input type="text" class="form-control" name="phone" value="" />
-                                                </div>
-                                            </div>
-                                            <div class="col-xl-3 col-md-6">
-                                                <div class="form-group mb-3">
                                                     <label class="form-label"> Status</label>
-                                                    <input type="text" class="form-control" name="status" value="" />
+                                                    <select class="form-control selectBasic" name="status" id="status">
+                                                        <option value="">Select</option>
+                                                        <option value="1" <?= (isset($_GET['status']) && $_GET['status'] == 1) ? 'selected' : '' ?>>Raised</option>
+                                                        <option value="2" <?= (isset($_GET['status']) && $_GET['status'] == 2) ? 'selected' : '' ?>>Shipped</option>
+                                                        <option value="3" <?= (isset($_GET['status']) && $_GET['status'] == 3) ? 'selected' : '' ?>>Completed</option>
+                                                        <option value="4" <?= (isset($_GET['status']) && $_GET['status'] == 4) ? 'selected' : '' ?>>Rejected</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -88,7 +105,7 @@
                                 </a>
                             </li>
                             <li>
-                                <p>Total Record : <span>{{ count($hub_parts) }}</span></p>
+                                <p>Total Record : <span>{{ $count }}</span></p>
                             </li>
                             <li>
                                 <p>Display up to :
@@ -194,10 +211,11 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            @if(is_object($hub_parts))
-                            {{ $hub_parts->withQueryString()->links('pagination::bootstrap-4') }}
-                            @endif
                         </div>
+                        <div class="mt-4">
+                            {{ $hub_parts->withQueryString()->links('pagination::bootstrap-4') }}
+                        </div>
+
                         @else
                         <div>
                             @include('admin.common.no_record')
