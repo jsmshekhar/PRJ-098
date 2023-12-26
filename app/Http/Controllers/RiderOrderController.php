@@ -31,9 +31,10 @@ class RiderOrderController extends AdminAppController
     {
         try {
             $perPage = env('PER_PAGE');
+            $permission = User::getPermissions();
             $orders = $this->model::with('rider')->whereNull('deleted_at');
             $orders = $orders->orderBy('created_at', 'DESC')->paginate($perPage);
-            return view($this->viewPath . '/index', compact('orders'));
+            return view($this->viewPath . '/index', compact('orders', 'permission'));
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),

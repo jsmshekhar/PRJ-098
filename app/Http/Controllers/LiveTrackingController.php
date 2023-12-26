@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\AdminAppController;
+use App\Models\User;
 
 class LiveTrackingController extends AdminAppController
 {
@@ -16,6 +17,7 @@ class LiveTrackingController extends AdminAppController
 
     public function index()
     {
-        return view($this->viewPath . '/index');
+        $permission = User::getPermissions();
+        return view($this->viewPath . '/index', compact('permission'));
     }
 }

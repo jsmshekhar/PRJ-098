@@ -304,4 +304,8 @@ class Product extends Model
             return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
         }
     }
+
+    // All vehicles list with mobilized demobilized
+
+    
 }

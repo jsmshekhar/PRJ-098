@@ -91,6 +91,12 @@ class Hub extends Model
             $ev_types = [];
             $ev_categories = [];
             $battery_types = [];
+            $hub_parts = [];
+            $bike_types = [];
+            $profile_categories = [];
+            $vehicleStatus = [];
+            $accessories_categories = [];
+            $count = 0;
             $hub = Hub::where('slug', $slug)->whereNull('deleted_at')->first();
             if($param == 'vehicle'){
                 $vehicles = Product::leftJoin('ev_types as et', 'products.ev_type_id', '=', 'et.ev_type_id')
@@ -122,6 +128,7 @@ class Hub extends Model
                 $profile_categories = config('constants.PROFILE_CATEGORIES');
                 $vehicleStatus = config('constants.VEHICLE_STATUS');
                 $bike_types = config('constants.BIKE_TYPE');
+                $count = Product::where('hub_id', $hub->hub_id)->whereNull('deleted_at')->count();
             }
             if ($param == 'employee') {
                 $employees = User::select('users.*', 'roles.name as role_name')
@@ -134,14 +141,38 @@ class Hub extends Model
                 $roles = Role::whereNull('deleted_at')->get();
                 $maxEmpId = User::select('emp_id')->orderBy('emp_id','DESC')->first();
                 $hub->max_emp_id = $maxEmpId ? $maxEmpId->emp_id : 101;
+                $count = User::where('hub_id', $hub->hub_id)->whereNull('deleted_at')->count();
+            }
+            if($param == 'accessories'){
+                $hub_parts = HubPartAccessories::leftJoin('accessories', 'accessories.accessories_id', '=', 'hub_part_accessories.accessories_id')
+                    ->leftJoin('hubs', 'hubs.hub_id', '=', 'hub_part_accessories.hub_id')
+                    ->leftJoin('users', 'users.user_id', '=', 'hub_part_accessories.created_by')
+                    ->where('hub_part_accessories.hub_id', $hub->hub_id)
+                    ->whereNull('hub_part_accessories.deleted_at');
+
+                $hub_parts = $hub_parts->select(
+                    'hub_part_accessories.*',
+                    'hubs.hubId',
+                    'hubs.city',
+                    'accessories.price',
+                    DB::raw('CONCAT(users.first_name, " ", users.last_name) AS name'),
+                    DB::raw('CASE 
+                        WHEN accessories.accessories_category_id = 1 THEN "Helmet" 
+                        WHEN accessories.accessories_category_id = 2 THEN "T-Shirt" 
+                        WHEN accessories.accessories_category_id = 3 THEN "Mobile Holder"  
+                    END as accessories')
+                );
+                $hub_parts = $hub_parts->orderBy('hub_part_accessories.created_at', 'DESC')->paginate($perPage);
+                $count = HubPartAccessories::where('hub_id', $hub->hub_id)->count();
+                $accessories_categories = config('constants.ACCESSORIES_CATEGORY');
             }
            
 
             if ($hub) {
-                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => $hub, 'vehicles' => $vehicles, 'employees' => $employees, 'roles' => $roles,'rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'battery_types' => $battery_types, 'profile_categories' => $profile_categories, 'vehicleStatus' => $vehicleStatus, 'bike_types' => $bike_types]);
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => $hub, 'vehicles' => $vehicles, 'employees' => $employees, 'roles' => $roles,'rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'battery_types' => $battery_types, 'profile_categories' => $profile_categories, 'vehicleStatus' => $vehicleStatus, 'bike_types' => $bike_types, 'count' => $count, 'hub_parts' => $hub_parts, 'accessories_categories' => $accessories_categories]);
             } else {
                 
-                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => [], 'vehicles' => [], 'employees' => [], 'roles' => [],'rent_cycles' => [], 'ev_types' => [], 'ev_categories' =>[], 'battery_types' => [], 'profile_categories' => [], 'bike_types' => []]);
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => [], 'vehicles' => [], 'employees' => [], 'roles' => [],'rent_cycles' => [], 'ev_types' => [], 'ev_categories' =>[], 'battery_types' => [], 'profile_categories' => [], 'bike_types' => [], 'count' => $count, 'hub_parts' => [], 'accessories_categories' => []]);
             }
         } catch (\Throwable $ex) {
             $result = [
