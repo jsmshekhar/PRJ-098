@@ -58,6 +58,7 @@ class HubController extends AdminAppController
             $permission = User::getPermissions();
             if (Gate::allows('hub_view', $permission)) {
                 $hubs = $this->hub->viewHub($request, $slug, $param);
+           
                 $hub = $hubs['result']['hubs'];
                 $vehicles = $hubs['result']['vehicles'];
                 $employees = $hubs['result']['employees'];
@@ -70,7 +71,10 @@ class HubController extends AdminAppController
                 $profile_categories = $hubs['result']['profile_categories'];
                 $vehicleStatus = $hubs['result']['vehicleStatus'];
                 $bike_types = $hubs['result']['bike_types'];
-                return view('admin.hub.view_hub', compact('hub', 'vehicles', 'employees', 'roles','rent_cycles', 'ev_types', 'ev_categories', 'battery_types', 'profile_categories', 'vehicleStatus', 'permission', 'bike_types'));
+                $count = $hubs['result']['count'];
+                $hub_parts = $hubs['result']['hub_parts'];
+                $accessories_categories = $hubs['result']['accessories_categories'];
+                return view('admin.hub.view_hub', compact('hub', 'vehicles', 'employees', 'roles','rent_cycles', 'ev_types', 'ev_categories', 'battery_types', 'profile_categories', 'vehicleStatus', 'permission', 'bike_types', 'count', 'hub_parts', 'accessories_categories'));
             } else {
                 return view('admin.401.401');
             }

@@ -31,7 +31,9 @@
                         <a class="btn btn-success waves-effect waves-light hubModelForm" data-toggle="modal" data-hub_id="{{ $hub->hub_Id }}" data-hubid="{{ $hub->hubId }}" data-city="{{ $hub->city }}" data-state="{{ $hub->state }}" data-country="{{ $hub->country }}" data-slug="{{ $hub->slug }}" data-address1="{{ $hub->address_1 }}" data-address2="{{ $hub->address_2 }}" data-zipcode="{{ $hub->zip_code }}" data-hublimit="{{ $hub->hub_limit }}" data-fulladdress="{{ $hub->full_address }}" title="Edit Hub" style="cursor: pointer;margin-right: 5px;">Edit Hub</a>
                         @endcan
                         @can('add_inventry', $permission)
+                        @if(request()->route('param') == 'vehicle')
                         <a class="btn btn-outline-success waves-effect waves-light vehicleModelForm" data-toggle="modal" data-operation="add" data-hub_id="{{ $hub->hub_id }}" title="Add New NotVehicleification">Add Vehicle</a>
+                        @endif
                         @endcan
                         <a href="" class="btn btn-outline-success waves-effect waves-light" title="Add New Notification">Assign an EV</a>
                     </div>
@@ -79,7 +81,7 @@
                     <ul>
                         <li><a href="{{route('hub-view',['slug' => request()->route('slug'), 'param' => 'vehicle'])}}" class="{{request()->route('param')=='vehicle' ? 'active' : ''}}">Hub Inventory</a></li>
                         <li><a href="{{route('hub-view',['slug' => request()->route('slug'), 'param' => 'employee'])}}" class="{{request()->route('param')=='employee' ? 'active' : ''}}">Employees</a></li>
-                        {{--<li><a href="{{route('hub-view',['slug' => request()->route('slug'), 'param' => 'accessories'])}}" class="{{request()->route('param')=='accessories' ? 'active' : ''}}">Accessories</a></li>--}}
+                        <li><a href="{{route('hub-view',['slug' => request()->route('slug'), 'param' => 'accessories'])}}" class="{{request()->route('param')=='accessories' ? 'active' : ''}}">Accessories</a></li>
                     </ul>
                 </div>
             </div>
@@ -95,7 +97,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <p>Total Record : <span>255</span></p>
+                                    <p>Total Record : <span>{{$count}}</span></p>
                                 </li>
                                 <li>
                                     <p>Display up to :
@@ -116,6 +118,13 @@
                                 </li>
                                 @endif
                                 @endcan
+                                @can('raise_request', $permission)
+                                @if(request()->route('param') == 'accessories' && !empty(Auth::user()->hub_id))
+                                <li style="float:right">
+                                    <a class="btn btn-success waves-effect waves-light raiseModelForm" data-toggle="modal">Raise Request</a></h1>
+                                </li>
+                                @endif
+                                @endcan
                             </ul>
                         </div>
                         <div class="table-rep-plugin">
@@ -123,8 +132,8 @@
                             @include('admin.hub.vehicle_listing')
                             @elseif (request()->route('param')=='employee')
                             @include('admin.hub.employee_listing')
-                            {{--@elseif (request()->route('param')=='accessories')
-                            @include('admin.hub.accessories_listing') --}}
+                            @elseif (request()->route('param')=='accessories')
+                            @include('admin.hub_part_accessories.list')
                             @endif
                         </div>
                     </div>
@@ -482,6 +491,10 @@
             });
         });
 
+        //raise request
+        $('.raiseModelForm').click(function() {
+            $('#raiseModelForm').modal('show');
+        });
     });
 
     // Active inactive status toggle

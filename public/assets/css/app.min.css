@@ -510,7 +510,8 @@ body[data-layout="horizontal"] .footer {
 .metismenu li {
   display: block;
   width: 100%;
-  margin: 16px 0;
+  /* margin: 16px 0; */
+  margin: 5px 0;
 }
 
 .metismenu .mm-collapse {
@@ -590,7 +591,8 @@ body[data-layout="horizontal"] .footer {
 }
 
 #sidebar-menu {
-  padding: 10px 0 30px 0;
+  /* padding: 10px 0 30px 0; */
+  padding: 20px 0 30px 0;
 }
 
 #sidebar-menu .mm-active > .has-arrow:after {
@@ -614,7 +616,8 @@ body[data-layout="horizontal"] .footer {
 
 #sidebar-menu ul li a {
   display: block;
-  padding: 14px 16px;
+  /* padding: 14px 16px; */
+  padding: 10px 16px;
   color: rgba(0, 0, 0, 0.8);
   position: relative;
   font-size: 14px;

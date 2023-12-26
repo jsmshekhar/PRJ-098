@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\AdminAppController;
+use App\Models\User;
 
 class HomeController extends AdminAppController
 {
@@ -16,6 +17,7 @@ class HomeController extends AdminAppController
 
     public function index()
     {
-        return view($this->viewPath . '/dashboard');
+        $permission = User::getPermissions();
+        return view($this->viewPath . '/dashboard', compact('permission'));
     }
 }
