@@ -25,6 +25,6 @@ class CompanySeeder extends Seeder
                 'status_id' => 1,
             ],
         ];
-        Rider::insert($company);
+        DB::table('site_configuration')->insert($company);
     }
 }
