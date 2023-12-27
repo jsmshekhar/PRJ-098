@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Database\Seeders\CompanySeeder;
 use Database\Seeders\CreateRiderSeeder;
 use Database\Seeders\ModuleTableSeeder;
 use Database\Seeders\CreateAdminUserSeeder;
@@ -24,6 +25,7 @@ class DatabaseSeeder extends Seeder
             CreateAdminUserSeeder::class,
             ModuleTableSeeder::class,
             PermissionTableSeeder::class,
+            CompanySeeder::class,
         ]);
     }
 }

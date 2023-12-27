@@ -32,4 +32,5 @@ Route::middleware(['auth:rider-api'])->namespace('Api')->prefix('v1')->group(fun
     Route::get('/vehicle-details/{slug}', [KycApiController::class, 'vehicleDetails']);
 
     Route::post('create-order', [KycApiController::class, 'createOrder']);
+    Route::post('update-kyc', [KycApiController::class, 'updateKyc']);
 });

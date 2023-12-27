@@ -19,6 +19,8 @@ use App\Http\Controllers\TransactionMgmtController;
 use App\Http\Controllers\WalletMgmtController;
 use App\Http\Controllers\AccessoriesController;
 use App\Http\Controllers\HubPartAccessoriesController;
+use App\Http\Controllers\SiteConfigurationController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -109,6 +111,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/add-accessories-hub-part', [HubPartAccessoriesController::class, 'addRequestHubPart'])->name('add-accessories-hub-part');
         Route::post('/update-accessories-hub-part', [HubPartAccessoriesController::class, 'updateAssignedAccessories'])->name('update-accessories-hub-part');
 
+        Route::post('/update-company-details', [SiteConfigurationController::class, 'updateCompanyDetail'])->name('update-company-details');
+        Route::post('/update-user-profile', [UserController::class, 'updateProfileDetail'])->name('update-user-profile');
         /* Shekhar's - Route */
         @include('admin.php');
     });

@@ -28,5 +28,6 @@ return [
     'ORDER_ERROR' => "Unable to create order.",
     "UPLOAD_SUCCESS" => "File uploaded successfully.",
     "UPLOAD_ERROR" => "Unable to upload file.",
+    'UPDATE_ERROR' => 'Record updating error.',
 
 ];
