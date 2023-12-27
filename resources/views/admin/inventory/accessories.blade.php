@@ -11,14 +11,13 @@
         <div class="col-12">
             <div class="nav_cust_menu">
                 <ul>
+                    @can('view_inventry', $permission)
                     <li><a href="{{ route('products', 'corporate') }}" class="" title="Products">Products</a></li>
-                    {{-- @can('view_inventry', $permission)
-                    <li><a href="" class="" title="Products">Products</a></li>
-                    @endcan --}}
+                    @endcan
                     <li><a href="{{ route('product-ev-types') }}" class="" title="Ev Types">Ev Types</a></li>
                     @if(Auth::user()->role_id == 0)
                     <li><a href="{{ route('accessories') }}" class="active" title="Accessories">Accessories</a>
-                        @endif
+                    @endif
                     </li>
                 </ul>
             </div>

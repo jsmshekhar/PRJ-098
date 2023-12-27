@@ -114,58 +114,7 @@ if (auth()->user()->photo) {
                 </div>
             </div>
             <div class="dropdown d-inline-block">
-                <button type="button" class="btn header-item noti-icon position-relative"
-                    id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false">
-                    <img src="{{ asset('public/assets/images/icons/bell-icon.svg') }}" alt="">
-                    <span class="badge bg-danger rounded-pill"></span>
-                </button>
-                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0 admin_profilt_pop"
-                    aria-labelledby="page-header-notifications-dropdown">
-
-                    <div data-simplebar style="max-height: 230px;">
-
-                        <a href="#!" class="text-reset notification-item">
-                            <div class="d-flex">
-                                <div class="flex-grow-1 p-3 border-bottom">
-                                    <p class="notify_text">Hello , you get a Request for Accessories from Hub Id 12453.
-                                    </p>
-                                    <div class="notify_btn_box">
-                                        <a href="#"
-                                            class="btn btn-outline-danger waves-effect waves-light">Reject</a>
-                                        <a href="#" class="btn btn-success waves-effect waves-light">Open</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        <a href="#!" class="text-reset notification-item">
-                            <div class="d-flex">
-                                <div class="flex-grow-1 p-3 border-bottom">
-                                    <p class="notify_text">Hello , you get a Request for Accessories from Hub Id 12453.
-                                    </p>
-                                    <div class="notify_btn_box">
-                                        <a href="#"
-                                            class="btn btn-outline-danger waves-effect waves-light">Reject</a>
-                                        <a href="#" class="btn btn-success waves-effect waves-light">Open</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        <a href="#!" class="text-reset notification-item">
-                            <div class="d-flex">
-                                <div class="flex-grow-1 p-3 border-bottom">
-                                    <p class="notify_text">Hello , you get a Request for Accessories from Hub Id 12453.
-                                    </p>
-                                    <div class="notify_btn_box">
-                                        <a href="#"
-                                            class="btn btn-outline-danger waves-effect waves-light">Reject</a>
-                                        <a href="#" class="btn btn-success waves-effect waves-light">Open</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
+                @include('admin.common.request_notification')
             </div>
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item" id="page-header-user-dropdown"

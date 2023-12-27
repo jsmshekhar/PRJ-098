@@ -61,18 +61,39 @@ class HubPartAccessoriesController extends AdminAppController
                         WHEN accessories.accessories_category_id = 2 THEN "T-Shirt" 
                         WHEN accessories.accessories_category_id = 3 THEN "Mobile Holder"  
                     END as accessories')
-                )
-                    ->orderBy('hub_part_accessories.created_at', 'DESC')->paginate($perPage);
+                );
+                if (isset($request->is_search) && $request->is_search == 1) {
+                    if (isset($request->hubid) && !empty($request->hubid)) {
+                        $hub_parts = $hub_parts->where('hubs.hubId', 'LIKE', "%{$request->hubid}%");
+                    }
+                    if (isset($request->hubid) && !empty($request->hubid)) {
+                        $hub_parts = $hub_parts->where('hubs.city', 'LIKE', "%{$request->hub_loc}%");
+                    }
+                    if (isset($request->fname) && !empty($request->fname)) {
+                        $hub_parts = $hub_parts->where('users.first_name', 'LIKE', "%{$request->fname}%");
+                    }
+                    if (isset($request->lname) && !empty($request->lname)) {
+                        $hub_parts = $hub_parts->where('users.last_name', 'LIKE', "%{$request->lname}%");
+                    }
+                    if (isset($request->aci) && !empty($request->aci)) {
+                        $hub_parts = $hub_parts->where('hub_part_accessories.accessories_category_id', $request->aci);
+                    }
+                    if (isset($request->status) && !empty($request->status)) {
+                        $hub_parts = $hub_parts->where('hub_part_accessories.status_id', $request->status);
+                    }
+                }
+                $hub_parts = $hub_parts->orderBy('hub_part_accessories.created_at', 'DESC')->paginate($perPage);
+                $count = 0;
                 if (count($hub_parts) > 0) {
                     if ($auth->hub_id == null || $auth->hub_id == "") {
-                        $hub_parts['count'] = HubPartAccessories::count();
+                        $count = HubPartAccessories::count();
                     } else {
-                        $hub_parts['count'] = HubPartAccessories::where('hub_id', $auth->hub_id)->count();
+                        $count = HubPartAccessories::where('hub_id', $auth->hub_id)->count();
                     }
                 }
                 $accessories_categories = config('constants.ACCESSORIES_CATEGORY');
            
-                return view('admin.hub_part_accessories.index', compact('hub_parts', 'permission', 'accessories_categories'));
+                return view('admin.hub_part_accessories.index', compact('hub_parts', 'permission', 'accessories_categories','count'));
             } else {
                 return view('admin.401.401');
             }
@@ -177,6 +198,27 @@ class HubPartAccessoriesController extends AdminAppController
                 return redirect()->back()->with('message', Lang::get('messages.INSERT_ERROR'));
             }
         } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Raj Kumar
+    Action    : Hub part reject
+    --------------------------------------------------*/
+    public function rejectRequestAccessories($slug)
+    {
+        try {
+            HubPartAccessories::where('slug', $slug)->update([
+                "status_id" => 4,  //rejct status 4
+            ]);
+            return redirect()->back();
+        } catch (\Exception $ex) {
             $result = [
                 'line' => $ex->getLine(),
                 'file' => $ex->getFile(),

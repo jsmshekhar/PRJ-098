@@ -110,6 +110,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/hub-part-accessories', [HubPartAccessoriesController::class, 'getHubPartAccessories'])->name('hub-part-accessories');
         Route::post('/add-accessories-hub-part', [HubPartAccessoriesController::class, 'addRequestHubPart'])->name('add-accessories-hub-part');
         Route::post('/update-accessories-hub-part', [HubPartAccessoriesController::class, 'updateAssignedAccessories'])->name('update-accessories-hub-part');
+        Route::post('/reject-hub-part-accessories/{slug}', [HubPartAccessoriesController::class, 'rejectRequestAccessories'])->name('reject-hub-part-accessories');
 
         Route::post('/update-company-details', [SiteConfigurationController::class, 'updateCompanyDetail'])->name('update-company-details');
         Route::post('/update-user-profile', [UserController::class, 'updateProfileDetail'])->name('update-user-profile');
