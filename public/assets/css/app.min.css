@@ -182,6 +182,7 @@ body[data-bs-theme="dark"] .layout-mode-light {
   float: left;
   margin-right: 15px;
   position: relative;
+  object-fit: cover;
 }
 
 .header-item span.active {
@@ -210,9 +211,10 @@ body[data-bs-theme="dark"] .layout-mode-light {
   position: absolute;
   top: 20px;
   right: 20px;
-  padding: 4px;
+  padding: 2px 5px;
   background: #eb0202;
   display: block;
+  line-height: normal;
 }
 
 .notification-item .d-flex {
@@ -4246,6 +4248,7 @@ div.dataTables_wrapper div.dataTables_info {
 
 .table-rep-plugin .table-responsive {
   border: none !important;
+  min-height: 210px;
 }
 
 .table-rep-plugin .btn-group .btn-default {
@@ -6215,6 +6218,7 @@ table .dropdown-menu.show .dropdown-item {
   font-size: 16px;
   font-weight: 400;
   line-height: 160%; /* 25.6px */
+  font-family: "Roboto", sans-serif !important;  
 }
 
 table .dropdown-menu.show .dropdown-item:hover {
@@ -6577,7 +6581,8 @@ table .dropdown-menu.show .dropdown-item:hover {
   border-color: #1BCC0C;
   width: 75px;
   height: 75px;
-  padding: 5px; 
+  padding: 5px;
+  object-fit: cover; 
 }
 
 
@@ -6588,7 +6593,7 @@ table .dropdown-menu.show .dropdown-item:hover {
   height: 10px;
   background-color: #1BCC0C;
   bottom: 10%;
-  right: 42%;
+  right: 37%;
   border-radius: 50%;
   transform: translate(-45%, 0);
 }
