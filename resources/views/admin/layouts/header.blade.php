@@ -204,7 +204,7 @@ if (auth()->user()->photo) {
                                 <div class="">
                                     <label for="userImage" class="selectImageRemove">
                                         <img class="upload_des_preview clickable selectedImage "
-                                            src="{{ asset('public/assets/images/uploadimg.png') }}"
+                                            src="{{ $userImage }}"
                                             alt="Logo Image" />
                                     </label>
                                     <input type="file" class="form-control d-none customFile" name="user_image"
@@ -263,7 +263,7 @@ if (auth()->user()->photo) {
                                 <div class="">
                                     <label for="customFile" class="selectImageRemove">
                                         <img class="upload_des_preview clickable selectedImage "
-                                            src="{{ asset('public/assets/images/uploadimg.png') }}"
+                                            src="{{ $companyLogo }}"
                                             alt="Logo Image" />
                                     </label>
                                     <input type="file" class="form-control d-none customFile" name="company_logo"
