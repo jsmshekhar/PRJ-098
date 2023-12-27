@@ -260,4 +260,55 @@ class Kyc extends Model
             return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
         }
     }
+
+    public function updateKyc($request)
+    {
+        try {
+            $slug = "";
+            $basePath = asset('public/upload/');
+            $details = DB::table('products as p')
+                ->join('ev_types as et', 'p.ev_type_id', '=', 'et.ev_type_id')
+                ->where('p.slug', $slug)
+                ->whereNull('p.deleted_at')
+                ->select(
+                    'p.slug',
+                    'p.title',
+                    'p.description',
+                    'p.speed',
+                    'p.profile_category',
+                    'p.image',
+                    DB::raw("CONCAT('$basePath','/product/', p.image) AS image_path"),
+                    'p.per_day_rent as per_day_rent',
+                    DB::raw('CASE p.bettery_type WHEN 1 THEN "Swappable" WHEN 2 THEN "Fixed" ELSE "" END as battery_type'),
+                    DB::raw('CASE p.ev_category_id WHEN 1 THEN "2 Wheeler" WHEN 2 THEN "3 Wheeler" END as ev_category'),
+                    'p.km_per_charge as km_per_charge',
+                    DB::raw('CASE p.bike_type WHEN 1 THEN "Cargo Bike" WHEN 2 THEN "Normal Bike" ELSE "" END as bike_type'),
+                    'et.ev_type_name'
+                )
+                ->first();
+
+            $accessories = DB::table('accessories as acc')
+                ->whereNull('acc.deleted_at')
+                ->select(
+                    'acc.slug',
+                    'acc.title',
+                    'acc.price',
+                    'acc.image',
+                    DB::raw("CONCAT('$basePath','/accessories/', acc.image) AS image_path"),
+                )
+                ->get();
+            $result = [];
+            if ($details) {
+                return successResponse(Response::HTTP_OK, Lang::get('messages.HTTP_FOUND'), $result);
+            }
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
 }

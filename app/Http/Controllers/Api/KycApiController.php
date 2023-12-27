@@ -173,4 +173,45 @@ class KycApiController extends ApiController
             return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
         }
     }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : updateKyc
+    Request   : Object
+    Return    : Json
+    --------------------------------------------------*/
+    public function updateKyc(Request $request)
+    {
+        try {
+            $requiredFields = [
+                'media_type' => [
+                    'required',
+                    Rule::in([1, 2]),
+                ],
+                'file_name' => 'required',
+                'path' => 'required',
+            ];
+            if ($request->media_type == 1) {
+                $requiredFields['file_name'] = 'required|mimes:jpeg,png,jpg,gif|max:2048';
+            }
+            if ($request->media_type == 2) {
+                $requiredFields['file_name'] = 'required|mimes:doc,docx,xls,xlsx,pdf|max:2048';
+            }
+
+            $result = [];
+            if (!$this->checkValidation($request, $requiredFields)) {
+                return validationResponse(Response::HTTP_UNPROCESSABLE_ENTITY, Lang::get('messages.VALIDATION_ERROR'), $this->errorMessage);
+            } else {
+                $result = ApiModel::uploadFile($request);
+                return finalResponse($result);
+            }
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
 }

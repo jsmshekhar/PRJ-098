@@ -10,6 +10,7 @@ trait UploadsImageTrait
     {
         $originalName = $file->getClientOriginalName();
         $fileName = time() . '-' . $originalName;
+        $fileName = preg_replace('/\s+/', '', $fileName);
         $path = public_path($folder);
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
