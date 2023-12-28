@@ -34,6 +34,7 @@ class CreateHubPartAccessoriesTable extends Migration
             $table->timestamp('assign_date')->nullable();
 
             $table->tinyInteger('status_id')->default(1)->comment('1 => Raised, 2 => Shipped, 3 => Completed, 4 => Rejected');
+            $table->tinyInteger('view_status')->default(0);
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamp('created_at')->nullable()->useCurrent();

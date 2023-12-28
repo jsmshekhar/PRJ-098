@@ -104,7 +104,7 @@ class Rider extends Authenticatable
                     ];
                 }
                 $token = $rider->createToken('rider')->accessToken;
-                $result = ['headerToken' => $token, 'isKycDone' => 1, 'rider' => $riderDetails];
+                $result = ['headerToken' => $token, 'isKycCompleted' => 1, 'rider' => $riderDetails];
                 return successResponse(Response::HTTP_OK, Lang::get('messages.LOGIN_SUCCESS'), $result);
             }
             return errorResponse(Response::HTTP_UNAUTHORIZED, Lang::get('messages.UNAUTHORIZED'), (object)[]);
