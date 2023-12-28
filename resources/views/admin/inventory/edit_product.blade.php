@@ -23,7 +23,7 @@
                 <div class="card-body border-0">
                     <div class="table-rep-plugin">
 
-                        <form method="post" enctype="multipart/form-data" id="createProductForm">
+                        <form method="post" id="createProductForm" enctype="multipart/form-data">
                             @csrf
                             <div class="row">
                                 <div class="col-md-6 mb-3">
@@ -123,13 +123,14 @@
                                     <label for="title" class="form-label">Image Upload</label>
                                     <div class="">
                                         <label for="customFile" class="selectImageRemove">
-                                            <img class="upload_des_preview clickable selectedImage " src="{{ $product->image != '' ?  asset('public/upload/product/'.$product->image) : asset('public/assets/images/uploadimg.png')}}" alt="example placeholder" />
+                                            <img class="upload_des_preview clickable selectedImage" src="{{ $product->image != '' ?  asset('public/upload/product/'.$product->image) : asset('public/assets/images/uploadimg.png')}}" alt="example placeholder" />
                                         </label>
                                         <input type="file" class="form-control d-none customFile" name="image" id="customFile" />
                                     </div>
                                 </div>
 
-                                <div class="col-md-6 mb-4">
+
+                                <div class=" col-md-6 mb-4">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="remember-check" name="is_display_on_app" @if($product->is_display_on_app == 1) checked @endif>
                                         <label class="form-check-label mt-1" for="remember-check">
@@ -178,7 +179,10 @@
             }
             $('#submitForm').prop('disabled', true);
             $('#submitForm').html('Please wait...')
+            var imageData = $('#customFile')[0].files[0]; // Get the image file
+
             var formDatas = new FormData(document.getElementById('createProductForm'));
+            formDatas.append('image', imageData);
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
