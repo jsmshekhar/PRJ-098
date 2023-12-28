@@ -36,10 +36,18 @@ class CreateRidersTable extends Migration
             $table->string('pincode', 25)->nullable();
 
             $table->text('photo')->nullable();
+            $table->string('company_name')->nullable();
+            $table->text('company_address')->nullable();
 
             $table->text('api_token')->nullable();
             $table->tinyInteger('profile_type')->default(1)->comment('1 => Corporate, 2 => Individual, 3 => Student, 4 => Vender');
             $table->tinyInteger('status_id')->default(1)->comment('1 => Active, 2 => Pending, 3 => Inactive, 4 => Deleted');
+
+            $table->timestamp('is_step_selfie_done')->nullable()->useCurrentOnUpdate();
+            $table->timestamp('is_personal_detail_done')->nullable()->useCurrentOnUpdate();
+            $table->timestamp('is_id_proof_done')->nullable()->useCurrentOnUpdate();
+            $table->timestamp('is_bank_detail_done')->nullable()->useCurrentOnUpdate();
+
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamp('created_at')->nullable()->useCurrent();

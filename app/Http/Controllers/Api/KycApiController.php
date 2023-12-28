@@ -8,6 +8,7 @@ use App\Models\ApiModel;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 
 class KycApiController extends ApiController
@@ -50,7 +51,9 @@ class KycApiController extends ApiController
     public function vehiclePreferences(Request $request)
     {
         try {
-            $requiredFields = [
+            $result = $this->keyModel->vehiclePreferences($request);
+            return finalResponse($result);
+            /*$requiredFields = [
                 'profile_category' => [
                     'required',
                     Rule::in([config('constants.PROFILE_CATEGORIES.INDIVIDUAL'), config('constants.PROFILE_CATEGORIES.VENDER'),  config('constants.PROFILE_CATEGORIES.STUDENT'), config('constants.PROFILE_CATEGORIES.CORPORATE')]),
@@ -64,7 +67,7 @@ class KycApiController extends ApiController
             } else {
                 $result = $this->keyModel->vehiclePreferences($request);
                 return finalResponse($result);
-            }
+            }*/
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -106,10 +109,6 @@ class KycApiController extends ApiController
     {
         try {
             $requiredFields = [
-                'profile_category' => [
-                    'required',
-                    Rule::in([config('constants.PROFILE_CATEGORIES.INDIVIDUAL'), config('constants.PROFILE_CATEGORIES.VENDER'),  config('constants.PROFILE_CATEGORIES.STUDENT'), config('constants.PROFILE_CATEGORIES.CORPORATE')]),
-                ],
                 'rent_cycle' => [
                     'required',
                     Rule::in([config('constants.RENT_CYCLE.15_DAYS'), config('constants.RENT_CYCLE.30_DAYS')]),
@@ -176,33 +175,67 @@ class KycApiController extends ApiController
 
     /*--------------------------------------------------
     Developer : Chandra Shekhar
-    Action    : updateKyc
+    Action    : updateKycSteps
     Request   : Object
     Return    : Json
     --------------------------------------------------*/
-    public function updateKyc(Request $request)
+    public function updateKycSteps(Request $request)
     {
         try {
+            /*
+            1 - Take your selfie
+            2 - Personal Details
+            3 - Personal Details
+            4 - Bank Details
+
+            AccountType - 1-Saving 2-Current
+            */
+            $stepOne = 1;
+            $stepTwo = 2;
+            $stepThree = 3;
+            $stepFour = 4;
+
+            $profileType = Auth::user()->profile_type;
             $requiredFields = [
-                'media_type' => [
+                'step' => [
                     'required',
-                    Rule::in([1, 2]),
+                    Rule::in([1, 2, 3, 4]),
                 ],
-                'file_name' => 'required',
-                'path' => 'required',
             ];
-            if ($request->media_type == 1) {
-                $requiredFields['file_name'] = 'required|mimes:jpeg,png,jpg,gif|max:2048';
+
+            $step = (int)$request->step;
+            if ($step == $stepOne) {
+                $requiredFields['profile_image'] = 'required';
             }
-            if ($request->media_type == 2) {
-                $requiredFields['file_name'] = 'required|mimes:doc,docx,xls,xlsx,pdf|max:2048';
+
+            if ($step == $stepTwo) {
+                $requiredFields['full_name'] = 'required';
+                $requiredFields['number'] = 'required';
+                $requiredFields['alternate_number'] = 'required';
+                $requiredFields['parent_phone'] = 'required';
+                $requiredFields['sibling_phone'] = 'required';
+                $requiredFields['current_address'] = 'required';
+                $requiredFields['permanent_address'] = 'required';
+            }
+
+            if ($step == $stepThree) {
+                $requiredFields['full_name'] = 'required';
+            }
+
+            if ($step == $stepFour) {
+                $requiredFields['account_type'] = ['required', Rule::in([1, 2]),];
+                $requiredFields['account_name'] = 'required';
+                $requiredFields['account_no'] = 'required';
+                $requiredFields['ifsc_code'] = 'required';
+                $requiredFields['upi_id'] = 'required';
             }
 
             $result = [];
             if (!$this->checkValidation($request, $requiredFields)) {
                 return validationResponse(Response::HTTP_UNPROCESSABLE_ENTITY, Lang::get('messages.VALIDATION_ERROR'), $this->errorMessage);
             } else {
-                $result = ApiModel::uploadFile($request);
+                dd($request->all());
+                $result = Kyc::updateKycSteps($request);
                 return finalResponse($result);
             }
         } catch (\Throwable $ex) {
