@@ -178,7 +178,10 @@
             }
             $('#submitForm').prop('disabled', true);
             $('#submitForm').html('Please wait...')
+            var imageData = $('#customFile')[0].files[0]; // Get the image file
+
             var formDatas = new FormData(document.getElementById('createProductForm'));
+            formDatas.append('image', imageData);
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
