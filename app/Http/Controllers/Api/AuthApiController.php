@@ -6,6 +6,7 @@ use App\Models\Rider;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Validation\Rule;
 
 class AuthApiController extends ApiController
 {
@@ -32,6 +33,10 @@ class AuthApiController extends ApiController
                 'password' => 'required',
                 'phone' => 'required|unique:riders,phone,NULL,rider_id,deleted_at,NULL',
                 'email' => 'unique:riders,email,NULL,rider_id,deleted_at,NULL',
+                'profile_category' => [
+                    'required',
+                    Rule::in([config('constants.PROFILE_CATEGORIES.INDIVIDUAL'), config('constants.PROFILE_CATEGORIES.VENDER'),  config('constants.PROFILE_CATEGORIES.STUDENT'), config('constants.PROFILE_CATEGORIES.CORPORATE')]),
+                ],
             ];
             if (!$this->checkValidation($request, $requiredFields)) {
                 return validationResponse(Response::HTTP_UNPROCESSABLE_ENTITY, Lang::get('messages.VALIDATION_ERROR'), $this->errorMessage);

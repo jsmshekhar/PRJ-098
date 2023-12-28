@@ -65,8 +65,8 @@ class Kyc extends Model
     public function vehiclePreferences($request)
     {
         try {
-            $profileType = (int)$request->profile_category;
-
+            // $profileType = (int)$request->profile_category;
+            $profileType = Auth::user()->profile_type;
             $basePath = asset('public/upload/product');
             $twoWheelers = DB::table('products as p')
                 ->join('ev_types as et', 'p.ev_type_id', '=', 'et.ev_type_id')
@@ -261,7 +261,7 @@ class Kyc extends Model
         }
     }
 
-    public function updateKyc($request)
+    public static function updateKycSteps($request)
     {
         try {
             $slug = "";
