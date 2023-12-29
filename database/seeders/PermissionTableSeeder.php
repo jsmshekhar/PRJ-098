@@ -180,6 +180,12 @@ class PermissionTableSeeder extends Seeder
                 "permission_slug" => "map-inventry-to-hub",
             ],
             [
+                'module_slug' => "INVENTRYMGT",
+                'module_id' => 4,
+                'name' => 'Vehicles',
+                "permission_slug" => "view-assigned-ev",
+            ],
+            [
                 'module_slug' => "NOTIFICATIONMGT",
                 'module_id' => 5,
                 'name' => 'View Notifications',

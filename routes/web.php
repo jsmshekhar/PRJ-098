@@ -95,6 +95,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/product/edit/{slug}/{param}', [ProductController::class, 'editProduct'])->name('product-edit');
         Route::post('/update-product/{slug}', [ProductController::class, 'updateProduct'])->name('update-product');
         Route::post('/product-delete/{slug}', [ProductController::class, 'deleteProduct'])->name('product-delete');
+        Route::get('/vehicles', [ProductController::class, 'getAssignedVehicles'])->name('vehicles');
 
         Route::get('/accessories', [AccessoriesController::class, 'getAccessories'])->name('accessories');
         Route::post('/add-accessories', [AccessoriesController::class, 'addAccessories'])->name('add-accessories');
@@ -114,6 +115,7 @@ Route::group(['prefix' => 'admin'], function () {
 
         Route::post('/update-company-details', [SiteConfigurationController::class, 'updateCompanyDetail'])->name('update-company-details');
         Route::post('/update-user-profile', [UserController::class, 'updateProfileDetail'])->name('update-user-profile');
+
         /* Shekhar's - Route */
         @include('admin.php');
     });

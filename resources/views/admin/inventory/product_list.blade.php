@@ -73,20 +73,34 @@
                     <ul>
                         @foreach($products as $key => $product)
                         <li class="">
-                            <div class="cat_suv">{{$product->title}} <span class="stock_in">In Stock</span> </div>
+                            <div class="cat_suv">{{$product->title}} <span class="stock_in">{{$product->status_id }}</span> </div>
                             <img class="card-img img-fluid" src="{{ asset('public/upload/product/'.$product->image) }}" alt="product image">
                             <div class="d-flex justify-content-between">
-                                <span>Bike Type</span>
+                                <span>{{$product->bike_type}}</span>
                                 <div class="sub_btns">
                                     <a href="{{ route('product-edit', ['slug' => $product->slug, 'param' => $product->profile_category]) }}" target="_blank">
                                         <i class="fa fa-edit"></i>
                                     </a>
-                                    <a href="#" target="_blank">
-                                    <i class="fa fa-trash"></i>
+                                    @can('delete_inventry', $permission)
+                                    <form id="delete-form-{{$product->slug}}" method="post" action="{{ route('product-delete', $product->slug) }}" style="display: none;">
+                                        @csrf
+                                        {{ method_field('POST') }} <!-- delete query -->
+                                    </form>
+                                    <a href="" class="" onclick="
+                                    if (confirm('Are you sure, You want to delete?'))
+                                    {
+                                        event.preventDefault();
+                                        document.getElementById('delete-form-{{$product->slug}}').submit();
+                                    }else {
+                                        event.preventDefault();
+                                    }
+                                    " title="delete">
+                                        <i class="fa fa-trash"></i>
                                     </a>
-                                    <a href="#" target="_blank">
+                                    @endcan
+                                    {{--<a href="#" target="_blank">
                                         <i class="fa fa-info-circle"></i>
-                                    </a>
+                                    </a>--}}
                                 </div>
                             </div>
                         </li>

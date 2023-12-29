@@ -8,6 +8,8 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
 
 class ProductController extends AdminAppController
 {
@@ -173,6 +175,61 @@ class ProductController extends AdminAppController
                     'message' => $data['original']['message'],
                 ];
                 return response()->json($status);
+            }
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Raj Kumar
+    Action    : Delete Hub
+    --------------------------------------------------*/
+    public function deleteProduct ($slug)
+    {
+        try {
+            $deleteResult = $this->product->deleteProduct($slug);
+            if (!empty($deleteResult)) {
+                return redirect()->back()->with('message', Lang::get('messages.DELETE'));
+            } else {
+                return redirect()->back()->with('message', Lang::get('messages.DELETE_ERROR'));
+            }
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    // Vehicles
+
+    /*--------------------------------------------------
+    Developer : Raj Kumar
+    Action    : Get Assigned Vehicles
+    --------------------------------------------------*/
+    public function getAssignedVehicles(Request $request)
+    {
+        try {
+            $permission = User::getPermissions();
+            if (Gate::allows('view_assigned_ev', $permission)) {
+                $vehicle = $this->product->getAssignedVehicles($request);
+                $vehicles = $vehicle['result']['vehicles'];
+                $count = $vehicle['result']['count'];
+                $hubs = $vehicle['result']['hubs'];
+                $payment_status = $vehicle['result']['payment_status'];
+                $vehicle_status = $vehicle['result']['vehicle_status'];
+                $ev_category = $vehicle['result']['ev_category'];
+                return view('admin.inventory.vehicle', compact('vehicles', 'count', 'hubs', 'payment_status', 'vehicle_status', 'ev_category', 'permission'));
+            } else {
+                return view('admin.401.401');
             }
         } catch (\Throwable $ex) {
             $result = [

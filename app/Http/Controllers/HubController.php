@@ -58,12 +58,11 @@ class HubController extends AdminAppController
             $permission = User::getPermissions();
             if (Gate::allows('hub_view', $permission)) {
                 $hubs = $this->hub->viewHub($request, $slug, $param);
-           
+                // /dd($hubs);
                 $hub = $hubs['result']['hubs'];
                 $vehicles = $hubs['result']['vehicles'];
                 $employees = $hubs['result']['employees'];
                 $roles = $hubs['result']['roles'];
-
                 $rent_cycles = $hubs['result']['rent_cycles'];
                 $ev_types = $hubs['result']['ev_types'];
                 $ev_categories = $hubs['result']['ev_categories'];
