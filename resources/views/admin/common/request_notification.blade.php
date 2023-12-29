@@ -33,7 +33,7 @@ $count = DB::table('hub_part_accessories')
         @foreach($hub_part_request as $data)
         <div class="d-flex">
             <div class="flex-grow-1 p-3 border-bottom">
-                <p class="notify_text">Hello , you get a Request for Accessories from Hub Id <b>{{$data->hubid}} ({{$data->city}}).</b></p>
+                <p class="notify_text">Hello , you get a Request for Accessories from Hub Id: <b>{{$data->hubid}} ({{$data->city}}).</b></p>
                 <div class="notify_btn_box">
                     <form id="delete-form-{{$data->slug}}" method="post" action="{{ route('reject-hub-part-accessories', $data->slug) }}" style="display: none;">
                         @csrf
@@ -49,7 +49,7 @@ $count = DB::table('hub_part_accessories')
                         }
                         " title="reject"> Reject
                     </a>
-                    <a href="#" class="btn btn-success waves-effect waves-light">Open</a>
+                    <a href="{{route('hub-part-accessories')}}" class="btn btn-success waves-effect waves-light" target="_blank">Open</a>
 
                 </div>
             </div>

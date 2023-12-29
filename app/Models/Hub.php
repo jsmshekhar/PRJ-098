@@ -99,26 +99,33 @@ class Hub extends Model
             $count = 0;
             $hub = Hub::where('slug', $slug)->whereNull('deleted_at')->first();
             if($param == 'vehicle'){
-                $vehicles = Product::leftJoin('ev_types as et', 'products.ev_type_id', '=', 'et.ev_type_id')
+                $vehicles = Product::leftJoin('rider_orders', 'rider_orders.mapped_vehicle_id', '=', 'products.product_id')
+                ->leftJoin('riders', 'riders.rider_id', '=', 'rider_orders.rider_id')
+                ->leftJoin('ev_types as et', 'products.ev_type_id', '=', 'et.ev_type_id')
                 ->where('products.hub_id', $hub->hub_id)
                 ->whereNull('products.deleted_at')
                 ->select(
-                        'products.*',
-                        'et.ev_type_name',
-                        'et.slug as ev_type_slug',
-                        DB::raw('CASE 
-                                WHEN products.ev_category_id = 1 THEN "Two Wheeler" 
-                                WHEN products.ev_category_id = 2 THEN "Three Wheeler" 
-                                ELSE "" 
-                            END as ev_category_name'),
-                        DB::raw('CASE 
-                                WHEN products.profile_category = 1 THEN "Corporate" 
-                                WHEN products.profile_category = 2 THEN "Individual" 
-                                WHEN products.profile_category = 3 THEN "Student" 
-                                WHEN products.profile_category = 4 THEN "Vendor" 
-                                ELSE "" 
-                            END as profile_category_name')
-                        )
+                    'products.*',
+                    'et.ev_type_name',
+                    'et.slug as ev_type_slug',
+                    'riders.customer_id',
+                    //'riders.kyc_status',
+                    'rider_orders.payment_status',
+                    'rider_orders.status_id as statusid',
+                        
+                    DB::raw('CASE 
+                            WHEN products.ev_category_id = 1 THEN "Two Wheeler" 
+                            WHEN products.ev_category_id = 2 THEN "Three Wheeler" 
+                            ELSE "" 
+                        END as ev_category_name'),
+                    DB::raw('CASE 
+                            WHEN products.profile_category = 1 THEN "Corporate" 
+                            WHEN products.profile_category = 2 THEN "Individual" 
+                            WHEN products.profile_category = 3 THEN "Student" 
+                            WHEN products.profile_category = 4 THEN "Vendor" 
+                            ELSE "" 
+                        END as profile_category_name')
+                    )
                 ->orderBy('products.created_at', 'DESC')
                 ->paginate($perPage);
                 $ev_types = EvType::orderBy('created_at', 'DESC')->get();

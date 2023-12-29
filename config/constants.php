@@ -89,4 +89,15 @@ return [
         'NOT_AVAILABLE' => 4,
     ],
 
+    'PAYMENT_STATUS' => [
+        'PAID' => 1,
+        'PEINDING' => 2,
+        'FAILD' => 3,
+        'REJECT' => 4,
+    ],
+
+    'VEHICLE_STATUS' => [
+        'MOBILIZED' => 1,
+        'IMMOBILIZED' => 2,
+    ],
 ];

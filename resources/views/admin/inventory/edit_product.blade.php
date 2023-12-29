@@ -13,7 +13,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header border-bottom bg-white">
-                    <h4>Update Product &nbsp; <b>{ {{ucfirst(request()->route('param'))}} }</b></h4>
+                    <h4>Update Product <span class="d-flex heading_label"> {{ucfirst(request()->route('param'))}} </span> </h4>
                     <div class="nav_cust_menu">
                         <ul>
                             <li><a href="{{ route('products', request()->route('param')) }}" class="active" title="Products">Go Back</a></li>

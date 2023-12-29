@@ -28,8 +28,8 @@
                      </a>
                  </li>
                  @endcan
-                 <li class="{{ Request::routeIs('customer-managements') ? 'mm-active' : '' }}">
-                     <a href="{{ route('customer-managements') }}" class="{{ Request::routeIs('customer-managements') ? 'active' : '' }}">
+                 <li class="{{ Request::routeIs('customer-managements') ||  Request::routeIs('customer-view') ? 'mm-active' : '' }}">
+                     <a href="{{ route('customer-managements') }}" class="{{ Request::routeIs('customer-managements') ||  Request::routeIs('customer-view') ? 'active' : '' }}">
                          <img src="{{ asset('public/assets/images/icons/Customer-icon.svg') }}" alt="">
                          <span>Customer Management</span>
                      </a>
@@ -42,9 +42,17 @@
                      </a>
                  </li>
                  @endcan
+                 @can('view_assigned_ev', $permission)
+                 <li class="{{ Request::routeIs('vehicles') ? 'mm-active' : '' }}">
+                     <a href=" {{ route('vehicles') }}" class="{{ Request::routeIs('vehicles') ? 'active' : '' }}">
+                         <img src="{{ asset('public/assets/images/icons/Management-icon.svg') }}" alt="">
+                         <span>Vehicles</span>
+                     </a>
+                 </li>
+                 @endcan
                  @can('view_inventry', $permission)
-                 <li class="{{ Request::routeIs('products', 'corporate') ? 'mm-active' : '' }}">
-                     <a href="{{route('products', 'corporate')}}" class="{{ Request::routeIs('products', 'corporate') ? 'active' : '' }}">
+                 <li class="{{ Request::routeIs('products', 'corporate') || Request::routeIs('product-create') || Request::routeIs('product-edit') ? 'mm-active' : '' }}">
+                     <a href="{{route('products', 'corporate')}}" class="{{ Request::routeIs('products', 'corporate') || Request::routeIs('product-create') || Request::routeIs('product-edit') ? 'active' : '' }}">
                          <img src="{{ asset('public/assets/images/icons/Inventory-icon.svg') }}" alt="">
                          <span>Inventory Management</span>
                      </a>
