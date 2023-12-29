@@ -261,13 +261,13 @@ if (auth()->user()->photo) {
                             <div class="form-group mb-2">
                                 <label for="title" class="form-label">Change Logo</label>
                                 <div class="">
-                                    <label for="customFile" class="selectImageRemove">
+                                    <label for="logoImage" class="selectImageRemove">
                                         <img class="upload_des_preview clickable selectedImage "
                                             src="{{ $companyLogo }}"
                                             alt="Logo Image" />
                                     </label>
                                     <input type="file" class="form-control d-none customFile" name="company_logo"
-                                        id="customFile" />
+                                        id="logoImage" />
                                 </div>
                             </div>
                         </div>
