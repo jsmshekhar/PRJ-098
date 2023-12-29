@@ -94,6 +94,8 @@ class Rider extends Authenticatable
                 $rider = Auth::guard('rider')->user();
                 $riderDetails = [];
                 if (!is_null($rider)) {
+                    $isKyc = DB::table('riders')->where('rider_id', $rider->rider_id)->whereNotNull('is_step_selfie_done')->whereNotNull('is_personal_detail_done')->whereNotNull('is_id_proof_done')->whereNotNull('is_bank_detail_done')->first();
+                    $kycStatus = !is_null($isKyc) ? 1 : 0;
                     $riderDetails = [
                         "slug" => $rider->slug,
                         "name" => $rider->name,
@@ -104,7 +106,7 @@ class Rider extends Authenticatable
                     ];
                 }
                 $token = $rider->createToken('rider')->accessToken;
-                $result = ['headerToken' => $token, 'isKycCompleted' => 1, 'rider' => $riderDetails];
+                $result = ['headerToken' => $token, 'isKycCompleted' => $kycStatus, 'rider' => $riderDetails];
                 return successResponse(Response::HTTP_OK, Lang::get('messages.LOGIN_SUCCESS'), $result);
             }
             return errorResponse(Response::HTTP_UNAUTHORIZED, Lang::get('messages.UNAUTHORIZED'), (object)[]);

@@ -173,9 +173,9 @@ class KycApiController extends ApiController
         }
     }
 
-    /*--------------------------------------------------
+     /*--------------------------------------------------
     Developer : Chandra Shekhar
-    Action    : updateKycSteps
+    Action    : update-kys-steps
     Request   : Object
     Return    : Json
     --------------------------------------------------*/
@@ -196,6 +196,7 @@ class KycApiController extends ApiController
             $stepFour = 4;
 
             $profileType = Auth::user()->profile_type;
+            $messages = [];
             $requiredFields = [
                 'step' => [
                     'required',
@@ -210,7 +211,7 @@ class KycApiController extends ApiController
 
             if ($step == $stepTwo) {
                 $requiredFields['full_name'] = 'required';
-                $requiredFields['number'] = 'required';
+                // $requiredFields['number'] = 'required';
                 $requiredFields['alternate_number'] = 'required';
                 $requiredFields['parent_phone'] = 'required';
                 $requiredFields['sibling_phone'] = 'required';
@@ -219,7 +220,19 @@ class KycApiController extends ApiController
             }
 
             if ($step == $stepThree) {
-                $requiredFields['full_name'] = 'required';
+                $requiredFields['pan_card.front_image'] = 'required';
+                $requiredFields['aadhar_card.front_image'] = 'required';
+                $requiredFields['driving_licence.front_image'] = 'required';
+                $requiredFields['electicity_bill.front_image'] = 'required';
+                $requiredFields['credit_score.front_image'] = 'required';
+
+                $messages = [
+                    'pan_card.front_image.required' => 'The pan card front image is required.',
+                    'aadhar_card.front_image.required' => 'The aadhar card front image is required.',
+                    'driving_licence.front_image.required' => 'The driving licence front image is required.',
+                    'electicity_bill.front_image.required' => 'The electicity bill is required.',
+                    'credit_score.front_image.required' => 'The credit score image is required.',
+                ];
             }
 
             if ($step == $stepFour) {
@@ -231,13 +244,33 @@ class KycApiController extends ApiController
             }
 
             $result = [];
-            if (!$this->checkValidation($request, $requiredFields)) {
+            if (!$this->checkValidation($request, $requiredFields, $messages)) {
                 return validationResponse(Response::HTTP_UNPROCESSABLE_ENTITY, Lang::get('messages.VALIDATION_ERROR'), $this->errorMessage);
             } else {
-                dd($request->all());
                 $result = Kyc::updateKycSteps($request);
                 return finalResponse($result);
             }
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : get-kys-step
+    Request   : Object
+    Return    : Json
+    --------------------------------------------------*/
+    public function getKycStep(Request $request)
+    {
+        try {
+            $result = Kyc::getKycStep($request);
+            return finalResponse($result);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),

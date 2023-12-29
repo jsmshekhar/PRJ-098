@@ -33,4 +33,5 @@ Route::middleware(['auth:rider-api'])->namespace('Api')->prefix('v1')->group(fun
 
     Route::post('create-order', [KycApiController::class, 'createOrder']);
     Route::post('update-kys-steps', [KycApiController::class, 'updateKycSteps']);
+    Route::get('/get-kys-step', [KycApiController::class, 'getKycStep']);
 });
