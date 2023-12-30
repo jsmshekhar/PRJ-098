@@ -17,7 +17,7 @@
                     <li><a href="{{ route('product-ev-types') }}" class="" title="Ev Types">Ev Types</a></li>
                     @if(Auth::user()->role_id == 0)
                     <li><a href="{{ route('accessories') }}" class="active" title="Accessories">Accessories</a>
-                    @endif
+                        @endif
                     </li>
                 </ul>
             </div>
@@ -31,7 +31,7 @@
                         <form method="post" enctype="multipart/form-data" id="addAccessories">
                             @csrf
                             <div class="row">
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-3 mb-3">
                                     <label for="accessories_category" class="form-label">Accessories Category</label>
                                     <select class="form-control selectBasic" name="accessories_category" id="accessories_category1">
                                         @foreach($accessories_categories as $key => $accCat)
@@ -39,29 +39,29 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-3 mb-3">
                                     <label for="example-title-input" class="form-label">Title </label>
                                     <input class="form-control" type="text" name="title" id="title1" value="">
                                     <input type="hidden" class="form-control" name="slug" value="">
                                 </div>
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-3 mb-3">
                                     <label for="no_of_item" class="form-label ">No. of Items &nbsp;<span class="spanColor onlyDigit_error"></span></label>
                                     <input type="text" name="no_of_item" class="form-control onlyDigit" id="no_of_item1">
                                 </div>
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-3 mb-3">
                                     <label for="example-title-input" class="form-label">Per Accessories Amount</label>
                                     <input class="form-control" type="text" name="price" id="price1" value="">
                                 </div>
-                                <div class="col-md-2 mb-3 d-flex justify-content-center">
-                                    <div class="btn btn-primary btn-rounded">
-                                        <label class="form-label text-white m-1" for="customFile1">Choose Image</label>
-                                        <input type="file" class="form-control d-none" name="image" id="customFile1" onchange="displaySelectedImage(event, 'selectedImage')" />
+                                <div class="col-md-3 mb-3">
+                                    <label for="title" class="form-label">Image Upload</label>
+                                    <div class="">
+                                        <label for="accessoriesFile" class="selectImageRemove">
+                                            <img class="upload_des_preview clickable selectedImage" src="{{asset('public/assets/images/uploadimg.png')}}" alt="example placeholder" />
+                                        </label>
+                                        <input type="file" class="form-control d-none customFile" name="image" id="accessoriesFile" />
                                     </div>
                                 </div>
-                                <div class="col-md-2 mb-3 d-flex justify-content-center">
-                                    <img id="selectedImage" src="{{ asset('public/assets/images/no-image.bmp') }}" alt="example placeholder" style="width: 120px;" />
-                                </div>
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-3 mb-3">
                                     <button type="button" class="btn btn-success " id="submitForm">Add </button>
                                     <span class="text-success d-block" id="message" style="margin-right: 10px"></span>
                                 </div>
@@ -159,14 +159,14 @@
                                 <input class="form-control" type="text" name="price" id="price">
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3 d-flex justify-content-center">
-                            <div class="btn btn-primary btn-rounded">
-                                <label class="form-label text-white m-1" for="customFile2">Choose Image</label>
-                                <input type="file" class="form-control d-none" name="image" id="customFile2" onchange="displaySelectedImage1(event, 'selectedImage1')" />
+                        <div class="col-md-6 mb-3">
+                            <label for="title" class="form-label">Image Upload</label>
+                            <div class="">
+                                <label for="accessoriesEditFile" class="selectImageRemove" id="ImageID">
+                                    <img class="upload_des_preview clickable selectedImage" src="{{asset('public/assets/images/uploadimg.png')}}" alt="accessories image" />
+                                </label>
+                                <input type="file" class="form-control d-none customFile" name="image" id="accessoriesEditFile" />
                             </div>
-                        </div>
-                        <div class="col-md-6 mb-3" id="ImageID">
-                            <img id="selectedImage1" src="{{ asset('public/assets/images/no-image.bmp') }}" alt="image" style="width: 120px;">
                         </div>
                     </div>
                 </form>
@@ -197,7 +197,7 @@
                 var image = $(this).data('image');
                 if (image) {
                     var imageUrl = "{{ asset('public/upload/accessories') }}/" + image;
-                    $("#ImageID").html('<img id="selectedImage1" src="' + imageUrl + '" alt="image" style="width: 120px;">');
+                    $("#ImageID").html('<img class="upload_des_preview clickable selectedImage" src="' + imageUrl + '" alt="accessories image">');
                 }
                 $("#slug").val(slug);
                 $("#title").val(title);
@@ -274,29 +274,5 @@
             });
         });
     });
-
-    function displaySelectedImage(event, elementId) {
-        const selectedImage = document.getElementById(elementId);
-        const fileInput = event.target;
-        if (fileInput.files && fileInput.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                selectedImage.src = e.target.result;
-            };
-            reader.readAsDataURL(fileInput.files[0]);
-        }
-    }
-
-    function displaySelectedImage1(event, elementId) {
-        const selectedImage1 = document.getElementById(elementId);
-        const fileInput = event.target;
-        if (fileInput.files && fileInput.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                selectedImage1.src = e.target.result;
-            };
-            reader.readAsDataURL(fileInput.files[0]);
-        }
-    }
 </script>
 @endsection

@@ -95,6 +95,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete_inventry', 'App\Policies\InventryPolicy@delete_inventry');
         Gate::define('map_inventry_rider', 'App\Policies\InventryPolicy@map_inventry_rider');
         Gate::define('map_inventry_to_hub', 'App\Policies\InventryPolicy@map_inventry_to_hub');
+        Gate::define('view_assigned_ev', 'App\Policies\InventryPolicy@view_assigned_ev');
 
         //Cpmplain Policies
         Gate::define('view', 'App\Policies\HubPartAccessoriesPolicy@view');

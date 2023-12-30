@@ -152,7 +152,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="userModalLabel">Raise Request</h5>
+                <h5 class="modal-title" id="userModalLabel">Assign Accessories</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="post" enctype="multipart/form-data" id="assignRequestForm" action="{{route('update-accessories-hub-part')}}">
@@ -285,7 +285,7 @@
         // Assign
         $('.assignModelForm').click(function() {
             $('#assignModelForm').modal('show');
-            var s = $(this).data('hubid');
+            var hubid = $(this).data('hubid');
             var slug = $(this).data('slug');
             var accessories_category = $(this).data('accessories_category');
             var requested_qty = $(this).data('requested_qty');

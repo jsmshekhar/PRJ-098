@@ -59,6 +59,7 @@ class Rider extends Authenticatable
                 'email' => $request->input('email'),
                 'phone' => $request->input('phone'),
                 'password' => Hash::make($request->input('password')),
+                'profile_type' => $request->input('profile_category'),
             ]);
             if ($rider) {
                 return successResponse(Response::HTTP_OK, Lang::get('messages.INSERT'), (object)[]);
@@ -91,8 +92,21 @@ class Rider extends Authenticatable
             if (Auth::guard('rider')->attempt($credentials)) {
                 config(['auth.guards.rider-api.driver' => 'session']);
                 $rider = Auth::guard('rider')->user();
+                $riderDetails = [];
+                if (!is_null($rider)) {
+                    $isKyc = DB::table('riders')->where('rider_id', $rider->rider_id)->whereNotNull('is_step_selfie_done')->whereNotNull('is_personal_detail_done')->whereNotNull('is_id_proof_done')->whereNotNull('is_bank_detail_done')->first();
+                    $kycStatus = !is_null($isKyc) ? 1 : 0;
+                    $riderDetails = [
+                        "slug" => $rider->slug,
+                        "name" => $rider->name,
+                        "email" => $rider->email,
+                        "phone" => $rider->phone,
+                        "photo" => $rider->photo,
+                        "profile_category" => (int)$rider->profile_type,
+                    ];
+                }
                 $token = $rider->createToken('rider')->accessToken;
-                $result = ['headerToken' => $token, 'isKycDone' => 1, 'rider' => $rider];
+                $result = ['headerToken' => $token, 'isKycCompleted' => $kycStatus, 'rider' => $riderDetails];
                 return successResponse(Response::HTTP_OK, Lang::get('messages.LOGIN_SUCCESS'), $result);
             }
             return errorResponse(Response::HTTP_UNAUTHORIZED, Lang::get('messages.UNAUTHORIZED'), (object)[]);

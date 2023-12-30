@@ -101,4 +101,13 @@ class InventryPolicy
             return false;
         }
     }
+    public function view_assigned_ev()
+    {
+        $permission = User::getPermissions();
+        if (in_array('view-assigned-ev', $permission)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
