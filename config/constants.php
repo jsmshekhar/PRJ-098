@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'ACTIVE_STATUS' => 1,
     'NOTIFICATION_PARAMETER' => [
         'Subscription_Based' => 1,
         'Distance_Limit_Based' => 2,
@@ -89,4 +90,22 @@ return [
         'NOT_AVAILABLE' => 4,
     ],
 
+    'ORDER_STATUS' => [
+        'ASSIGNED' => 1,
+        'PENDING' => 2,
+        'REJECTED' => 3,
+    ],
+    'EV_STATUS' => [
+        'ACTIVE' => 1,
+        'INACTIVE' => 2,
+        'NON_FUNCTIONAL' => 3,
+        'ASSIGNED' => 4,
+        'DELETED' => 5,
+    ],
+    'PAYMENT_STATUS' => [
+        'SUCCESS' => 1,
+        'PENDING' => 2,
+        'FAILED' => 3,
+        'REJECTED' => 4,
+    ],
 ];

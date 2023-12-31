@@ -1,7 +1,13 @@
 @extends('admin.layouts.app')
 @section('title', 'Rider`s Order Management')
 @section('css')
+    <style>
+        #client_address {
+            height: 80px;
+        }
+    </style>
 @endsection
+
 @section('content')
     <div class="container-fluid">
         <div class="row">
@@ -110,11 +116,13 @@
                                             <tr>
                                                 <th>Customer Id</th>
                                                 <th>Customer Name</th>
-                                                <th>Order Date</th>
                                                 <th>Order Id</th>
+                                                <th>Order Date</th>
                                                 <th>Order Items</th>
                                                 <th>Order Quantity</th>
                                                 <th>Order Amount</th>
+                                                <th>Payment Status</th>
+                                                <th>Assign Ev</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -124,8 +132,8 @@
                                                         {{ $order->rider->slug }}
                                                     </td>
                                                     <td>{{ $order->rider->name }}</td>
-                                                    <td>{{ dateFormat($order->order_date) }}</td>
                                                     <td>{{ $order->slug }}</td>
+                                                    <td>{{ dateFormat($order->order_date) }}</td>
                                                     <td>
                                                         {{ $order->product_name . ',' }}
 
@@ -136,7 +144,7 @@
                                                             @php
 
                                                                 foreach (json_decode($order->accessories_items) as $items) {
-                                                                    $accessoriesItems[] = ucwords($items->title);
+                                                                    $accessoriesItems[] = $items->quantity . '-' . ucwords($items->title);
                                                                 }
                                                                 sort($accessoriesItems);
                                                                 echo implode(', ', $accessoriesItems);
@@ -145,6 +153,12 @@
                                                     </td>
                                                     <td>{{ count($accessoriesItems) + 1 }}</td>
                                                     <td>{{ $order->ordered_ammount }}</td>
+                                                    <td>{{ $order->payment_status_display }}</td>
+                                                    <td>
+                                                        <a href="javascript:void(0)"
+                                                            class="btn btn-success waves-effect waves-light"
+                                                            onclick="showModal('{{ $order->rider->slug }}', '{{ $order->rider->profile_type }}', '{{ $order->slug }}');">Assign</a>
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -166,6 +180,128 @@
 
     </div>
 @endsection
+
+<div class="modal fade" id="targetModal" role="dialog" aria-labelledby="modalLabel" data-keyboard="false"
+    data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modelWidth" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="hubModalLabel">Assign an EV</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" enctype="multipart/form-data" id="assignEvsForm" autocomplete="off">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group mb-2">
+                                <label for="address serach" class="col-form-label">Customer ID</label>
+                                <input id="customerSlug" name="customer_slug" readonly type="text"
+                                    class="floating-input form-control" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group mb-2">
+                                <label for="address serach" class="col-form-label">Map EV</label>
+                                {{ Form::select('mapped_ev', $evList, null, ['class' => 'form-control selectBasic', 'placeholder' => 'Select Ev', 'id' => 'mapped_ev']) }}
+                                <span class="spanColor mapped_ev_error"></span>
+                            </div>
+                        </div>
+                        <div class="isVendor">
+                            <div class="col-md-12">
+                                <div class="form-group mb-2">
+                                    <label for="address serach" class="col-form-label">Cluster Manager</label>
+                                    <span class="spanColor cluster_manager_error"></span>
+                                    <input id="autocomplete" name="cluster_manager" type="text"
+                                        class="floating-input form-control" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group mb-2">
+                                    <label for="address serach" class="col-form-label">TL Name</label>
+                                    <input id="autocomplete" name="tl_name" type="text"
+                                        class="floating-input form-control" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group mb-2">
+                                    <label for="address serach" class="col-form-label">Client Name</label>
+                                    <input id="autocomplete" name="client_name" type="text"
+                                        class="floating-input form-control" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group mb-2">
+                                    <label for="address serach" class="col-form-label">Client Address</label>
+                                    <textarea id="client_address" name="client_address" class="form-control" rows="5"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="order_slug" id="orderSlug">
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-danger waves-effect waves-light"
+                    data-bs-dismiss="modal">Close</button>
+                <span class=" text-success d-block" id="message"></span>
+                <button type="button" id="submitAssignEvForm" class="btn btn-success waves-effect waves-light">Save
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
 @section('js')
-    <script type="text/javascript"></script>
+    <script type="text/javascript">
+        $('.isVendor').hide();
+
+        function showModal(customerId = "", customerType = "", slug = "") {
+            if (customerType == 1) {
+                $('.isVendor').show();
+            }
+            $('#customerSlug').val(customerId);
+            $('#orderSlug').val(slug);
+            $("#targetModal").modal('show');
+        }
+
+        $(document).ready(function() {
+            $('#submitAssignEvForm').click(function(e) {
+                e.preventDefault();
+                var mappedEv = $('#mapped_ev').val();
+                if (mappedEv == "") {
+                    $(".mapped_ev_error").html('This field is required!');
+                    $("input#mapped_ev").focus();
+                    return false;
+                }
+                $('#submitAssignEvForm').prop('disabled', true);
+                $('#submitAssignEvForm').html('Please wait...')
+                var formDatas = new FormData(document.getElementById('assignEvsForm'));
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    method: 'POST',
+                    url: "{{ route('assign-ev-customer') }}",
+                    data: formDatas,
+                    contentType: false,
+                    processData: false,
+                    success: function(data) {
+                        $('#message').html("<span class='sussecmsg'>" + data.message +
+                            "</span>");
+
+                        $('#submitCompanyForm').prop('disabled', false);
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 1000);
+
+                    },
+                    errors: function() {
+                        $('#message').html(
+                            "<span class='sussecmsg'>Somthing went wrong!</span>");
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

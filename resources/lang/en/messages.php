@@ -29,5 +29,7 @@ return [
     "UPLOAD_SUCCESS" => "File uploaded successfully.",
     "UPLOAD_ERROR" => "Unable to upload file.",
     'UPDATE_ERROR' => 'Record updating error.',
+    'EV_ASSIGNED' => 'EV has been assined successfully.',
+    'EV_ASSIGNED_ERROR' => 'EV assined Error.',
 
 ];
