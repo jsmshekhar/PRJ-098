@@ -37,6 +37,9 @@
                             <h5>Email Id : <span>{{ $rider->email }}</span></h5>
                             <h5>Mobile number: <span> {{ $rider->phone }}</span></h5>
                             <h5>Alternate Mobile number : <span>{{ $rider->alternate_phone }}</span></h5>
+                            <h5>Father Mobile number : <span>{{ $rider->parent_phone }}</span></h5>
+                            <h5>Brother Mobile number : <span>{{ $rider->sibling_phone }}</span></h5>
+                            <h5>Owner Mobile number : <span>{{ $rider->owner_phone }}</span></h5>
                             <h5>Current Address : <span>{{ $rider->current_address }}</span></h5>
                             <h5>Permanent Address : <span>{{ $rider->permanent_address }}</span></h5>
                         </div>
@@ -241,7 +244,7 @@
                                             @foreach ($rider->transactions as $transaction)
                                                 <tr>
                                                     <td>{{ $transaction->transaction_id }}</td>
-                                                    <td>{{ $transaction->payment_status }}</td>
+                                                    <td>{{ $transaction->payment_status_display }}</td>
                                                     <td>{{ $transaction->transaction_ammount }}</td>
                                                     <td>{{ $transaction->transaction_type_name }}</td>
                                                     <td>{{ $transaction->transaction_mode_name }}</td>

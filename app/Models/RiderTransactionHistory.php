@@ -12,7 +12,7 @@ class RiderTransactionHistory extends Model
     protected $primaryKey = 'rider_transaction_id';
 
     protected $appends = [
-        'transaction_type_name', 'transaction_mode_name', 'payment_status'
+        'transaction_type_name', 'transaction_mode_name', 'payment_status_display'
     ];
 
     //1 => Credited, 2 => Debited
@@ -57,12 +57,12 @@ class RiderTransactionHistory extends Model
     }
 
     //1 => Succes, 2 => Pending, 3 => Failed, 4 => Rejected
-    public function getPaymentStatusAttribute()
+    public function getPaymentStatusDisplayAttribute()
     {
-        if (is_null($this->status_id) || $this->status_id == "") {
+        if (is_null($this->payment_status) || $this->payment_status == "") {
             return "";
         } else {
-            switch ($this->status_id) {
+            switch ($this->payment_status) {
                 case 1:
                     return 'Succes';
                     break;
@@ -76,7 +76,7 @@ class RiderTransactionHistory extends Model
                     return 'Rejected';
                     break;
                 default:
-                    return "";
+                    return "Pending";
             }
         }
     }

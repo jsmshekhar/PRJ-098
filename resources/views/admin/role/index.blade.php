@@ -1,3 +1,6 @@
+@php
+    use Illuminate\Support\Facades\DB;
+@endphp
 @extends('admin.layouts.app')
 @section('title', 'Roles')
 @section('css')
