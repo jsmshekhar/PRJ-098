@@ -31,7 +31,9 @@ class Product extends Model
             $auth = Auth::user();
             $products = Product::select(
                     'title','slug','image',
-                    DB::raw('CASE WHEN profile_category = 1 THEN "corporate" WHEN profile_category = 2 THEN "individual" WHEN profile_category = 3 THEN "student" WHEN profile_category = 4 THEN "vendor" END AS profile_category')
+                    DB::raw('CASE WHEN bike_type = 1 THEN "Cargo Bike" WHEN bike_type = 2 THEN "Normal Bike" END AS bike_type'),
+                    DB::raw('CASE WHEN profile_category = 1 THEN "corporate" WHEN profile_category = 2 THEN "individual" WHEN profile_category = 3 THEN "student" WHEN profile_category = 4 THEN "vendor" END AS profile_category'),
+                    DB::raw('CASE WHEN status_id = 1 THEN "In Stock" WHEN status_id = 2 THEN "Inacticve" WHEN status_id = 3 THEN "NF" WHEN status_id = 4 THEN "Assigned" WHEN status_id = 5 THEN "Delete" END AS status_id')
             )->where('hub_id', $auth->hub_id)->orWhere('hub_id', '!=', $auth->hub_id);
 
             if ($param == 'corporate') {
@@ -222,7 +224,7 @@ class Product extends Model
             $is_display_on_app = !empty($request->is_display_on_app) ? 1 : 2;
             $status_id = !empty($request->status_id) ? $request->status_id : 1;
             $bike_type = !empty($request->bike_type) ? $request->bike_type : 2;
-            
+           
             $product_image = '';
             if ($request->image) {
                 $image = $request->file('image');
@@ -305,7 +307,115 @@ class Product extends Model
         }
     }
 
-    // All vehicles list with mobilized demobilized
+    /*--------------------------------------------------
+    Developer : Raj Kumar
+    Action    : Delete Product(Vehicle)
+    --------------------------------------------------*/
+    public function deleteProduct($slug)
+    {
+        try {
+            $deleteResult = Product::where('slug', $slug);
+            $result = $deleteResult->delete();
+            Product::where('slug', $slug)->update([
+                "status_id" => 5, // delete
+            ]);
 
+            if (!empty($result)) {
+                return successResponse(Response::HTTP_OK, Lang::get('messages.DELETE'), $result);
+            } else {
+                return errorResponse(Response::HTTP_OK, Lang::get('messages.DELETE_ERROR'));
+            }
+        } catch (\Exception $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Raj Kumar
+    All vehicles list with mobilized demobilized
+    --------------------------------------------------*/
+    public function getAssignedVehicles($request)
+    {
+        try {
+            $auth = Auth::user();
+            $vehicles = RiderOrder::join('products', function($q) {
+                    $q->on('products.product_id', '=', 'rider_orders.mapped_vehicle_id');
+                    $q->where('products.status_id', '=', 4);
+                })
+                ->join('riders', 'riders.rider_id', '=', 'rider_orders.rider_id')
+                ->join('hubs', 'hubs.hub_id', '=', 'products.hub_id')
+                ->where('rider_orders.status_id','=', 1)
+                ->select(
+                    'rider_orders.payment_status',
+                    'products.ev_number',
+                    DB::raw('CASE 
+                        WHEN products.ev_category_id = 1 THEN "Two Wheeler" 
+                        WHEN products.ev_category_id = 2 THEN "Three Wheeler" 
+                        ELSE ""
+                    END as ev_category_name'),
+                    'riders.name','riders.phone','riders.customer_id','riders.slug',
+                    DB::raw('CASE 
+                        WHEN riders.profile_type = 1 THEN "Corporate" 
+                        WHEN riders.profile_type = 2 THEN "Individual" 
+                        WHEN riders.profile_type = 3 THEN "Student" 
+                        WHEN riders.profile_type = 4 THEN "Vendor" 
+                        ELSE "" 
+                    END as profile_category_name'),
+                    'hubs.hubid'
+                );
+            if (isset($request->is_search) && $request->is_search == 1) {
+                if (isset($request->ev_no) && !empty($request->ev_no)) {
+                    $vehicles = $vehicles->where('products.ev_number', 'LIKE', "%{$request->ev_no}%");
+                }
+                if (isset($request->ev_cat) && !empty($request->ev_cat)) {
+                    $vehicles = $vehicles->where('products.ev_category_id', 'LIKE', "%{$request->ev_cat}%");
+                }
+                if (isset($request->cus_id) && !empty($request->cus_id)) {
+                    $vehicles = $vehicles->where('riders.customer_id', 'LIKE', "%{$request->cus_id}%");
+                }
+                if (isset($request->ph) && !empty($request->ph)) {
+                    $vehicles = $vehicles->where('riders.phone', 'LIKE', "%{$request->ph}%");
+                }
+                if (isset($request->hid) && !empty($request->hid)) {
+                    $vehicles = $vehicles->where('hubs.hub_id', 'LIKE', "%{$request->hid}%");
+                }
+                if (isset($request->pay) && !empty($request->pay)) {
+                    $vehicles = $vehicles->where('rider_orders.payment_status', 'LIKE', "%{$request->pay}%");
+                }
+                // if (isset($request->status) && !empty($request->status)) {
+                //     $vehicles = $vehicles->where('rider_orders.payment_status', 'LIKE', "%{$request->status}%");
+                // }
+            }
+            $vehicles = $vehicles->orderBy('rider_orders.created_at', 'DESC')->paginate(20);
+            $count = RiderOrder::join('products', function ($q) {
+                    $q->on('products.product_id', '=', 'rider_orders.mapped_vehicle_id');
+                    $q->where('products.status_id', '=', 4);
+                })
+                ->join('riders', 'riders.rider_id', '=', 'rider_orders.rider_id')
+                ->join('hubs', 'hubs.hub_id', '=', 'products.hub_id')
+                ->where('rider_orders.status_id', '=', 1)->count();
+            $hubs = DB::table('hubs')->whereNull('deleted_at')->where('status_id', 1)->select('hub_id', 'city','hubid')->get();
+            $payment_status = config('constants.PAYMENT_STATUS');
+            $vehicle_status = config('constants.VEHICLE_STATUS');
+            $ev_category = config('constants.EV_CATEGORIES');
+            if (count($vehicles) > 0) {
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['vehicles' => $vehicles, 'count' => $count, 'hubs' => $hubs, 'payment_status' => $payment_status, 'vehicle_status' => $vehicle_status, 'ev_category' => $ev_category]);
+            } else {
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['vehicles' => [], 'count' => "",'hubs' => $hubs, 'payment_status' => $payment_status, 'vehicle_status' => $vehicle_status, 'ev_category' => $ev_category]);
+            }
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
     
 }

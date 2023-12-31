@@ -512,15 +512,11 @@
                         "_token": token,
                     },
                     success: function(response) {
-                        // Handle success
                     },
                     error: function(xhr, status, error) {
-                        // Handle error
                     }
                 });
             } else if (params === 'vehicle') {
-                // Handle 'vehicle' case, but the URL is missing in your example
-                // Add the appropriate URL or action here
             }
         }
     }

@@ -123,10 +123,10 @@
                                 <div class="col-md-3 mb-3">
                                     <label for="title" class="form-label">Image Upload</label>
                                     <div class="">
-                                        <label for="customFile" class="selectImageRemove">
+                                        <label for="productFile" class="selectImageRemove">
                                             <img class="upload_des_preview clickable selectedImage " src="{{asset('public/assets/images/uploadimg.png')}}" alt="example placeholder" />
                                         </label>
-                                        <input type="file" class="form-control d-none customFile" name="image" id="customFile" />
+                                        <input type="file" class="form-control d-none customFile" name="image" id="productFile" />
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
@@ -178,7 +178,10 @@
             }
             $('#submitForm').prop('disabled', true);
             $('#submitForm').html('Please wait...')
+            //var imageData = $('#customFile')[0].files[0]; // Get the image file
+
             var formDatas = new FormData(document.getElementById('createProductForm'));
+           // formDatas.append('image', imageData);
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

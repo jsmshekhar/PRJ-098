@@ -108,4 +108,9 @@ return [
         'FAILED' => 3,
         'REJECTED' => 4,
     ],
+
+    'VEHICLE_STATUS' => [
+        'MOBILIZED' => 1,
+        'IMMOBILIZED' => 2,
+    ],
 ];
