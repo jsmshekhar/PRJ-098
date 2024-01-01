@@ -48,10 +48,10 @@
                                 <h5>Hub Capacity: <span> {{$hub->hub_limit}}</span></h5>
                             </div>
                             <div class="col-xl-3 col-md-6">
-                                <h5>Vehicle Count in Hub : <span>###</span></h5>
+                                <h5>Vehicle Count in Hub : <span>{{$vehicleCount}}</span></h5>
                             </div>
                             <div class="col-xl-3 col-md-6">
-                                <h5>Total No. of Employees : <span>###</span></h5>
+                                <h5>Total No. of Employees : <span>{{$empCount}}</span></h5>
                             </div>
                             <div class="col-xl-3 col-md-3">
                                 <h5>Hub Address : <span> {{$hub->address_1}}{{$hub->address_2 ? ', '.$hub->address_2: ''}}</span></h5>
@@ -69,7 +69,9 @@
                             </div>
 
                             <div class="col-xl-6">
-                                <h5>Total Accessories : <span>Helmets, T-shirts</span></h5>
+                                <h5>Accessories in Hub : <span>@foreach ($accessoriesinHub as $access)
+                                        {{$access == 1 ? "Helmet" : ($access == 2 ? ", T-Shirt" : ($access == 3 ? ", Mobile Holder" : ""))}}@endforeach</span>
+                                </h5>
                             </div>
 
                         </div>
@@ -290,6 +292,7 @@
             if (operationType === 'add') {
                 var hub_id = $(this).data('hub_id');
                 var empid = $(this).data('empid');
+                empid = empid ? parseInt(empid) + 1 : 101;
                 $('#first_name').removeAttr('readonly');
                 $('#first_name').removeClass('readOnlyClass');
                 $('#last_name').removeAttr('readonly');
@@ -307,26 +310,31 @@
             }
 
             $('#userModelForm').modal('show');
-            var first_name = $(this).data('fname');
-            var last_name = $(this).data('lname');
-            var email = $(this).data('email');
-            var phone = $(this).data('phone');
             var slug = $(this).data('slug');
-            var roleid = $(this).data('roleid');
-            var rolename = $(this).data('rolename');
-            var hub_id = $(this).data('hub_id');
-            var empid = $(this).data('empid');
+            if (slug) {
 
-            $("#first_name").val(first_name);
-            $("#last_name").val(last_name);
-            $("#email").val(email);
-            $("#phone").val(phone);
-            $("#slug").val(slug);
-            //$("#role_id").find(':selected').attr('data-roleid')
-            $("#role_id").val(roleid);
-            $("#rolename").val(rolename);
-            $("#hub_id").val(hub_id);
-            $("#employee_id").val(empid);
+                var first_name = $(this).data('fname');
+                var last_name = $(this).data('lname');
+                var email = $(this).data('email');
+                var phone = $(this).data('phone');
+                var roleid = $(this).data('roleid');
+                var rolename = $(this).data('rolename');
+                var hub_id = $(this).data('hub_id');
+                var empid = $(this).data('empid');
+                $("#first_name").val(first_name);
+                $("#last_name").val(last_name);
+                $("#email").val(email);
+                $("#phone").val(phone);
+                $("#slug").val(slug);
+                //$("#role_id").find(':selected').attr('data-roleid')
+                $("#role_id").val(roleid);
+                $("#rolename").val(rolename);
+                $("#hub_id").val(hub_id);
+                $("#employee_id").val(empid);
+            }
+
+
+
 
         });
         $('#submitUser').click(function(e) {
@@ -511,13 +519,10 @@
                         "slug": slug,
                         "_token": token,
                     },
-                    success: function(response) {
-                    },
-                    error: function(xhr, status, error) {
-                    }
+                    success: function(response) {},
+                    error: function(xhr, status, error) {}
                 });
-            } else if (params === 'vehicle') {
-            }
+            } else if (params === 'vehicle') {}
         }
     }
 </script>
