@@ -176,7 +176,6 @@
                         <div class="col-md-6 mb-3">
                             <label for="ev_type_id" class="form-label">EV Type</label>
                             <select class="form-control selectBasic" name="ev_type_id" id="ev_type_id">
-                                <option value="">Select EV Type</option>
                                 @foreach($ev_types as $key => $ev_type)
                                 <option value="{{$ev_type->ev_type_id}}">{{$ev_type->ev_type_name}}</option>
                                 @endforeach

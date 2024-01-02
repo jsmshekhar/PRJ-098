@@ -114,6 +114,7 @@ Route::group(['prefix' => 'admin'], function () {
 
         Route::post('/update-company-details', [SiteConfigurationController::class, 'updateCompanyDetail'])->name('update-company-details');
         Route::post('/update-user-profile', [UserController::class, 'updateProfileDetail'])->name('update-user-profile');
+        Route::post('/change-password', [UserController::class, 'changePassword'])->name('change-password');
 
         /* Shekhar's - Route */
         @include('admin.php');
