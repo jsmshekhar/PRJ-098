@@ -15,8 +15,7 @@
  <!-- Plugins js-->
  <script src="{{ asset('public/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js') }}">
  </script>
- <script
-     src="{{ asset('public/assets/libs/admin-resources/jquery.vectormap/maps/jquery-jvectormap-world-mill-en.js') }}">
+ <script src="{{ asset('public/assets/libs/admin-resources/jquery.vectormap/maps/jquery-jvectormap-world-mill-en.js') }}">
  </script>
  <!-- dashboard init -->
  {{-- <script src="{{ asset('public/assets/js/pages/dashboard.init.js') }}"></script> --}}
@@ -108,6 +107,63 @@
                      $('#message').html("<span class='sussecmsg'>" + data.message +
                          "</span>");
                      $('#submitCompanyForm').prop('disabled', false);
+                     setTimeout(function() {
+                         window.location.reload();
+                     }, 1000);
+
+                 },
+                 errors: function() {
+                     $('#message').html(
+                         "<span class='sussecmsg'>Somthing went wrong!</span>");
+                 }
+             });
+         });
+     });
+
+     $(document).ready(function() {
+         $('#submitPasswordForm').click(function(e) {
+             e.preventDefault();
+             var old_pwd = $('#old_password').val();
+             if (old_pwd == "") {
+                 $(".old_password_error").html('This field is required!');
+                 $("input#old_password").focus();
+                 return false;
+             }
+             var new_pwd = $('#new_password').val();
+             if (new_pwd == "") {
+                 $(".new_password_error").html('This field is required!');
+                 $("input#new_password").focus();
+                 return false;
+             }
+             var cn_pwd = $('#confirm_password').val();
+             if (cn_pwd == "") {
+                 $(".confirm_password_error").html('This field is required!');
+                 $("input#confirm_password").focus();
+                 return false;
+             }
+
+             if (new_pwd != cn_pwd) {
+                 $(".confirm_password_error").html('The password does not match the new password.');
+                 $("input#confirm_password").focus();
+                 return false;
+             }
+
+             $('#submitPasswordForm').prop('disabled', true);
+             $('#submitPasswordForm').html('Please wait...')
+             var formDatas = new FormData(document.getElementById('passwordChangeForm'));
+             $.ajax({
+                 headers: {
+                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                 },
+                 method: 'POST',
+                 url: "{{ route('change-password') }}",
+                 data: formDatas,
+                 contentType: false,
+                 processData: false,
+                 success: function(data) {
+                     $('#message').html("<span class='sussecmsg'>" + data.message +
+                         "</span>");
+                     $('#submitPasswordForm').prop('disabled', false);
                      setTimeout(function() {
                          window.location.reload();
                      }, 1000);

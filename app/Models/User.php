@@ -10,6 +10,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\UploadsImageTrait;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
@@ -129,6 +130,47 @@ class User extends Authenticatable
                     "photo" => $userImage,
                 ];
                 $userDetail = User::where('user_id', $userId)->update($userInfo);
+
+                if ($userDetail) {
+                    $status = [
+                        'status' => Response::HTTP_OK,
+                        'message' => Lang::get('messages.UPDATE'),
+                    ];
+                    return response()->json($status);
+                }
+            }
+            $status = [
+                'status' => Response::HTTP_BAD_REQUEST,
+                'url' => "",
+                'message' => Lang::get('messages.UPDATE_ERROR'),
+            ];
+            return response()->json($status);
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Raj Kumar
+    Action    : Change Password
+    --------------------------------------------------*/
+    public function changePassword($request)
+    {
+        try {
+            $userImage = '';
+            $userId = Auth::id();
+            $hashPwd = User::where('user_id', $userId)->select('password')->first();
+
+            if (Hash::check($request->old_password, $hashPwd)) {
+                $password = [
+                    "password" => $request->password ?? Hash::make($request->password),
+                ];
+                $userDetail = User::where('user_id', $userId)->update($password);
 
                 if ($userDetail) {
                     $status = [
