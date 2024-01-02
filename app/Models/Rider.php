@@ -18,7 +18,7 @@ class Rider extends Authenticatable
     protected $table = "riders";
     protected $primaryKey = 'rider_id';
     protected $fillable = [
-        'slug', 'name', 'email', 'email_verified_at', 'activated_at', 'phone', 'password', 'current_address', 'permanent_address', 'state_id', 'city_id', 'vehicle_id', 'photo', 'subscription_days', 'joining_date', 'subscription_validity', 'api_token', 'status_id', 'created_by', 'updated_by', 'created_at', 'updated_at', 'deleted_at',
+        'slug', 'name', 'email', 'email_verified_at', 'activated_at', 'phone', 'password', 'current_address', 'permanent_address', 'state_id', 'city_id', 'vehicle_id', 'photo', 'subscription_days', 'joining_date', 'subscription_validity', 'api_token', 'status_id', 'created_by', 'updated_by', 'created_at', 'updated_at', 'deleted_at', 'customer_id',
     ];
     protected $hidden = [
         'api_token', 'password'
@@ -53,8 +53,15 @@ class Rider extends Authenticatable
     public function register($request)
     {
         try {
+            $customerId = 101;
+            $riderDetail = Rider::whereNull('deleted_at')->orderBy('rider_id', 'DESC')->first();
+            if (!is_null($riderDetail)) {
+                $customerId = (int)$riderDetail->customer_id;
+                $customerId = $customerId + 1;
+            }
             $rider = Rider::create([
                 'slug' => slug(),
+                'customer_id' => $customerId,
                 'name' => $request->input('name'),
                 'email' => $request->input('email'),
                 'phone' => $request->input('phone'),
