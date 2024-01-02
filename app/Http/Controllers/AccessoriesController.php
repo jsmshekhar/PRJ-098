@@ -50,66 +50,9 @@ class AccessoriesController extends AdminAppController
 
     /*--------------------------------------------------
     Developer : Raj Kumar
-    Action    : Add Accessories
+    Action    : Add Update Accessories
     --------------------------------------------------*/
-    public function addAccessories(Request $request)
-    {
-        try {
-            $title = !empty($request->title) ? $request->title : "";
-            $no_of_item = !empty($request->no_of_item) ? $request->no_of_item : "";
-            $price = !empty($request->price) ? $request->price : "";
-            $accessories_category_id = !empty($request->accessories_category) ? $request->accessories_category : "";
-            $auth = Auth::user();
-            $accessories_image = "";
-            if ($request->image) {
-                $image = $request->file('image');
-                $folder = '/upload/accessories/';
-                $accessories_image = $this->uploadImage($image, $folder);
-            }
-            
-            $slug = slug();
-            $accessories = Accessories::insertGetId([
-                "slug" => $slug,
-                "title" => $title,
-                "no_of_item" => $no_of_item,
-                "accessories_category_id" => $accessories_category_id,
-                "price" => $price,
-                "image" => !empty($accessories_image) ? $accessories_image : "",
-                "user_id" => $auth->user_id,
-                "user_slug" => $auth->slug,
-                "created_by" => $auth->user_id,
-            ]);
-            
-            if ($accessories) {
-                $status = [
-                    'status' => Response::HTTP_OK,
-                    'url' => route('accessories'),
-                    'message' => Lang::get('messages.INSERT'),
-                ];
-                return response()->json($status);
-            } else {
-                $status = [
-                    'status' => Response::HTTP_BAD_REQUEST,
-                    'url' => "",
-                    'message' => Lang::get('messages.INSERT_ERROR'),
-                ];
-                return response()->json($status);
-            }
-        } catch (\Throwable $ex) {
-            $result = [
-                'line' => $ex->getLine(),
-                'file' => $ex->getFile(),
-                'message' => $ex->getMessage(),
-            ];
-            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
-        }
-    }
-
-    /*--------------------------------------------------
-    Developer : Raj Kumar
-    Action    : Update Accessories
-    --------------------------------------------------*/
-    public function updateAccessories(Request $request)
+    public function addUpdateAccessories(Request $request)
     {
         try {
             $title = !empty($request->title) ? $request->title : "";
@@ -119,31 +62,57 @@ class AccessoriesController extends AdminAppController
             $slug = !empty($request->slug) ? $request->slug : "";
             $auth = Auth::user(); 
             $accessories_image = "";
+            
             if ($request->image) {
                 $image = $request->file('image');
                 $folder = '/upload/accessories/';
                 $accessories_image = $this->uploadImage($image, $folder);
             }
-            if($accessories_image){
-                $accessories = Accessories::where('slug', $slug)->update([
-                    "title" => $title,
-                    "no_of_item" => $no_of_item,
-                    "accessories_category_id" => $accessories_category_id,
-                    "price" => $price,
-                    "image" => $accessories_image,
-                    "updated_by" => $auth->user_id,
-                ]);
+            if ($slug) {
+                if ($accessories_image) {
+                    $accessories = Accessories::where('slug', $slug)->update([
+                        "title" => $title,
+                        "no_of_item" => $no_of_item,
+                        "accessories_category_id" => $accessories_category_id,
+                        "price" => $price,
+                        "image" => $accessories_image,
+                        "updated_by" => $auth->user_id,
+                    ]);
+                } else {
+                    $accessories = Accessories::where('slug', $slug)->update([
+                        "title" => $title,
+                        "no_of_item" => $no_of_item,
+                        "accessories_category_id" => $accessories_category_id,
+                        "price" => $price,
+                        "updated_by" => $auth->user_id,
+                    ]);
+                }
             }else{
-                $accessories = Accessories::where('slug', $slug)->update([
-                    "title" => $title,
-                    "no_of_item" => $no_of_item,
-                    "accessories_category_id" => $accessories_category_id,
-                    "price" => $price,
-                    "updated_by" => $auth->user_id,
-                ]);
+                $unique = Accessories::where('accessories_category_id', $accessories_category_id)->first();
+                $slug = slug();
+                if($unique){
+                    $status = [
+                        'status' => Response::HTTP_OK,
+                        'url' => route('accessories'),
+                        'message' => Lang::get('messages.ALREADY_FOUND'),
+                    ];
+                    return response()->json($status);
+                }else{
+                    $accessories = Accessories::insertGetId([
+                        "slug" => $slug,
+                        "title" => $title,
+                        "no_of_item" => $no_of_item,
+                        "accessories_category_id" => $accessories_category_id,
+                        "price" => $price,
+                        "image" => !empty($accessories_image) ? $accessories_image : "",
+                        "user_id" => $auth->user_id,
+                        "user_slug" => $auth->slug,
+                        "created_by" => $auth->user_id,
+                    ]);
+                }
+                
             }
             
-           
             if ($accessories) {
                 $status = [
                     'status' => Response::HTTP_OK,

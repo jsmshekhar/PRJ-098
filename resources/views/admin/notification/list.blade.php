@@ -49,9 +49,10 @@
                                         <td>
                                             @if($notification->status_id == 1 && $notification->notification_parameter_value !== 3)
                                             <label class="text-success m-0">Active</label>
-                                            @elseif($notification->status_id == 3 || $notification->schedule_date < date('Y-m-d')) <label class="text-danger m-0">Expired</label>
-                                                @elseif($notification->status_id == 1 || $notification->schedule_date >= date('Y-m-d')) <label class="text-success m-0">Active</label>
-                                                @endif
+                                            @elseif($notification->notification_parameter_value == 3 && ($notification->status_id == 3 || $notification->schedule_date < date('Y-m-d'))) <label class="text-danger m-0">Expired</label>
+                                            @elseif($notification->status_id == 1 || $notification->schedule_date >= date('Y-m-d')) <label class="text-success m-0">Active</label>
+                                            @elseif($notification->status_id == 2) <label class="text-warning m-0">Inactive</label>
+                                            @endif
                                         </td>
                                         <td>
                                             <a href="{{ route('edit-notification', [$notification->param, $notification->slug]) }}" class="notificationEditForm" title="Edit Notification" style="cursor: pointer;margin-right: 5px;"><i class="fa fa-edit"></i>

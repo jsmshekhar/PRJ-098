@@ -81,7 +81,7 @@
                                             <input class="form-control" id="penalty_charge_text" type="text" name="penalty_charge_text" value="{{$notification->penalty_charge_text}}">
                                             <input class="form-control" id="penalty_charge_value" type="hidden" name="penalty_charge" value="{{$notification->penalty_charge}}">
                                         </div>
-                                        <div class="form-check mb-3">
+                                        <div class="form-check mb-4">
                                             <input class="form-check-input" type="checkbox" name="is_send_charge" id="is_send_charge" @if($notification->is_send_charge == 1) checked @endif>
                                             <label class="form-check-label pt-1 px-2" for="formCheck1">
                                                 Display penalty charges on notification panel with message
@@ -111,7 +111,14 @@
                                             <input class="form-control" type="date" name="schedule_date" id="schedule_date" value="{{date('Y-m-d', strtotime($notification->schedule_date == null ? date('Y-m-d') : $notification->schedule_date))}}">
                                         </div>
                                         @endif
-                                        <div class="">
+                                        <div class="mb-4">
+                                            <label for="NotificatostatusId" class="form-label">Status</label>
+                                            <select class="form-control selectBasic" name="status_id" id="NotificatostatusId">
+                                                <option value="1" @if($notification->status_id==1) selected @endif>Active</option>
+                                                <option value="2" @if($notification->status_id==2) selected @endif>Inactive</option>
+                                            </select>
+                                        </div>
+                                        <div class="mt-4">
                                             <button type="button" class="btn btn-success " id="submitForm">{{ request()->route('param')=="automatic" ? 'Update Notification' : 'Update Notification'}}</button>
                                             <span class="text-success d-block" id="message" style="margin-right: 10px"></span>
                                         </div>
@@ -156,9 +163,8 @@
                     $('#submitForm').prop('disabled', false);
                     $('#submitForm').html('Update Notification')
                     setTimeout(function() {
-                        //window.location.reload();
                         window.location = data.url;
-                    }, 3000);
+                    }, 1000);
 
                 },
                 errors: function() {

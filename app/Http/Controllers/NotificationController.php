@@ -95,6 +95,7 @@ class NotificationController extends AdminAppController
             $notification_user_based = !empty($request->notification_user_based) ? $request->notification_user_based : null;
             $schedule_date = !empty($request->schedule_date) ? $request->schedule_date : null;
             $notification_type = !empty($request->notification_type) ? $request->notification_type : null;
+            $status_id = !empty($request->status_id) ? $request->status_id : null;
             $auth = Auth::user();
 
             $slug = slug();
@@ -111,6 +112,7 @@ class NotificationController extends AdminAppController
                 "penalty_charge_text" => $penalty_charge_text,
                 "is_send_charge" => $is_send_charge == 'on' ? 1 : 0,
                 "schedule_date" => $schedule_date,
+                "status_id" => $status_id,
                 "user_id" => $auth->user_id,
                 "user_slug" => $auth->slug,
                 "created_by" => $auth->user_id,
@@ -148,13 +150,14 @@ class NotificationController extends AdminAppController
     public function editNotification($param, $slug)
     {
         try {
+            $permission = User::getPermissions();
             $notification = $this->notification->editNotification($param, $slug);
             $user_base = $notification['result']['user_base'];
             $parameters = $notification['result']['parameters'];
             $distance = $notification['result']['distance'];
             $days = $notification['result']['days'];
             $notification = $notification['result']['notification'];
-            return view('admin.notification.edit', compact('notification', 'parameters', 'distance', 'days', 'user_base'));
+            return view('admin.notification.edit', compact('notification', 'parameters', 'distance', 'days', 'user_base', 'permission'));
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -189,6 +192,7 @@ class NotificationController extends AdminAppController
             $is_send_charge = !empty($request->is_send_charge) ? $request->is_send_charge : 0;
             $notification_user_based = !empty($request->notification_user_based) ? $request->notification_user_based : null;
             $schedule_date = !empty($request->schedule_date) ? $request->schedule_date : null;
+            $status_id = !empty($request->status_id) ? $request->status_id : null;
             $auth = Auth::user();
 
             $notificationId = Notification::where('slug', $slug)->update([
@@ -201,6 +205,7 @@ class NotificationController extends AdminAppController
                 "penalty_charge" => $penalty_charge,
                 "penalty_charge_text" => $penalty_charge_text,
                 "is_send_charge" => $is_send_charge == 'on' ? 1 : 0,
+                "status_id" => $status_id,
                 "schedule_date" => $notification_parameter == 4 ? null : $schedule_date,
                 "updated_by" => $auth->user_id,
             ]);

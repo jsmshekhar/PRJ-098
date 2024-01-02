@@ -26,51 +26,11 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-body border-0">
-                    <div class="table-rep-plugin">
-                        <form method="post" enctype="multipart/form-data" id="addAccessories">
-                            @csrf
-                            <div class="row">
-                                <div class="col-md-3 mb-3">
-                                    <label for="accessories_category" class="form-label">Accessories Category</label>
-                                    <select class="form-control selectBasic" name="accessories_category" id="accessories_category1">
-                                        @foreach($accessories_categories as $key => $accCat)
-                                        <option value="{{$accCat}}">{{$accCat == 1 ? "Helmet" : ($accCat == 2 ? "T-Shirt" : "Mobile Holder")}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label for="example-title-input" class="form-label">Title </label>
-                                    <input class="form-control" type="text" name="title" id="title1" value="">
-                                    <input type="hidden" class="form-control" name="slug" value="">
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label for="no_of_item" class="form-label ">No. of Items &nbsp;<span class="spanColor onlyDigit_error"></span></label>
-                                    <input type="text" name="no_of_item" class="form-control onlyDigit" id="no_of_item1">
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label for="example-title-input" class="form-label">Per Accessories Amount</label>
-                                    <input class="form-control" type="text" name="price" id="price1" value="">
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label for="title" class="form-label">Image Upload</label>
-                                    <div class="">
-                                        <label for="accessoriesFile" class="selectImageRemove">
-                                            <img class="upload_des_preview clickable selectedImage" src="{{asset('public/assets/images/uploadimg.png')}}" alt="example placeholder" />
-                                        </label>
-                                        <input type="file" class="form-control d-none customFile" name="image" id="accessoriesFile" />
-                                    </div>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <button type="button" class="btn btn-success " id="submitForm">Add </button>
-                                    <span class="text-success d-block" id="message" style="margin-right: 10px"></span>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
                 <div class="card-header border-bottom bg-white">
                     <h4>Accessories List</h4>
+                    <div class="btn-card-header">
+                        <a class="btn btn-success waves-effect waves-light accessoriesModelForm" data-toggle="modal" title="Add Accessories">Add New Accessories</a>
+                    </div>
                 </div>
                 <div class="table-rep-plugin">
                     @if (count($accessorieses) > 0)
@@ -96,7 +56,7 @@
                                         <td>{{$accessories->title}}</td>
                                         <td>{{$accessories->no_of_item}}</td>
                                         <td>₹{{$accessories->price}}</td>
-                                        <td>₹{{ $accessories->price * $accessories->no_of_item }}</td>
+                                        <td>₹{{ $accessories->price ? $accessories->price * $accessories->no_of_item : 0}}</td>
                                         <td>
                                             <a class="accessoriesModelForm" data-toggle="modal" data-category="{{ $accessories->accessories_category_id }}" data-slug="{{ $accessories->slug }}" data-price="{{ $accessories->price }}" data-title="{{ $accessories->title }}" data-item="{{ $accessories->no_of_item }}" data-image="{{ $accessories->image }}" title="Edit Accessories" style="cursor: pointer;margin-right: 5px;">Edit
                                             </a>
@@ -123,7 +83,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="categoryModalLabel">Add Product Category</h5>
+                <h5 class="modal-title" id="categoryModalLabel">Add Accessories</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -155,17 +115,17 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group mb-2">
-                                <label for="example-title-input" class="form-label">Amount Per Item</label>
-                                <input class="form-control" type="text" name="price" id="price">
+                                <label for="example-title-input" class="form-label">Amount Per Item &nbsp; <span class="spanColor onlyDigit_error"> </span></label>
+                                <input class="form-control onlyDigit" type="text" name="price" id="price">
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="title" class="form-label">Image Upload</label>
                             <div class="">
-                                <label for="accessoriesEditFile" class="selectImageRemove" id="ImageID">
+                                <label for="accessoriesFile" class="selectImageRemove" id="ImageID">
                                     <img class="upload_des_preview clickable selectedImage" src="{{asset('public/assets/images/uploadimg.png')}}" alt="accessories image" />
                                 </label>
-                                <input type="file" class="form-control d-none customFile" name="image" id="accessoriesEditFile" />
+                                <input type="file" class="form-control d-none customFile" name="image" id="accessoriesFile" />
                             </div>
                         </div>
                     </div>
@@ -205,9 +165,6 @@
                 $("#price").val(price);
                 $('#accessories_category').val(category).trigger('change');
 
-            }
-
-            if (slug) {
                 $('#submitAccessories').html('Update')
                 $('#categoryModalLabel').html('Edit Accessories')
             }
@@ -223,7 +180,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 method: 'POST',
-                url: "{{ route('update-accessories') }}",
+                url: "{{ route('add-update-accessories') }}",
                 data: formDatas,
                 contentType: false,
                 processData: false,
@@ -232,36 +189,6 @@
                         "</span>");
                     $('#submitAccessories').prop('disabled', false);
                     $('#submitAccessories').html('Update');
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 1000);
-
-                },
-                errors: function() {
-                    $('#message').html(
-                        "<span class='sussecmsg'>Somthing went wrong!</span>");
-                }
-            });
-        });
-        $('#submitForm').click(function(e) {
-            e.preventDefault();
-
-            $('#submitForm').prop('disabled', true);
-            $('#submitForm').html('Please wait...')
-            var formDatas = new FormData(document.getElementById('addAccessories'));
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                method: 'POST',
-                url: "{{ route('add-accessories') }}",
-                data: formDatas,
-                contentType: false,
-                processData: false,
-                success: function(data) {
-                    $('#message').html("<span class='sussecmsg'>" + data.message +
-                        "</span>");
-                    $('#submitForm').prop('disabled', false);
                     setTimeout(function() {
                         window.location.reload();
                     }, 1000);
