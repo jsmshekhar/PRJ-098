@@ -20,6 +20,7 @@ class CreateRiderSeeder extends Seeder
         $riders = [
             [
                 'slug' => slug(),
+                'customer_id' => 101,
                 'name' => "Jhon Rider",
                 'email' => "jhon@gmail.com",
                 'password' => bcrypt("admin@123"),

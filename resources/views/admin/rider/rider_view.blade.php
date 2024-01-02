@@ -207,7 +207,7 @@
                         <div class="detail_cnt round-spa">
                             <div class="text-center" dir="ltr">
                                 <span class="rond_cntr">{{ $walletBalence }}</span>
-                                <input class="knob" data-linecap=round data-fgColor="#7F56D9" value="10"
+                                <input class="knob" data-linecap=round data-fgColor="#01992366" value="100"
                                     data-skin="tron" data-angleOffset="1000" data-readOnly=true data-thickness=".1" />
                             </div>
                         </div>

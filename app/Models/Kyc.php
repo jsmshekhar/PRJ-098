@@ -174,7 +174,13 @@ class Kyc extends Model
                     DB::raw("CONCAT('$basePath','/accessories/', acc.image) AS image_path"),
                 )
                 ->get();
-            $result = ['vehicle' => $details, 'accessories' => $accessories];
+
+            $securityAmt = [
+                "icon" => asset('public/images/mobile-icon/shield.png'),
+                "title" => "Security amount",
+                "ammount" => 2500,
+            ];
+            $result = ['vehicle' => $details, 'accessories' => $accessories, 'security_ammount' => $securityAmt];
             if ($details) {
                 return successResponse(Response::HTTP_OK, Lang::get('messages.HTTP_FOUND'), $result);
             }

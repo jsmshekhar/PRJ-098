@@ -17,6 +17,7 @@ class CreateRidersTable extends Migration
         Schema::create('riders', function (Blueprint $table) {
             $table->bigIncrements('rider_id');
             $table->string('slug', 20)->nullable();
+            $table->integer('customer_id')->nullable();
             $table->string('name')->nullable();
             $table->string('email', 191)->nullable();
             $table->timestamp('email_verified_at')->nullable();
