@@ -90,7 +90,6 @@
                                 <div class="col-md-6 mb-3">
                                     <label for="ev_type_id" class="form-label">EV Type</label>
                                     <select class="form-control selectBasic" name="ev_type_id" id="ev_type_id">
-                                        <option value="">Select EV Type</option>
                                         @foreach($ev_types as $key => $ev_type)
                                         <option value="{{$ev_type->ev_type_id}}">{{$ev_type->ev_type_name}}</option>
                                         @endforeach
@@ -100,7 +99,6 @@
                                 <div class="col-md-6 mb-3">
                                     <label for="hub_id" class="form-label">Hub</label>
                                     <select class="form-control selectBasic" name="hub_id" id="hub_id">
-                                        <option value="">Select Hub</option>
                                         @foreach($hubs as $key => $hub)
                                         <option value="{{$hub->hub_id}}">{{$hub->city}}</option>
                                         @endforeach
@@ -131,7 +129,7 @@
                                 </div>
                                 <div class="col-md-6 mb-4">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="remember-check" name="is_display_on_app" checked>
+                                        <input class="form-check-input" type="checkbox" id="remember-check" name="is_display_on_app">
                                         <label class="form-check-label mt-1" for="remember-check">
                                             &nbsp; The product is displayed on the app.
                                         </label>
@@ -196,7 +194,7 @@
                     $('#submitForm').prop('disabled', false);
                     setTimeout(function() {
                         window.location = data.url;
-                    }, 3000);
+                    }, 1000);
 
                 },
                 errors: function() {

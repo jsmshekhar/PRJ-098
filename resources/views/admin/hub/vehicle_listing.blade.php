@@ -37,7 +37,18 @@
                         <label class="text-info">RFD</label>
                         @endif
                     </td>
-                    <td>Paid</td>
+                    <td> @if ($vehicle->payment_status == 1)
+                        <label class="text-success">Paid</label>
+                        @elseif($vehicle->payment_status == 2)
+                        <label class="text-warning">Pending</label>
+                        @elseif($vehicle->payment_status == 3)
+                        <label class="text-danger">Failed</label>
+                        @elseif($vehicle->payment_status == 4)
+                        <label class="text-info">Rejected</label>
+                        @else
+                        <label class="text-secondary">NA</label>
+                        @endif
+                    </td>
                     <td>Verified</td>
 
                     <td>

@@ -72,8 +72,11 @@ class HubController extends AdminAppController
                 $bike_types = $hubs['result']['bike_types'];
                 $count = $hubs['result']['count'];
                 $hub_parts = $hubs['result']['hub_parts'];
+                $empCount = $hubs['result']['empCount'];
+                $vehicleCount = $hubs['result']['vehicleCount'];
+                $accessoriesinHub = $hubs['result']['accessoriesinHub'];
                 $accessories_categories = $hubs['result']['accessories_categories'];
-                return view('admin.hub.view_hub', compact('hub', 'vehicles', 'employees', 'roles','rent_cycles', 'ev_types', 'ev_categories', 'battery_types', 'profile_categories', 'vehicleStatus', 'permission', 'bike_types', 'count', 'hub_parts', 'accessories_categories'));
+                return view('admin.hub.view_hub', compact('hub', 'vehicles', 'employees', 'roles','rent_cycles', 'ev_types', 'ev_categories', 'battery_types', 'profile_categories', 'vehicleStatus', 'permission', 'bike_types', 'count', 'hub_parts', 'accessories_categories','empCount', 'vehicleCount', 'accessoriesinHub'));
             } else {
                 return view('admin.401.401');
             }
