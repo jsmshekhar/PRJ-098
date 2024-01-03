@@ -65,6 +65,9 @@ class ComplainController extends AdminAppController
                     }
                 }
                 $complains = $complains->orderBy('complains.created_at', 'DESC')->paginate($perPage);
+
+                $count = Complain::leftJoin('complain_categories as cc', 'complains.complain_category', '=', 'cc.slug')
+                ->whereNull('complains.deleted_at')->count();
                 $role = DB::table('users')
                     ->select('roles.name', 'users.role_id', 'users.hub_id')
                     ->Join('roles', 'users.role_id', '=', 'roles.role_id')
@@ -75,7 +78,7 @@ class ComplainController extends AdminAppController
                 $roles = $role->whereNull('users.deleted_at')->whereNull('roles.deleted_at')->distinct()->get();
                 $categories = ComplainCategory::whereNull('deleted_at')->get();
                 $compalinStatus = config('constants.COMPLAIN_STATUS');
-                return view('admin.complain.complain', compact('complains', 'roles', 'categories', 'compalinStatus', 'permission'));
+                return view('admin.complain.complain', compact('complains', 'roles', 'categories', 'compalinStatus', 'count', 'permission'));
             } else {
                 return view('admin.401.401');
             }
