@@ -115,7 +115,7 @@
                                 </a>
                             </li>
                             <li>
-                                <p>Total Record : <span>255</span></p>
+                                <p>Total Record : <span>{{$count}}</span></p>
                             </li>
                             <li>
                                 <p>Display up to :

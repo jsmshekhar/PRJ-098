@@ -185,9 +185,10 @@ class RoleUserController extends AdminAppController
                     }
                 }
                 $users = $users->orderBy('users.created_at', 'DESC')->paginate($perPage);
+                $count = User::where('status_id', 1)->where('role_id', '!=', 0)->whereNull('deleted_at')->count();
                 $roles = Role::where('user_id', Auth::user()->user_id)->whereNull('deleted_at')->get();
                 $hubs = DB::table('hubs')->whereNull('deleted_at')->where('status_id', 1)->select('hub_id', 'city')->get();
-                return view('admin.user.index', compact('users', 'roles', 'hubs', 'permission'));
+                return view('admin.user.index', compact('users', 'roles', 'hubs', 'permission', 'count'));
             } else {
                 return view('admin.401.401');
             }

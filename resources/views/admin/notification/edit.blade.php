@@ -39,7 +39,7 @@
                                     <form method="post" enctype="multipart/form-data" id="createNotificationForm">
                                         @csrf
                                         <div class="mb-3">
-                                            <label for="basicpill-address-input" class="form-label">Notification Message &nbsp; <span class="spanColor title_error"></span></label>
+                                            <label for="basicpill-address-input" class="form-label">Notification Title &nbsp; <span class="spanColor title_error"></span></label>
                                             <input id="title" name="title" class="form-control" value="{{$notification->title}}" placeholder="notification title">
                                         </div>
                                         <div class="mb-3">
