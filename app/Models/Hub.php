@@ -112,10 +112,21 @@ class Hub extends Model
                     'et.ev_type_name',
                     'et.slug as ev_type_slug',
                     'riders.customer_id',
-                    //'riders.kyc_status',
                     'rider_orders.payment_status',
                     'rider_orders.status_id as statusid',
-                        
+                    'rider_orders.assigned_date',
+                    'rider_orders.cluster_manager',
+                    'rider_orders.tl_name',
+                    'rider_orders.client_name',
+                    'rider_orders.client_address',
+                    'rider_orders.slug as order_slug',
+                    'riders.kyc_status',
+                    DB::raw('CASE 
+                            WHEN riders.kyc_status = 1 THEN "Verified" 
+                            WHEN riders.kyc_status = 2 THEN "Pending" 
+                            WHEN riders.kyc_status = 3 THEN "Red Flag"
+                            ELSE "" 
+                        END as kycStatus'),
                     DB::raw('CASE 
                             WHEN products.ev_category_id = 1 THEN "Two Wheeler" 
                             WHEN products.ev_category_id = 2 THEN "Three Wheeler" 
