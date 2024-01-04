@@ -12,6 +12,7 @@ use App\Models\Rider;
 use App\Models\Notification;
 use App\Models\Product;
 use App\Models\HubPartAccessories;
+use App\Models\RiderOrder;
 use App\Policies\UserPolicy;
 use App\Policies\HubPolicy;
 use App\Policies\InventryPolicy;
@@ -22,6 +23,8 @@ use App\Policies\NotificationPolicy;
 use App\Policies\CustomerPolicy;
 use App\Policies\RefundPolicy;
 use App\Policies\HubPartAccessoriesPolicy;
+use App\Policies\OrderPolicy;
+use App\Policies\ReturnExchangePolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -39,6 +42,8 @@ class AuthServiceProvider extends ServiceProvider
         Notification::class => NotificationPolicy::class,
         HubPartAccessories::class => HubPartAccessoriesPolicy::class,
         Product::class => InventryPolicy::class,
+        RiderOrder::class => OrderPolicy::class,
+        //Hub::class => ReturnExchangePolicy::class,
     ];
 
     /**
@@ -97,10 +102,14 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('map_inventry_to_hub', 'App\Policies\InventryPolicy@map_inventry_to_hub');
         Gate::define('view_assigned_ev', 'App\Policies\InventryPolicy@view_assigned_ev');
 
-        //Cpmplain Policies
+        //Raise Request Policies
         Gate::define('view', 'App\Policies\HubPartAccessoriesPolicy@view');
         Gate::define('raise_request', 'App\Policies\HubPartAccessoriesPolicy@raise_request');
         Gate::define('assiegn_request', 'App\Policies\HubPartAccessoriesPolicy@assiegn_request');
+
+        //Order Policies
+        Gate::define('view', 'App\Policies\HubPartAccessoriesPolicy@view');
+        Gate::define('assign_ev', 'App\Policies\HubPartAccessoriesPolicy@assign_ev');
 
         Passport::routes();
         Passport::tokensExpireIn(now()->addDays(7));
