@@ -76,7 +76,8 @@ class HubController extends AdminAppController
                 $vehicleCount = $hubs['result']['vehicleCount'];
                 $accessoriesinHub = $hubs['result']['accessoriesinHub'];
                 $accessories_categories = $hubs['result']['accessories_categories'];
-                return view('admin.hub.view_hub', compact('hub', 'vehicles', 'employees', 'roles','rent_cycles', 'ev_types', 'ev_categories', 'battery_types', 'profile_categories', 'vehicleStatus', 'permission', 'bike_types', 'count', 'hub_parts', 'accessories_categories','empCount', 'vehicleCount', 'accessoriesinHub'));
+                $hubId = $hubs['result']['hubId'];
+                return view('admin.hub.view_hub', compact('hub', 'vehicles', 'employees', 'roles','rent_cycles', 'ev_types', 'ev_categories', 'battery_types', 'profile_categories', 'vehicleStatus', 'permission', 'bike_types', 'count', 'hub_parts', 'accessories_categories','empCount', 'vehicleCount', 'accessoriesinHub','hubId'));
             } else {
                 return view('admin.401.401');
             }
@@ -107,6 +108,8 @@ class HubController extends AdminAppController
             $hub_limit = !empty($request->hub_limit) ? $request->hub_limit : null;
             $zip_code = !empty($request->zip_code) ? $request->zip_code : "";
             $slug = !empty($request->slug) ? $request->slug : "";
+            $latitude = !empty($request->latitude) ? $request->latitude : "";
+            $longitude = !empty($request->longitude) ? $request->longitude : "";
             $auth = Auth::user();
             if (!empty($request->slug)) {
                 $hubId = Hub::where('slug', $slug)->update([
@@ -118,6 +121,9 @@ class HubController extends AdminAppController
                     "full_address" => $full_address,
                     "hub_limit" => $hub_limit,
                     "zip_code" => $zip_code,
+                    "latitude" => $latitude,
+                    "longitude" => $longitude,
+                    "hubId" => $hubId,
                 ]);
             } else {
                 $slug = slug();
@@ -135,6 +141,8 @@ class HubController extends AdminAppController
                     "user_id" => $auth->user_id,
                     "user_slug" => $auth->slug,
                     "created_by" => $auth->user_id,
+                    "latitude" => $latitude,
+                    "longitude" => $longitude,
                 ]);
             }
             if ($hubId) {
