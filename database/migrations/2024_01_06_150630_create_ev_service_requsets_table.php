@@ -14,7 +14,7 @@ class CreateEvServiceRequsetsTable extends Migration
     public function up()
     {
         Schema::create('ev_service_requsets', function (Blueprint $table) {
-            $table->bigIncrements('faq_id');
+            $table->bigIncrements('requset_id');
             $table->string('slug', 20)->nullable();
             $table->integer('rider_id')->nullable();
             $table->string('name')->nullable();

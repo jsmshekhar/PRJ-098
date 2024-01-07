@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class EvServiceRequset extends Model
 {
     use HasFactory;
+    protected $table = "ev_service_requsets";
+    protected $primaryKey = 'requset_id';
 }
