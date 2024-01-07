@@ -175,5 +175,75 @@
                  }
              });
          });
+         jQuery(document).ready(function() {
+             ImgUpload();
+         });
      });
+
+     function ImgUpload() {
+         var imgWrap = "";
+         var imgArray = [];
+         var finalData = [];
+
+         $('.uploadInputfile').each(function() {
+             $(this).on('change', function(e) {
+                 imgWrap = $(this).closest('.uploadImg').find('.uploadImgWrap');
+                 //var maxLength = $(this).attr('data-max_length');
+
+                 var files = e.target.files;
+                 var filesArr = Array.prototype.slice.call(files);
+                 var iterator = 0;
+                 filesArr.forEach(function(f, index) {
+
+                     if (!f.type.match('image.*')) {
+                         return;
+                     }
+
+                     var len = 0;
+                     for (var i = 0; i < imgArray.length; i++) {
+                         if (imgArray[i] !== undefined) {
+                             len++;
+                         }
+                     }
+                     imgArray.push(f);
+
+                     var reader = new FileReader();
+                     reader.onload = function(e) {
+                         var html = "<div class='uploadImgBox'><div style='background-image: url(" + e.target.result + ")' data-number='" + $(".uploadImgClose").length + "' data-file='" + f.name + "' class='img-bg'><div class='uploadImgClose'></div></div></div>";
+                         imgWrap.append(html);
+                         iterator++;
+
+                         var AttachmentArray = {
+                             AttachmentType: 1,
+                             ObjectType: 1,
+                             FileName: f.name,
+                             FileDescription: "Attachment",
+                             NoteText: "",
+                             MimeType: f.type,
+                             Content: e.target.result.split("base64,")[1],
+                             FileSizeInBytes: f.size,
+                         };
+                         // $('#j_son').val(JSON.stringify(AttachmentArray));
+                         finalData.push(AttachmentArray);
+                         $('#json_img').val(JSON.stringify(finalData));
+                     }
+                     reader.readAsDataURL(f);
+                 });
+             });
+         });
+
+         $('body').on('click', ".uploadImgClose", function(e) {
+             var file = $(this).parent().data("file");
+             console.log(file);
+             for (var i = 0; i < finalData.length; i++) {
+                 console.log(finalData[i].FileName);
+                 if (finalData[i].FileName === file) {
+                     finalData.splice(i, 1);
+                     break;
+                 }
+             }
+             $('#json_img').val(JSON.stringify(finalData));
+             $(this).parent().parent().remove();
+         });
+     }
  </script>

@@ -9,10 +9,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\DB;
+use App\Traits\UploadsImageTrait;
+use Illuminate\Support\Facades\Auth;
 
 class RiderOrder extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, UploadsImageTrait;
     protected $table = "rider_orders";
     protected $primaryKey = 'order_id';
 
@@ -77,6 +79,30 @@ class RiderOrder extends Model
                         'hub_id' => $product->hub_id ?? null,
                     ];
                     $status = RiderOrder::where('slug', $orderSlug)->update($records);
+                    $riderOrderId = RiderOrder::where('slug', $orderSlug)->select('order_id')->first();
+                    $imgArray = json_decode($request->evImages);
+                    $auth = Auth::user();
+                    if ($imgArray) {
+                        foreach ($imgArray as $images) {
+                            if ($images != null) {
+                                $image = $images->Content;
+                                $filename = $images->FileName;
+                                $imagebase = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $image));
+                                $folder = '/upload/mediafiles/';
+                                $product_image = $this->uploadMultipleImage($imagebase, $folder, $filename);
+
+                                $multi_image = new MediaFile();
+                                $multi_image->slug = slug();
+                                $multi_image->ref_id = $riderOrderId->order_id;
+                                $multi_image->ref_table_id = config('table.REF_TABLE.RIDER_ORDER');
+                                $multi_image->module_type = 1;
+                                $multi_image->file_type = 1;
+                                $multi_image->created_by = $auth->user_id;
+                                $multi_image->file_name = !empty($product_image) ? $product_image : "";
+                                $multi_image->save();
+                            }
+                        }
+                    }
                     if ($status) {
                         Product::where('slug', $evSlug)->update(['status_id' => config('constants.EV_STATUS.ASSIGNED')]);
                         $response = [
