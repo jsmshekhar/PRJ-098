@@ -59,9 +59,9 @@ class RiderOrder extends Model
             $orderSlug = $request->order_slug ?? null;
             $orderDetails = RiderOrder::where(['slug' => $orderSlug, 'status_id' => config('constants.ORDER_STATUS.PENDING'), 'payment_status' => config('constants.PAYMENT_STATUS.SUCCESS')])->whereNull('deleted_at')->first();
             if (!is_null($orderDetails)) {
-                $riderSlug = $request->customer_slug ?? null;
+                $riderId = $orderDetails->rider_id ?? null;
                 $evSlug = $request->mapped_ev ?? null;
-                $rider = Rider::where(['slug' => $riderSlug])->whereNull('deleted_at')->first();
+                $rider = Rider::where(['rider_id' => $riderId])->whereNull('deleted_at')->first();
                 $product = Product::where(['slug' => $evSlug])->where('status_id', config('constants.ACTIVE_STATUS'))->whereNull('deleted_at')->first();
                 if (!is_null($rider) && !is_null($product)) {
                     $records = [
@@ -74,6 +74,7 @@ class RiderOrder extends Model
                         'client_name' => $request->client_name ?? null,
                         'client_address' => $request->client_address ?? null,
                         'assigned_date' => NOW(),
+                        'hub_id' => $product->hub_id ?? null,
                     ];
                     $status = RiderOrder::where('slug', $orderSlug)->update($records);
                     if ($status) {

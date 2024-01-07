@@ -24,6 +24,34 @@ class Rider extends Authenticatable
         'api_token', 'password'
     ];
 
+    protected $appends = [
+        'profile_type_name'
+    ];
+
+    public function getProfileTypeNameAttribute()
+    {
+        if (is_null($this->profile_type) || $this->profile_type == "") {
+            return "";
+        } else {
+            switch ($this->profile_type) {
+                case 1:
+                    return 'Corporate';
+                    break;
+                case 2:
+                    return 'Individual';
+                    break;
+                case 3:
+                    return 'Student';
+                    break;
+                case 4:
+                    return 'Vender';
+                    break;
+                default:
+                    return "";
+            }
+        }
+    }
+
     public function bankDetail()
     {
         return $this->hasOne(RiderBankDetail::class, 'rider_id', 'rider_id')->whereNull('deleted_at');
@@ -69,7 +97,10 @@ class Rider extends Authenticatable
                 'profile_type' => $request->input('profile_category'),
             ]);
             if ($rider) {
-                return successResponse(Response::HTTP_OK, Lang::get('messages.INSERT'), (object)[]);
+                $rider = new Rider();
+                $result = $rider->login($request);
+                $result = !empty($result) && isset($result['result']) ? $result['result'] :  (object)[];
+                return successResponse(Response::HTTP_OK, Lang::get('messages.INSERT'), $result);
             }
             return errorResponse(Response::HTTP_OK, Lang::get('messages.INSERT_ERROR'), (object)[]);
         } catch (\Throwable $ex) {

@@ -284,7 +284,7 @@ if (auth()->user()->photo) {
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-between">
-                <span class=" text-success d-block" id="" style="margin-right: 10px"></span>
+                <span class=" text-success d-block" id="message" style="margin-right: 10px"></span>
                 <button type="button" id="submitPasswordForm" class="btn btn-success waves-effect waves-light">Save
                 </button>
                 <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->

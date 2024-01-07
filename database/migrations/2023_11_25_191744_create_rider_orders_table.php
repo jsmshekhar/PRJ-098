@@ -44,8 +44,9 @@ class CreateRiderOrdersTable extends Migration
             $table->string('security_ammount')->nullable();
             $table->text('requested_payload')->nullable();
 
+            $table->bigInteger('hub_id')->nullable()->comment('Hub Id');
             $table->tinyInteger('status_id')->default(2)->comment('1 => Assigned, 2 => Pending, 3 => Rejected');
-            $table->tinyInteger('payment_status')->default(2)->comment('1 => Succes, 2 => Pending, 3 => Failed, 4 => Rejected');
+            $table->tinyInteger('payment_status')->default(2)->comment('1 => Succes, 2 => Pending, 3 => Failed, 4 => Rejected, 5-Overdues');
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamp('created_at')->nullable()->useCurrent();
