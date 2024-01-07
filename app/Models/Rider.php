@@ -25,7 +25,7 @@ class Rider extends Authenticatable
     ];
 
     protected $appends = [
-        'profile_type_name'
+        'profile_type_name','kyc_status_name'
     ];
 
     public function getProfileTypeNameAttribute()
@@ -45,6 +45,27 @@ class Rider extends Authenticatable
                     break;
                 case 4:
                     return 'Vender';
+                    break;
+                default:
+                    return "";
+            }
+        }
+    }
+
+    public function getKycStatusNameAttribute()
+    {
+        if (is_null($this->kyc_status) || $this->kyc_status == "") {
+            return "";
+        } else {
+            switch ($this->kyc_status) {
+                case 1:
+                    return 'Verified';
+                    break;
+                case 2:
+                    return 'Pending';
+                    break;
+                case 3:
+                    return 'Red Flag';
                     break;
                 default:
                     return "";
