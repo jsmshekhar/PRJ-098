@@ -296,7 +296,7 @@ class Kyc extends Model
                     ];
                     $status = Rider::where('rider_id', $riderId)->update($record);
                     if ($status) {
-                        Rider::where('rider_id', $riderId)->update(['is_step_selfie_done' => NOW()]);
+                        Rider::where('rider_id', $riderId)->update(['is_step_selfie_done' => NOW(), 'kyc_step' => $requestedStep]);
                     }
                 } elseif ($requestedStep == $stepTwo && is_null($rider->is_personal_detail_done)) {
                     $record = [
@@ -311,6 +311,7 @@ class Kyc extends Model
                         'company_name' => $request->company_name ?? null,
                         'company_address' => $request->company_address ?? null,
                         'state_name' => $request->state ?? null,
+                        'kyc_step' => $requestedStep,
                     ];
                     $status = Rider::where('rider_id', $riderId)->update($record);
                     if ($status) {
@@ -364,7 +365,7 @@ class Kyc extends Model
                     DB::table('rider_documents')->where('rider_id', $riderId)->delete();
                     $status = RiderDocument::insert($record);
                     if ($status) {
-                        Rider::where('rider_id', $riderId)->update(['is_id_proof_done' => NOW()]);
+                        Rider::where('rider_id', $riderId)->update(['is_id_proof_done' => NOW(), 'kyc_step' => $requestedStep]);
                     }
                 } elseif ($requestedStep == $stepFour && is_null($rider->is_bank_detail_done)) {
                     $record = [
@@ -377,6 +378,7 @@ class Kyc extends Model
                         'ifsc_code' => $request->ifsc_code,
                         'branch_name' => $request->branch_name ?? null,
                         'upi_id' => $request->upi_id,
+                        'kyc_step' => $requestedStep,
                     ];
                     DB::table('rider_bank_details')->where('rider_id', $riderId)->delete();
                     $status = RiderBankDetail::insert($record);

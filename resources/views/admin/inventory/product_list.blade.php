@@ -34,25 +34,25 @@
                     <ul>
                         <li class="{{ request()->route('param') == 'corporate' ? 'active' : '' }}">
                             <a href="{{ route('products', 'corporate') }}" title="Corporate's Product">
-                                <img class="card-img img-fluid" src="{{ asset('public/assets/images/users/CorporateEmployee.PNG') }}" alt="Card image">
+                                <img class="card-img img-fluid" src="{{ asset('public/assets/images/users/CorporateEmployee.png') }}" alt="Card image">
                                 <span>Corporate</span>
                             </a>
                         </li>
                         <li class="{{ request()->route('param') == 'individual' ? 'active' : '' }}">
                             <a href="{{ route('products', 'individual') }}" title="Individual's Product">
-                                <img class="card-img img-fluid" src="{{ asset('public/assets/images/users/Individual.PNG') }}" alt="product image">
+                                <img class="card-img img-fluid" src="{{ asset('public/assets/images/users/Individual.png') }}" alt="product image">
                                 <span>Individual</span>
                             </a>
                         </li>
                         <li class="{{ request()->route('param') == 'student' ? 'active' : '' }}">
                             <a href="{{ route('products', 'student') }}" title="Student's Product">
-                                <img class="card-img img-fluid" src="{{ asset('public/assets/images/users/Student.PNG') }}" alt="product image">
+                                <img class="card-img img-fluid" src="{{ asset('public/assets/images/users/Student.png') }}" alt="product image">
                                 <span>Student</span>
                             </a>
                         </li>
                         <li class="{{ request()->route('param') == 'vendor' ? 'active' : '' }}">
                             <a href="{{ route('products', 'vendor') }}" title="Vendor's Product">
-                                <img class="card-img img-fluid" src="{{ asset('public/assets/images/users/Vendor.PNG') }}" alt="product image">
+                                <img class="card-img img-fluid" src="{{ asset('public/assets/images/users/Vendor.png') }}" alt="product image">
                                 <span>Vendor</span>
                             </a>
                         </li>

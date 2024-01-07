@@ -129,7 +129,7 @@
                                             @foreach ($orders as $key => $order)
                                                 <tr>
                                                     <td>
-                                                        {{ $order->rider->slug }}
+                                                        {{ "CUS".$order->rider->customer_id }} ({{ $order->rider->profile_type_name }})
                                                     </td>
                                                     <td>{{ $order->rider->name }}</td>
                                                     <td>{{ $order->slug }}</td>
@@ -142,22 +142,28 @@
                                                         @endphp
                                                         @if (!is_null($order->accessories_items))
                                                             @php
-
+                                                                $qty = 0;
                                                                 foreach (json_decode($order->accessories_items) as $items) {
                                                                     $accessoriesItems[] = $items->quantity . '-' . ucwords($items->title);
+                                                                    $qty = $qty + $items->quantity;
                                                                 }
                                                                 sort($accessoriesItems);
                                                                 echo implode(', ', $accessoriesItems);
                                                             @endphp
                                                         @endif
                                                     </td>
-                                                    <td>{{ count($accessoriesItems) + 1 }}</td>
+                                                    <td>{{ $qty + 1 }}</td>
                                                     <td>{{ $order->ordered_ammount }}</td>
                                                     <td>{{ $order->payment_status_display }}</td>
                                                     <td>
-                                                        <a href="javascript:void(0)"
-                                                            class="btn btn-success waves-effect waves-light"
-                                                            onclick="showModal('{{ $order->rider->slug }}', '{{ $order->rider->profile_type }}', '{{ $order->slug }}');">Assign</a>
+                                                        @if ($order->payment_status == 1)
+                                                            <a href="javascript:void(0)"
+                                                                class="btn btn-success waves-effect waves-light"
+                                                                onclick="showModal('{{ $order->rider->customer_id }}', '{{ $order->rider->profile_type }}', '{{ $order->slug }}');">Assign</a>
+                                                        @else
+                                                            <a href="javascript:void(0)"
+                                                                class="btn btn-secondary disabled waves-effect waves-light">Assign</a>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -186,20 +192,15 @@
     <div class="modal-dialog modal-dialog-centered modelWidth" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="hubModalLabel">Assign an EV</h5>
+                <h4>Assign an EV
+                    <span class="d-flex heading_label" id="customerSlug"></span>
+                </h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form method="post" enctype="multipart/form-data" id="assignEvsForm" autocomplete="off">
                     @csrf
                     <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group mb-2">
-                                <label for="address serach" class="col-form-label">Customer ID</label>
-                                <input id="customerSlug" name="customer_slug" readonly type="text"
-                                    class="floating-input form-control" autocomplete="off">
-                            </div>
-                        </div>
                         <div class="col-md-12">
                             <div class="form-group mb-2">
                                 <label for="address serach" class="col-form-label">Map EV</label>
@@ -260,7 +261,7 @@
             if (customerType == 1) {
                 $('.isVendor').show();
             }
-            $('#customerSlug').val(customerId);
+            $('#customerSlug').text("Customer Id - CUS"+customerId);
             $('#orderSlug').val(slug);
             $("#targetModal").modal('show');
         }
