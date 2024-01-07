@@ -190,10 +190,10 @@ class Hub extends Model
            
 
             if ($hub) {
-                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => $hub, 'vehicles' => $vehicles, 'employees' => $employees, 'roles' => $roles,'rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'battery_types' => $battery_types, 'profile_categories' => $profile_categories, 'vehicleStatus' => $vehicleStatus, 'bike_types' => $bike_types, 'count' => $count, 'hub_parts' => $hub_parts, 'accessories_categories' => $accessories_categories, 'vehicleCount'=> $vehicleCount, 'empCount'=>$empCount, 'accessoriesinHub' => $accessoriesinHub]);
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => $hub, 'vehicles' => $vehicles, 'employees' => $employees, 'roles' => $roles,'rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'battery_types' => $battery_types, 'profile_categories' => $profile_categories, 'vehicleStatus' => $vehicleStatus, 'bike_types' => $bike_types, 'count' => $count, 'hub_parts' => $hub_parts, 'accessories_categories' => $accessories_categories, 'vehicleCount'=> $vehicleCount, 'empCount'=>$empCount, 'accessoriesinHub' => $accessoriesinHub, 'hubId' => $hub->hubId]);
             } else {
                 
-                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => [], 'vehicles' => [], 'employees' => [], 'roles' => [],'rent_cycles' => [], 'ev_types' => [], 'ev_categories' =>[], 'battery_types' => [], 'profile_categories' => [], 'bike_types' => [], 'count' => $count, 'hub_parts' => [], 'accessories_categories' => [],'vehicleCount' => 0, 'empCount' => 0, 'accessoriesinHub' => []]);
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => [], 'vehicles' => [], 'employees' => [], 'roles' => [],'rent_cycles' => [], 'ev_types' => [], 'ev_categories' =>[], 'battery_types' => [], 'profile_categories' => [], 'bike_types' => [], 'count' => $count, 'hub_parts' => [], 'accessories_categories' => [],'vehicleCount' => 0, 'empCount' => 0, 'accessoriesinHub' => [], 'hubId' => ""]);
             }
         } catch (\Throwable $ex) {
             $result = [
