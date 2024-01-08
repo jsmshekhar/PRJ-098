@@ -215,7 +215,7 @@
                                     @endphp
                                     @endif
                                     <tr>
-                                        <td><a class="orderOverviewModelForm" data-toggle="modal" data-customer_id="CUS{{ $order->rider->customer_id }}" data-customer_name="{{ $order->rider->name }}" data-order_date="{{ dateFormat($order->order_date) }}" data-qty="{{ $qty + 1 }}" data-items="{{ $items }}" data-order_amount="{{ $order->ordered_ammount }}" data-images="" title="Customer Overview" style="cursor: pointer;margin-right: 5px;"> {{ "CUS".$order->rider->customer_id }} ({{ $order->rider->profile_type_name }})
+                                        <td><a class="orderOverviewModelForm" data-toggle="modal" data-customer_id="CUS{{ $order->rider->customer_id }}" data-customer_name="{{ $order->rider->name }}" data-order_date="{{ dateFormat($order->order_date) }}" data-qty="{{ $qty + 1 }}" data-items="{{ $items }}" data-order_amount="{{ $order->ordered_ammount }}" data-images="{{json_encode($order->mediaFiles)}}" title="Customer Overview" style="cursor: pointer;margin-right: 5px;"> {{ "CUS".$order->rider->customer_id }} ({{ $order->rider->profile_type_name }})
                                             </a>
 
                                         </td>
@@ -286,7 +286,7 @@
                         <div class="col-md-12">
                             <div class="form-group mb-2">
                                 <label for="address serach" class="col-form-label">Map EV</label>
-                            {{ Form::select('mapped_ev', $evList, null, ['class' => 'form-control selectBasic', 'placeholder' => 'Select Ev', 'id' => 'mapped_ev']) }}
+                                {{ Form::select('mapped_ev', $evList, null, ['class' => 'form-control selectBasic', 'placeholder' => 'Select Ev', 'id' => 'mapped_ev']) }} 
                                 <span class="spanColor mapped_ev_error"></span>
                             </div>
                         </div>
@@ -377,7 +377,15 @@
                             <label class="form-label">AOrder Amount</label>
                             <input class="form-control readOnlyClass" type="text" id="orderAmounts" readonly>
                         </div>
-                    </div>
+                        <div class="col-md-12 mb-2 uploadImg">
+                            <div class="uploadBtnBox form-check">
+                                <label class="uploadBtn">
+                                    <p>Images</p>
+                                </label>
+                            </div>
+                            <div class="uploadImgWrap" id="imageContainer">
+                            </div>
+                        </div>
                 </form>
             </div>
         </div>
@@ -447,19 +455,20 @@
         var items = $(this).data('items');
         var order_amount = $(this).data('order_amount');
         var images = $(this).data('images');
-
+        console.log(images);
         $("#customerIds").val(customer_id);
         $("#customerNames").val(customer_name);
         $("#orderDates").val(order_date);
         $("#orderQntys").val(qty);
         $("#orderAmounts").val(order_amount)
         $("#orderItems").val(items);
-        // var imageContainer = $('#imageContainer');
-        // imageContainer.empty();
-        // images.forEach(function(imageUrl) {
-        //     var imgElement = $('<img>').attr('src', imageUrl).addClass('modal-image');
-        //     imageContainer.append(imgElement);
-        // });
+        var imageContainer = $('#imageContainer');
+        imageContainer.empty();
+        images.forEach(function(imageUrl) {
+            var url = "{{ asset('public/upload/mediafiles') }}/" + imageUrl;
+            var imgElement = $('<img>').attr('src', url).addClass('modal-image');
+            imageContainer.append(imgElement);
+        });
     });
 </script>
 @endsection
