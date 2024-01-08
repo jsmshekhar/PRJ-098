@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Faqs;
 use Illuminate\Http\Response;
+use App\Models\ComplainCategory;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ApiModel extends Model
 {
@@ -41,6 +45,130 @@ class ApiModel extends Model
                 }
             }
             return errorResponse(Response::HTTP_BAD_REQUEST, Lang::get('messages.UPLOAD_ERROR'));
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : get faqs
+    --------------------------------------------------*/
+    public static function getFaqs($request)
+    {
+        try {
+            $result = Faqs::select(['slug', 'title', 'description', 'created_at'])->whereNull('deleted_at')->get();
+            if (!$result->isEmpty()) {
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), $result);
+            }
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), []);
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : get complain category
+    --------------------------------------------------*/
+    public static function complainCategory($request)
+    {
+        try {
+            $result = ComplainCategory::select(['slug', 'category_name'])->whereNull('deleted_at')->orderBy('category_name', 'ASC')->get();
+            if (!$result->isEmpty()) {
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), $result);
+            }
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), []);
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : Get complaint list
+    --------------------------------------------------*/
+    public static function getComplaints($request)
+    {
+        try {
+            $riderId = Auth::id();
+            $results = DB::table('complains AS c')
+                ->join('complain_categories AS cc', 'cc.slug', '=', 'c.complain_category')
+                ->select(
+                    'c.slug',
+                    'c.description',
+                    'cc.category_name',
+                    DB::raw('CASE c.status_id WHEN 1 THEN "Resolved" WHEN 3 THEN "Discard" ELSE "Pending" END as status'),
+                    'c.created_at'
+                )
+                ->where('c.rider_id', '=', $riderId)
+                ->get();
+            if (!$results->isEmpty()) {
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), $results);
+            }
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), []);
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : Create Complaint
+    --------------------------------------------------*/
+    public static function createComplaint($request)
+    {
+        try {
+            $riderId = Auth::id();
+            $categorySlug = $request->category_slug ?? "";
+            $category = ComplainCategory::where('slug', $categorySlug)->whereNull('deleted_at')->first();
+
+            $complainNumber = 101;
+            $complain = Complain::whereNull('deleted_at')->orderBy('complain_id', 'DESC')->first();
+            if (!is_null($complain)) {
+                $complainNumber = (int)$complain->complain_number;
+                $complainNumber = $complainNumber + 1;
+            }
+
+            if (!is_null($category)) {
+                $complaint = [
+                    'slug' => slug(),
+                    'complain_category' => $categorySlug,
+                    'description' => $request->description ?? "",
+                    'complain_number' => $complainNumber,
+                    'name' => Auth::user()->name,
+                    'email' => Auth::user()->email,
+                    'phone' => Auth::user()->phone,
+                    'status_id' => 2,
+                    'rider_id' => $riderId,
+                    'role_id' => $category->role_id,
+                ];
+                $status = Complain::insert($complaint);
+                if ($status) {
+                    return successResponse(Response::HTTP_OK, Lang::get('messages.INSERT'), (object)[]);
+                }
+            }
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), []);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
