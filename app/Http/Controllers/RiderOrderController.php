@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Rider;
 use App\Models\User;
 use App\Http\Controllers\AdminAppController;
+use App\Models\MediaFile;
 use App\Models\Product;
 use App\Models\RiderOrder;
 
@@ -37,6 +38,13 @@ class RiderOrderController extends AdminAppController
             $orders = $orders->where('status_id', config('constants.ORDER_STATUS.PENDING'));
             $orders = $orders->orderBy('created_at', 'DESC')->paginate($perPage);
             $evList = Product::where('status_id', 1)->whereNull('deleted_at')->pluck('title', 'slug')->toArray();
+            if(count($orders)>0){
+                foreach ($orders as $key => $value) {
+                    $value->mediaFiles = MediaFile::where(['ref_id'=> $value->order_id, 'ref_table_id' => config('table.REF_TABLE.RIDER_ORDER'), 'module_type' => 1])
+                        ->pluck('file_name')->toArray();
+                }
+            }
+            //dd($orders);
             return view($this->viewPath . '/index', compact('orders', 'permission', 'evList'));
         } catch (\Throwable $ex) {
             $result = [
