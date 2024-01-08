@@ -40,4 +40,5 @@ Route::middleware(['auth:rider-api'])->namespace('Api')->prefix('v1')->group(fun
 
     Route::post('create-complaint', [CommonDataController::class, 'createComplaint']);
     Route::get('/get-complaints', [CommonDataController::class, 'getComplaints']);
+    Route::post('service-request', [CommonDataController::class, 'serviceRequest']);
 });
