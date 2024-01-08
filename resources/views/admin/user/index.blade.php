@@ -88,7 +88,7 @@
                                             </div>
                                             <div class="col-xl-3 col-md-6">
                                                 <label class="form-label">Role</label>
-                                                <select class="form-control select2" name="role">
+                                                <select class="form-control selectBasic" name="role">
                                                     <option value="">Select Role</option>
                                                     @foreach($roles as $key => $role)
                                                     <option value="{{$role->role_id}}" <?= (isset($_GET['role']) && $role->role_id == $_GET['role']) ? 'selected' : '' ?>>{{$role->name}}</option>
@@ -115,7 +115,7 @@
                                 </a>
                             </li>
                             <li>
-                                <p>Total Record : <span>255</span></p>
+                                <p>Total Record : <span>{{$count}}</span></p>
                             </li>
                             <li>
                                 <p>Display up to :
@@ -239,7 +239,7 @@
                         </div>
                         <div class="col-md-6 form-group mb-1">
                             <label for="choices-single-no-search" class="col-form-label font-size-13 text-muted">Role</label>
-                            <select class="form-control select2" name="role_id" id="role_id">
+                            <select class="form-control selectBasic" name="role_id" id="role_id">
                                 @foreach($roles as $role)
                                 <option value="{{$role->role_id}}">{{ucfirst($role->name)}}</option>
                                 @endforeach
@@ -247,7 +247,7 @@
                         </div>
                         <div class="col-md-6 form-group mb-1">
                             <label for="choices-single-no-search" class="col-form-label font-size-13 text-muted">Hub</label>
-                            <select class="form-control select2" name="hub_id" id="hub_id">
+                            <select class="form-control selectBasic" name="hub_id" id="hub_id">
                                 @foreach($hubs as $hub)
                                 <option value="{{$hub->hub_id}}">{{$hub->city}}</option>
                                 @endforeach
@@ -273,28 +273,25 @@
         // Model data
         $('.userModelForm').click(function() {
             $('#userModelForm').modal('show');
-            var first_name = $(this).data('fname');
-            var last_name = $(this).data('lname');
-            var email = $(this).data('email');
-            var phone = $(this).data('phone');
             var slug = $(this).data('slug');
-            var roleid = $(this).data('roleid');
-            var rolename = $(this).data('rolename');
-            var hubid = $(this).data('hubid');
-
-            $("#first_name").val(first_name);
-            $("#last_name").val(last_name);
-            $("#email").val(email);
-            $("#phone").val(phone);
-            $("#slug").val(slug);
-            $('#role_id').val(roleid).trigger('change');
-            $("#rolename").val(rolename);
-            $('#hub_id').val(hubid).trigger('change');
-
             if (slug) {
+                var first_name = $(this).data('fname');
+                var last_name = $(this).data('lname');
+                var email = $(this).data('email');
+                var phone = $(this).data('phone');
+                var roleid = $(this).data('roleid');
+                var rolename = $(this).data('rolename');
+                var hubid = $(this).data('hubid');
+
+                $("#first_name").val(first_name);
+                $("#last_name").val(last_name);
+                $("#email").val(email);
+                $("#phone").val(phone);
+                $("#slug").val(slug);
+                $('#role_id').val(roleid).trigger('change');
+                $("#rolename").val(rolename);
+                $('#hub_id').val(hubid).trigger('change');
                 $('#submitUser').html('Update')
-            }
-            if (slug) {
                 $('#userModalLabel').html('Edit User')
             }
         });
@@ -330,7 +327,7 @@
                     $('#submitUser').html('Update');
                     setTimeout(function() {
                         window.location.reload();
-                    }, 3000);
+                    }, 1000);
                 },
                 errors: function() {
                     $('#message').html("<span class='sussecmsg'>Somthing went wrong!</span>");

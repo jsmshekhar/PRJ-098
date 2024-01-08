@@ -58,6 +58,14 @@ class ModuleTableSeeder extends Seeder
                 'slug' => "HUBPARTACCESSORIS",
                 'name' => "Hub Part Accessories",
             ],
+            [
+                'slug' => "ORDERS",
+                'name' => "Orders",
+            ],
+            [
+                'slug' => "RETURNEXCHANGE",
+                'name' => "Return and exchange",
+            ],
         ]; 
         Module::insert($modules);
     }

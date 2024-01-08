@@ -7,6 +7,7 @@ return [
     'UPDATE' => 'Data has been successfully updated.',
     'DELETE' => 'Data has been successfully deleted.',
     'INCORRECT_EMAIL' => 'Either email or Password is incorrect.',
+    'ALREADY_FOUND' => 'This Record Already Added.',
     'LOGIN_SUCCESS' => 'Login Successfully.',
     'LOGOUT_SUCCESS' => 'Logout Successfully.',
     'UPDATE_IMAGE_DESC' => 'Image description updated successfully.',
@@ -29,5 +30,7 @@ return [
     "UPLOAD_SUCCESS" => "File uploaded successfully.",
     "UPLOAD_ERROR" => "Unable to upload file.",
     'UPDATE_ERROR' => 'Record updating error.',
+    'EV_ASSIGNED' => 'EV has been assined successfully.',
+    'EV_ASSIGNED_ERROR' => 'EV assined Error.',
 
 ];

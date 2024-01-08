@@ -41,17 +41,6 @@
 
                 </ul>
             </div>
-
-            <!-- <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <div class="page-title-left">
-                    @can('set_automatic_notification', $permission)
-                    <a href="{{route('create-notification','automatic')}}" class="btn btn-info btn-sm {{request()->route('param')=='automatic' ? 'active' : ''}}" title="">Automatic Notification</a>
-                    @endcan
-                    @can('send_push_notification', $permission)
-                    <a href="{{route('create-notification','manual')}}" class="btn btn-info btn-sm {{request()->route('param')=='manual' ? 'active' : ''}}" title="">Push Notification</a>
-                    @endcan
-                </div>
-            </div> -->
         </div>
     </div>
     <div class="row">
@@ -65,7 +54,7 @@
                                     <form method="post" enctype="multipart/form-data" id="createNotificationForm">
                                         @csrf
                                         <div class="mb-3">
-                                            <label for="basicpill-address-input" class="form-label">Notification Message &nbsp; <span class="spanColor title_error"></span></label>
+                                            <label for="basicpill-address-input" class="form-label">Notification Title &nbsp; <span class="spanColor title_error"></span></label>
                                             <input type="text" id="title" name="title" class="form-control">
                                         </div>
                                         <div class="mb-3">
@@ -108,7 +97,7 @@
                                             <input class="form-control" id="penalty_charge_value" type="hidden" name="penalty_charge" value="50">
                                             <input class="form-control" id="notification_type" type="hidden" name="notification_type" value="Automatic">
                                         </div>
-                                        <div class="form-check mb-3">
+                                        <div class="form-check mb-4">
                                             <input class="form-check-input" type="checkbox" name="is_send_charge" id="is_send_charge" checked>
                                             <label class="form-check-label pt-1 px-2" for="formCheck1">
                                                 Display penalty charges on notification panel with message
@@ -133,13 +122,20 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="mb-3" id="scheduleDateShowHide">
+                                        <div class="mb-4" id="scheduleDateShowHide">
                                             <label for="example-date-input" class="form-label">Schedule Date</label>
                                             <input class="form-control" type="date" name="schedule_date" id="schedule_date">
                                             <input class="form-control" id="notification_type" type="hidden" name="notification_type" value="Manual">
                                         </div>
                                         @endif
-                                        <div class="">
+                                        <div class="mb-4">
+                                            <label for="status_id" class="form-label">Status</label>
+                                            <select class="form-control selectBasic" name="status_id" id="status_id">
+                                                <option value="1">Active</option>
+                                                <option value="2">Inactive</option>
+                                            </select>
+                                        </div>
+                                        <div class="mt-4">
                                             <button type="button" class="btn btn-success" id="submitForm">{{ request()->route('param')=="automatic" ? 'Set Notification' : 'Schedule Notification'}}</button>
                                             <span class="text-success d-block" id="message" style="margin-right: 10px"></span>
                                         </div>
@@ -183,9 +179,8 @@
                     $('#submitForm').prop('disabled', false);
                     $('#submitForm').html('Add Notification')
                     setTimeout(function() {
-                        //window.location.reload();
                         window.location = data.url;
-                    }, 3000);
+                    }, 1000);
 
                 },
                 errors: function() {

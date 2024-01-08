@@ -22,7 +22,13 @@
                     <td>{{$vehicle->chassis_number}}</td>
                     <td>{{$vehicle->gps_emei_number ? "Installed" : "No Device"}}</td>
                     <td>{{$vehicle->ev_category_name}}</td>
-                    <td>{{$vehicle->customer_id ? "CUS".$vehicle->customer_id : "NA"}}</td>
+                    <td>@if($vehicle->customer_id)
+                        <a class="customerOverviewModelForm" data-toggle="modal" data-ev_number="{{ $vehicle->ev_number }}" data-order_slug="{{ $vehicle->order_slug }}" data-hubid="{{ $hub->hubId }}" data-chassis_number="{{ $vehicle->chassis_number }}" data-customer_id="CUS{{ $vehicle->customer_id }}" data-profile_category_name="{{ $vehicle->profile_category_name }}" data-ev_category_name="{{ $vehicle->ev_category_name }}" data-kyc_status="{{ $vehicle->kycStatus }}" data-cluster_manager="{{ $vehicle->cluster_manager }}" data-tl_name="{{ $vehicle->tl_name }}" data-client_name="{{ $vehicle->client_name }}" data-client_address="{{ $vehicle->client_address }}" title="Customer Overview" style="cursor: pointer;margin-right: 5px;"> {{"CUS".$vehicle->customer_id}}
+                        </a>
+                        @else
+                        NA
+                        @endif
+                    </td>
                     <td>{{$vehicle->profile_category_name}}</td>
                     <td>
                         @if ($vehicle->status_id == 1)
@@ -37,8 +43,28 @@
                         <label class="text-info">RFD</label>
                         @endif
                     </td>
-                    <td>Paid</td>
-                    <td>Verified</td>
+                    <td> @if ($vehicle->payment_status == 1)
+                        <label class="text-success">Paid</label>
+                        @elseif($vehicle->payment_status == 2)
+                        <label class="text-warning">Pending</label>
+                        @elseif($vehicle->payment_status == 3)
+                        <label class="text-danger">Failed</label>
+                        @elseif($vehicle->payment_status == 4)
+                        <label class="text-info">Rejected</label>
+                        @else
+                        <label class="text-secondary">NA</label>
+                        @endif
+                    </td>
+                    <td> @if ($vehicle->kyc_status == 1)
+                        <label class="text-success">Verified</label>
+                        @elseif($vehicle->kyc_status == 2)
+                        <label class="text-info">Pending</label>
+                        @elseif($vehicle->kyc_status == 3)
+                        <label class="text-danger">Red Flag</label>
+                        @else
+                        <label class="text-secondary">NA</label>
+                        @endif
+                    </td>
 
                     <td>
                         <div class="dropdown">
@@ -165,7 +191,6 @@
                         <div class="col-md-6 mb-3">
                             <label for="ev_type_id" class="form-label">EV Type</label>
                             <select class="form-control selectBasic" name="ev_type_id" id="ev_type_id">
-                                <option value="">Select EV Type</option>
                                 @foreach($ev_types as $key => $ev_type)
                                 <option value="{{$ev_type->ev_type_id}}">{{$ev_type->ev_type_name}}</option>
                                 @endforeach
@@ -209,6 +234,76 @@
                 <span class="text-success d-block" id="message"></span>
                 <button type="button" id="submitVehicle" class="btn btn-success waves-effect waves-light">Add
                 </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Customer overview -->
+
+<div class="modal fade" id="customerOverviewModelForm" role="dialog" aria-labelledby="modalLabel" data-keyboard="false" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog" style="max-width: 50%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Customer Overview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" enctype="multipart/form-data" id="customerOverviewForm">
+                    @csrf
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">EV Number</label>
+                            <input type="hidden" class="form-control" name="orderSlug" id="orderSlug">
+                            <input class="form-control readOnlyClass" type="text" id="orderEVNumber" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Chassis Number</label>
+                            <input class="form-control readOnlyClass" type="text" id="orderChassisNumber" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Hub Id</label>
+                            <input class="form-control readOnlyClass" type="text" id="orderHubId" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Customer Id</label>
+                            <input class="form-control readOnlyClass" type="text" id="orderCustomerId" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Profile Category</label>
+                            <input class="form-control readOnlyClass" type="text" id="orderProfile" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Assigned Date</label>
+                            <input class="form-control readOnlyClass" type="text" id="orderAssignDate" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">EV Category</label>
+                            <input class="form-control readOnlyClass" type="text" id="orderEvCategory" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">KYC Status</label>
+                            <input class="form-control readOnlyClass" type="text" id="orderKycStatus" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Cluster Manager</label>
+                            <input class="form-control readOnlyClass" type="text" id="orderClusterManager" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">TL Name</label>
+                            <input class="form-control readOnlyClass" type="text" id="orderTlName" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Client Name</label>
+                            <input class="form-control readOnlyClass" type="text" id="orderClientName" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Client Address</label>
+                            <input class="form-control readOnlyClass" type="text" id="orderClientAddress" readonly>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

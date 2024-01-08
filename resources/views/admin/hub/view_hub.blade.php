@@ -6,12 +6,21 @@
         width: 75px !important;
     }
 
+    .pac-container {
+        /* display: block !important; */
+        z-index: 999999;
+    }
+
     input[switch]:checked+label:after {
         left: 54px !important;
     }
 
     .readOnlyClass {
         background: #E6E6E6;
+    }
+
+    .modelWidth {
+        max-width: 50%;
     }
 </style>
 @endsection
@@ -28,14 +37,14 @@
                     <h4 class="card-title">Hub Overview : @if($hub->status_id == 1)<span class="text-success">Active</span> @else <span class="text-success">Inactive</span> @endif</h4>
                     <div class="page-title-right btn-card-header">
                         @can('edit_hub', $permission)
-                        <a class="btn btn-success waves-effect waves-light hubModelForm" data-toggle="modal" data-hub_id="{{ $hub->hub_Id }}" data-hubid="{{ $hub->hubId }}" data-city="{{ $hub->city }}" data-state="{{ $hub->state }}" data-country="{{ $hub->country }}" data-slug="{{ $hub->slug }}" data-address1="{{ $hub->address_1 }}" data-address2="{{ $hub->address_2 }}" data-zipcode="{{ $hub->zip_code }}" data-hublimit="{{ $hub->hub_limit }}" data-fulladdress="{{ $hub->full_address }}" title="Edit Hub" style="cursor: pointer;margin-right: 5px;">Edit Hub</a>
+                        <a class="btn btn-success waves-effect waves-light hubModelForm" data-toggle="modal" data-hub_id="{{ $hub->hub_id }}" data-hubid="{{ $hub->hubId }}" data-city="{{ $hub->city }}" data-state="{{ $hub->state }}" data-country="{{ $hub->country }}" data-slug="{{ $hub->slug }}" data-address1="{{ $hub->address_1 }}" data-address2="{{ $hub->address_2 }}" data-zipcode="{{ $hub->zip_code }}" data-hublimit="{{ $hub->hub_limit }}" data-fulladdress="{{ $hub->full_address }}" data-latitude="{{ $hub->latitude }}" data-longitude="{{ $hub->longitude }}" title="Edit Hub" style="cursor: pointer;margin-right: 5px;">Edit Hub</a>
                         @endcan
                         @can('add_inventry', $permission)
                         @if(request()->route('param') == 'vehicle')
                         <a class="btn btn-outline-success waves-effect waves-light vehicleModelForm" data-toggle="modal" data-operation="add" data-hub_id="{{ $hub->hub_id }}" title="Add New NotVehicleification">Add Vehicle</a>
                         @endif
                         @endcan
-                        <a href="" class="btn btn-outline-success waves-effect waves-light" title="Add New Notification">Assign an EV</a>
+                        {{--<a href="" class="btn btn-outline-success waves-effect waves-light" title="Add New Notification">Assign an EV</a>--}}
                     </div>
                 </div>
                 <div class="card-body pb-0">
@@ -48,10 +57,10 @@
                                 <h5>Hub Capacity: <span> {{$hub->hub_limit}}</span></h5>
                             </div>
                             <div class="col-xl-3 col-md-6">
-                                <h5>Vehicle Count in Hub : <span>###</span></h5>
+                                <h5>Vehicle Count in Hub : <span>{{$vehicleCount}}</span></h5>
                             </div>
                             <div class="col-xl-3 col-md-6">
-                                <h5>Total No. of Employees : <span>###</span></h5>
+                                <h5>Total No. of Employees : <span>{{$empCount}}</span></h5>
                             </div>
                             <div class="col-xl-3 col-md-3">
                                 <h5>Hub Address : <span> {{$hub->address_1}}{{$hub->address_2 ? ', '.$hub->address_2: ''}}</span></h5>
@@ -69,7 +78,9 @@
                             </div>
 
                             <div class="col-xl-6">
-                                <h5>Total Accessories : <span>Helmets, T-shirts</span></h5>
+                                <h5>Accessories in Hub : <span>@foreach ($accessoriesinHub as $access)
+                                        {{$access == 1 ? "Helmet" : ($access == 2 ? ", T-Shirt" : ($access == 3 ? ", Mobile Holder" : ""))}}@endforeach</span>
+                                </h5>
                             </div>
 
                         </div>
@@ -145,144 +156,14 @@
     </div> <!-- end row -->
 </div>
 <!-- Add role model -->
-<div class="modal fade" id="hubModelForm" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="hubModalLabel">Edit Hub</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form method="post" enctype="multipart/form-data" id="addUpdateHub">
-                    @csrf
-                    <input type="hidden" class="form-control" name="slug" id="slug">
-                    <div class="mb-2">
-                        <label for="hubid" class="col-form-label">Hub Id <sup class="compulsayField">*</sup> <span class="spanColor hubid_error"></span></label>
-                        <input type="text" name="hubId" class="form-control" id="hubId" value="{{$hub->hubId}}" readonly>
-                    </div>
-                    <div class="mb-2">
-                        <label for="address1" class="col-form-label">Search Address</label>
-                        <input id="autocomplete" name="street_address" placeholder="Enter your address" type="text" class="floating-input form-control">
-                    </div>
-                    <div class="mb-2">
-                        <label for="address1" class="col-form-label">Address Line 1</label>
-                        <input type="text" name="address1" class="form-control" id="address1">
-                    </div>
-                    <div class="mb-2">
-                        <label for="address2" class="col-form-label">Address Line 2</label>
-                        <input type="text" name="address2" class="form-control" id="address2">
-                    </div>
-                    <div class="mb-2">
-                        <label for="city" class="col-form-label">City</label>
-                        <input type="text" name="city" class="form-control" id="city">
-                    </div>
-                    <div class="mb-2">
-                        <label for="state" class="col-form-label">State </label>
-                        <input type="text" name="state" class="form-control" id="state">
-                    </div>
-                    <div class="mb-2">
-                        <label for="country" class="col-form-label">Country</label>
-                        <input type="text" name="country" class="form-control" id="country">
-                    </div>
-                    <div class="mb-2">
-                        <label for="pincode" class="col-form-label">Pin Code</label>
-                        <input type="text" name="zip_code" class="form-control" id="zip_code">
-                    </div>
-                    <div class="mb-2">
-                        <label for="hublimit" class="col-form-label">Hub Limit</label>
-                        <input type="text" name="hub_limit" class="form-control" id="hub_limit">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer d-flex justify-content-between">
-                <span class="text-success d-block" id="message" style="margin-right: 10px"></span>
-
-                <button type="button" id="submitHub" class="btn btn-success waves-effect waves-light">Update
-                </button>
-                <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-            </div>
-        </div>
-    </div>
-</div>
 @endsection
 @section('js')
+<!-- Add role model -->
 <script type="text/javascript">
     $(document).ready(function() {
         function toggleReadOnly(state) {
             $('.readOnlyClass').prop('readonly', state);
         }
-
-        // Model data
-        $('.hubModelForm').click(function() {
-            $('#hubModelForm').modal('show');
-            var slug = $(this).data('slug');
-            if (slug) {
-                var hub_id = $(this).data('hub_Id');
-                var hubId = $(this).data('hubid');
-                var city = $(this).data('city');
-                var state = $(this).data('state');
-                var country = $(this).data('country');
-                var address1 = $(this).data('address1');
-                var address2 = $(this).data('address2');
-                var zip_code = $(this).data('zipcode');
-                var hub_limit = $(this).data('hublimit');
-                var full_address = $(this).data('fulladdress');
-
-                $("#slug").val(slug);
-                $("#hubId").val(hubId);
-                $("#city").val(city);
-                $("#state").val(state);
-                $("#country").val(country);
-                $("#address1").val(address1);
-                $("#address2").val(address2);
-                $("#zip_code").val(zip_code);
-                $("#hub_limit").val(hub_limit);
-                $("#autocomplete").val(full_address);
-            }
-
-            if (slug) {
-                $('#submitHub').html('Update')
-            }
-            if (slug) {
-                $('#hubModalLabel').html('Edit Hub')
-            }
-        });
-        $('#submitHub').click(function(e) {
-            e.preventDefault();
-            var name = $('#hubId').val();
-            if (name == "") {
-                $(".hubid_error").html('This field is required!');
-                $("input#hubId").focus();
-                return false;
-            }
-            $('#submitHub').prop('disabled', true);
-            $('#submitHub').html('Please wait...')
-            var formDatas = new FormData(document.getElementById('addUpdateHub'));
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                method: 'POST',
-                url: "{{ route('add-update-hub') }}",
-                data: formDatas,
-                contentType: false,
-                processData: false,
-                success: function(data) {
-                    $('#message').html("<span class='sussecmsg'>" + data.message + "</span>");
-                    $('#submitHub').prop('disabled', false);
-                    $('#submitHub').html('Update');
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 3000);
-
-                },
-                errors: function() {
-                    $('#message').html("<span class='sussecmsg'>Somthing went wrong!</span>");
-                }
-            });
-        });
-
-        // employee model
 
         $('.userModelForm').on('click', function(event) {
             event.preventDefault();
@@ -290,6 +171,7 @@
             if (operationType === 'add') {
                 var hub_id = $(this).data('hub_id');
                 var empid = $(this).data('empid');
+                empid = empid ? parseInt(empid) + 1 : 101;
                 $('#first_name').removeAttr('readonly');
                 $('#first_name').removeClass('readOnlyClass');
                 $('#last_name').removeAttr('readonly');
@@ -307,26 +189,31 @@
             }
 
             $('#userModelForm').modal('show');
-            var first_name = $(this).data('fname');
-            var last_name = $(this).data('lname');
-            var email = $(this).data('email');
-            var phone = $(this).data('phone');
-            var slug = $(this).data('slug');
-            var roleid = $(this).data('roleid');
-            var rolename = $(this).data('rolename');
             var hub_id = $(this).data('hub_id');
-            var empid = $(this).data('empid');
+            if (hub_id) {
 
-            $("#first_name").val(first_name);
-            $("#last_name").val(last_name);
-            $("#email").val(email);
-            $("#phone").val(phone);
-            $("#slug").val(slug);
-            //$("#role_id").find(':selected').attr('data-roleid')
-            $("#role_id").val(roleid);
-            $("#rolename").val(rolename);
-            $("#hub_id").val(hub_id);
-            $("#employee_id").val(empid);
+                var first_name = $(this).data('fname');
+                var last_name = $(this).data('lname');
+                var email = $(this).data('email');
+                var phone = $(this).data('phone');
+                var roleid = $(this).data('roleid');
+                var rolename = $(this).data('rolename');
+                var hub_id = $(this).data('hub_id');
+                var empid = $(this).data('empid');
+                $("#first_name").val(first_name);
+                $("#last_name").val(last_name);
+                $("#email").val(email);
+                $("#phone").val(phone);
+                $("#hub_id").val(hub_id);
+                //$("#role_id").find(':selected').attr('data-roleid')
+                $("#role_id").val(roleid);
+                $("#rolename").val(rolename);
+                $("#hub_id").val(hub_id);
+                $("#employee_id").val(empid);
+            }
+
+
+
 
         });
         $('#submitUser').click(function(e) {
@@ -385,8 +272,8 @@
             }
 
             $('#vehicleModelForm').modal('show');
-            var slug = $(this).data('slug');
-            if (slug) {
+            var hub_id = $(this).data('hub_id');
+            if (hub_id) {
                 var hub_id = $(this).data('hub_id');
                 var title = $(this).data('title');
                 var ev_number = $(this).data('ev_number');
@@ -411,7 +298,7 @@
                 $("#hub_id").val(hub_id);
                 $("#ev_number").val(ev_number);
                 $("#speed").val(speed);
-                $("#slug").val(slug);
+                $("#hub_id").val(hub_id);
                 $("#chassis_number").val(chassis_number);
                 $("#per_day_rent").val(per_day_rent);
                 $("#km_per_charge").val(km_per_charge);
@@ -445,7 +332,7 @@
 
         $('#submitVehicle').click(function(e) {
             e.preventDefault();
-            var slug = $('#slug').val();
+            var hub_id = $('#hub_id').val();
             var updateurl = $('#updateurl').val();
             var name = $('#title').val();
             if (name == "") {
@@ -473,7 +360,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 method: 'POST',
-                url: slug ? updateurl : "{{route('add-product')}}",
+                url: hub_id ? updateurl : "{{route('add-product')}}",
                 data: formDatas,
                 contentType: false,
                 processData: false,
@@ -495,6 +382,37 @@
         $('.raiseModelForm').click(function() {
             $('#raiseModelForm').modal('show');
         });
+
+        //Customer overview
+        $('.customerOverviewModelForm').on('click', function(event) {
+            event.preventDefault();
+            $('#customerOverviewModelForm').modal('show');
+            var order_slug = $(this).data('order_slug');
+            var ev_number = $(this).data('ev_number');
+            var hubid = $(this).data('hubid');
+            var chassis_number = $(this).data('chassis_number');
+            var customer_id = $(this).data('customer_id');
+            var profile_category_name = $(this).data('profile_category_name');
+            var ev_category_name = $(this).data('ev_category_name');
+            var cluster_manager = $(this).data('cluster_manager');
+            var tl_name = $(this).data('tl_name');
+            var client_name = $(this).data('client_name');
+            var client_address = $(this).data('client_address');
+            var kyc_status = $(this).data('kyc_status');
+
+            $("#orderEVNumber").val(ev_number);
+            $("#orderChassisNumber").val(chassis_number);
+            $("#orderHubId").val(hubid);
+            $("#orderCustomerId").val(customer_id);
+            $("#orderProfile").val(profile_category_name);
+            $("#orderAssignDate").val('data-roleid')
+            $("#orderEvCategory").val(ev_category_name);
+            $("#orderKycStatus").val(kyc_status);
+            $("#orderClusterManager").val(cluster_manager);
+            $("#orderClientName").val(client_name);
+            $("#orderTlName").val(tl_name);
+            $("#orderClientAddress").val(client_address);
+        });
     });
 
     // Active inactive status toggle
@@ -511,14 +429,12 @@
                         "slug": slug,
                         "_token": token,
                     },
-                    success: function(response) {
-                    },
-                    error: function(xhr, status, error) {
-                    }
+                    success: function(response) {},
+                    error: function(xhr, status, error) {}
                 });
-            } else if (params === 'vehicle') {
-            }
+            } else if (params === 'vehicle') {}
         }
     }
 </script>
+@include('admin.models.hub_model')
 @endsection

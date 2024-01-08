@@ -98,8 +98,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/vehicles', [ProductController::class, 'getAssignedVehicles'])->name('vehicles');
 
         Route::get('/accessories', [AccessoriesController::class, 'getAccessories'])->name('accessories');
-        Route::post('/add-accessories', [AccessoriesController::class, 'addAccessories'])->name('add-accessories');
-        Route::post('/update-accessories', [AccessoriesController::class, 'updateAccessories'])->name('update-accessories');
+        Route::post('/add-update-accessories', [AccessoriesController::class, 'addUpdateAccessories'])->name('add-update-accessories');
         Route::get('/product-ev-types', [EvTypeController::class, 'getEvType'])->name('product-ev-types');
         Route::post('/add-update-ev-type', [EvTypeController::class, 'addUpdateEvType'])->name('add-update-ev-type');
 
@@ -115,6 +114,7 @@ Route::group(['prefix' => 'admin'], function () {
 
         Route::post('/update-company-details', [SiteConfigurationController::class, 'updateCompanyDetail'])->name('update-company-details');
         Route::post('/update-user-profile', [UserController::class, 'updateProfileDetail'])->name('update-user-profile');
+        Route::post('/change-password', [UserController::class, 'changePassword'])->name('change-password');
 
         /* Shekhar's - Route */
         @include('admin.php');

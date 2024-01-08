@@ -5,6 +5,89 @@
     #description {
         height: 140px;
     }
+
+    .upload_box {
+        padding: 40px;
+    }
+
+    .upload__btn {
+        display: inline-block;
+        font-weight: 600;
+        color: #fff;
+        text-align: center;
+        min-width: 116px;
+        padding: 5px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 2px solid;
+        background-color: #4045ba;
+        border-color: #4045ba;
+        border-radius: 10px;
+        line-height: 26px;
+        font-size: 14px;
+    }
+
+    .upload__inputfile {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
+
+    .upload__btn-box {
+        margin-bottom: 10px;
+    }
+
+    .upload__img-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -10px;
+    }
+
+    .upload__img-box {
+        width: 200px;
+        padding: 0 10px;
+        margin-bottom: 12px;
+    }
+
+    .img-bg {
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        position: relative;
+        padding-bottom: 100%;
+    }
+
+    &__inputfile {
+        width: .1px;
+        height: .1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
+
+    .upload__img-close {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background-color: rgba(0, 0, 0, 0.5);
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        text-align: center;
+        line-height: 24px;
+        z-index: 1;
+        cursor: pointer;
+    }
+
+    .upload__img-close:after {
+        content: "✖";
+        font-size: 14px;
+        color: white;
+    }
 </style>
 @endsection
 @section('content')
@@ -90,7 +173,6 @@
                                 <div class="col-md-6 mb-3">
                                     <label for="ev_type_id" class="form-label">EV Type</label>
                                     <select class="form-control selectBasic" name="ev_type_id" id="ev_type_id">
-                                        <option value="">Select EV Type</option>
                                         @foreach($ev_types as $key => $ev_type)
                                         <option value="{{$ev_type->ev_type_id}}">{{$ev_type->ev_type_name}}</option>
                                         @endforeach
@@ -100,7 +182,6 @@
                                 <div class="col-md-6 mb-3">
                                     <label for="hub_id" class="form-label">Hub</label>
                                     <select class="form-control selectBasic" name="hub_id" id="hub_id">
-                                        <option value="">Select Hub</option>
                                         @foreach($hubs as $key => $hub)
                                         <option value="{{$hub->hub_id}}">{{$hub->city}}</option>
                                         @endforeach
@@ -131,7 +212,7 @@
                                 </div>
                                 <div class="col-md-6 mb-4">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="remember-check" name="is_display_on_app" checked>
+                                        <input class="form-check-input" type="checkbox" id="remember-check" name="is_display_on_app">
                                         <label class="form-check-label mt-1" for="remember-check">
                                             &nbsp; The product is displayed on the app.
                                         </label>
@@ -181,7 +262,7 @@
             //var imageData = $('#customFile')[0].files[0]; // Get the image file
 
             var formDatas = new FormData(document.getElementById('createProductForm'));
-           // formDatas.append('image', imageData);
+            // formDatas.append('image', imageData);
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -196,7 +277,7 @@
                     $('#submitForm').prop('disabled', false);
                     setTimeout(function() {
                         window.location = data.url;
-                    }, 3000);
+                    }, 1000);
 
                 },
                 errors: function() {

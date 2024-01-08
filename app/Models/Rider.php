@@ -18,11 +18,60 @@ class Rider extends Authenticatable
     protected $table = "riders";
     protected $primaryKey = 'rider_id';
     protected $fillable = [
-        'slug', 'name', 'email', 'email_verified_at', 'activated_at', 'phone', 'password', 'current_address', 'permanent_address', 'state_id', 'city_id', 'vehicle_id', 'photo', 'subscription_days', 'joining_date', 'subscription_validity', 'api_token', 'status_id', 'created_by', 'updated_by', 'created_at', 'updated_at', 'deleted_at',
+        'slug', 'name', 'email', 'email_verified_at', 'activated_at', 'phone', 'password', 'current_address', 'permanent_address', 'state_id', 'city_id', 'vehicle_id', 'photo', 'subscription_days', 'joining_date', 'subscription_validity', 'api_token', 'status_id', 'created_by', 'updated_by', 'created_at', 'updated_at', 'deleted_at', 'customer_id',
     ];
     protected $hidden = [
         'api_token', 'password'
     ];
+
+    protected $appends = [
+        'profile_type_name','kyc_status_name'
+    ];
+
+    public function getProfileTypeNameAttribute()
+    {
+        if (is_null($this->profile_type) || $this->profile_type == "") {
+            return "";
+        } else {
+            switch ($this->profile_type) {
+                case 1:
+                    return 'Corporate';
+                    break;
+                case 2:
+                    return 'Individual';
+                    break;
+                case 3:
+                    return 'Student';
+                    break;
+                case 4:
+                    return 'Vender';
+                    break;
+                default:
+                    return "";
+            }
+        }
+    }
+
+    public function getKycStatusNameAttribute()
+    {
+        if (is_null($this->kyc_status) || $this->kyc_status == "") {
+            return "";
+        } else {
+            switch ($this->kyc_status) {
+                case 1:
+                    return 'Verified';
+                    break;
+                case 2:
+                    return 'Pending';
+                    break;
+                case 3:
+                    return 'Red Flag';
+                    break;
+                default:
+                    return "";
+            }
+        }
+    }
 
     public function bankDetail()
     {
@@ -53,8 +102,15 @@ class Rider extends Authenticatable
     public function register($request)
     {
         try {
+            $customerId = 101;
+            $riderDetail = Rider::whereNull('deleted_at')->orderBy('rider_id', 'DESC')->first();
+            if (!is_null($riderDetail)) {
+                $customerId = (int)$riderDetail->customer_id;
+                $customerId = $customerId + 1;
+            }
             $rider = Rider::create([
                 'slug' => slug(),
+                'customer_id' => $customerId,
                 'name' => $request->input('name'),
                 'email' => $request->input('email'),
                 'phone' => $request->input('phone'),
@@ -62,7 +118,10 @@ class Rider extends Authenticatable
                 'profile_type' => $request->input('profile_category'),
             ]);
             if ($rider) {
-                return successResponse(Response::HTTP_OK, Lang::get('messages.INSERT'), (object)[]);
+                $rider = new Rider();
+                $result = $rider->login($request);
+                $result = !empty($result) && isset($result['result']) ? $result['result'] :  (object)[];
+                return successResponse(Response::HTTP_OK, Lang::get('messages.INSERT'), $result);
             }
             return errorResponse(Response::HTTP_OK, Lang::get('messages.INSERT_ERROR'), (object)[]);
         } catch (\Throwable $ex) {

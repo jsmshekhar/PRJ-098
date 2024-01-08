@@ -76,6 +76,7 @@ class RiderController extends AdminAppController
     {
         try {
             $permission = User::getPermissions();
+            $kycStatus = ['1' => 'Verified', '2' => 'Pending', '3' => 'Red Flag'];
             $rider = Rider::with(['bankDetail', 'documents', 'transactions', 'complaints'])->where('slug', $slug)->whereNull('deleted_at')->first();
             if (!is_null($rider)) {
                 $walletBalence = 0;
@@ -89,7 +90,7 @@ class RiderController extends AdminAppController
                 if (!is_null($walletValue)) {
                     $walletBalence = $walletValue->total_credits - $walletValue->total_debits;
                 }
-                return view($this->viewPath . '/rider_view', compact('rider', 'walletBalence', 'permission'));
+                return view($this->viewPath . '/rider_view', compact('rider', 'walletBalence', 'permission', 'kycStatus'));
             }
         } catch (\Throwable $ex) {
             $result = [
@@ -125,6 +126,74 @@ class RiderController extends AdminAppController
                     'message' => Lang::get('messages.INSERT_ERROR'),
                 ];
             }
+            return response()->json($status);
+        } catch (\Exception $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shehar
+    Action    : Rider Kyc Status Changed
+    --------------------------------------------------*/
+    public function changeKycStatus(Request $request)
+    {
+        try {
+            $updateResult = Rider::where('slug', $request->rider_slug)->update([
+                "kyc_status" => $request->kyc_status ?? 1,
+            ]);
+            if ($updateResult) {
+                $status = [
+                    'status' => Response::HTTP_OK,
+                    'message' => Lang::get('messages.UPDATE'),
+                ];
+            } else {
+                $status = [
+                    'status' => Response::HTTP_BAD_REQUEST,
+                    'message' => Lang::get('messages.UPDATE_ERROR'),
+                ];
+            }
+            return response()->json($status);
+        } catch (\Exception $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shehar
+    Action    : Update Rider Details
+    --------------------------------------------------*/
+    public function updateRiderDetails(Request $request)
+    {
+        try {
+            $rider = Rider::where('slug', $request->rider_slug)->whereNull('deleted_at')->first();
+            if (!is_null($rider)) {
+                $updateResult = Rider::where('slug', $request->rider_slug)->update([
+                    "current_address" => $request->current_address ?? $request->current_address,
+                    "permanent_address" => $request->permanent_address ?? $request->permanent_address,
+                ]);
+                if ($updateResult) {
+                    $status = [
+                        'status' => Response::HTTP_OK,
+                        'message' => Lang::get('messages.UPDATE'),
+                    ];
+                    return response()->json($status);
+                }
+            }
+            $status = [
+                'status' => Response::HTTP_BAD_REQUEST,
+                'message' => Lang::get('messages.UPDATE_ERROR'),
+            ];
             return response()->json($status);
         } catch (\Exception $ex) {
             $result = [

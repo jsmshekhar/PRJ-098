@@ -98,6 +98,9 @@ class Hub extends Model
             $accessories_categories = [];
             $count = 0;
             $hub = Hub::where('slug', $slug)->whereNull('deleted_at')->first();
+            $empCount = User::where('hub_id', $hub->hub_id)->whereNull('deleted_at')->count();
+            $vehicleCount = Product::where('hub_id', $hub->hub_id)->whereNull('deleted_at')->count();
+            $accessoriesinHub = array_unique(HubPartAccessories::where('hub_id', $hub->hub_id)->pluck('accessories_category_id')->toArray());
             if($param == 'vehicle'){
                 $vehicles = Product::leftJoin('rider_orders', 'rider_orders.mapped_vehicle_id', '=', 'products.product_id')
                 ->leftJoin('riders', 'riders.rider_id', '=', 'rider_orders.rider_id')
@@ -109,10 +112,21 @@ class Hub extends Model
                     'et.ev_type_name',
                     'et.slug as ev_type_slug',
                     'riders.customer_id',
-                    //'riders.kyc_status',
                     'rider_orders.payment_status',
                     'rider_orders.status_id as statusid',
-                        
+                    'rider_orders.assigned_date',
+                    'rider_orders.cluster_manager',
+                    'rider_orders.tl_name',
+                    'rider_orders.client_name',
+                    'rider_orders.client_address',
+                    'rider_orders.slug as order_slug',
+                    'riders.kyc_status',
+                    DB::raw('CASE 
+                            WHEN riders.kyc_status = 1 THEN "Verified" 
+                            WHEN riders.kyc_status = 2 THEN "Pending" 
+                            WHEN riders.kyc_status = 3 THEN "Red Flag"
+                            ELSE "" 
+                        END as kycStatus'),
                     DB::raw('CASE 
                             WHEN products.ev_category_id = 1 THEN "Two Wheeler" 
                             WHEN products.ev_category_id = 2 THEN "Three Wheeler" 
@@ -176,10 +190,10 @@ class Hub extends Model
            
 
             if ($hub) {
-                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => $hub, 'vehicles' => $vehicles, 'employees' => $employees, 'roles' => $roles,'rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'battery_types' => $battery_types, 'profile_categories' => $profile_categories, 'vehicleStatus' => $vehicleStatus, 'bike_types' => $bike_types, 'count' => $count, 'hub_parts' => $hub_parts, 'accessories_categories' => $accessories_categories]);
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => $hub, 'vehicles' => $vehicles, 'employees' => $employees, 'roles' => $roles,'rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'battery_types' => $battery_types, 'profile_categories' => $profile_categories, 'vehicleStatus' => $vehicleStatus, 'bike_types' => $bike_types, 'count' => $count, 'hub_parts' => $hub_parts, 'accessories_categories' => $accessories_categories, 'vehicleCount'=> $vehicleCount, 'empCount'=>$empCount, 'accessoriesinHub' => $accessoriesinHub, 'hubId' => $hub->hubId]);
             } else {
                 
-                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => [], 'vehicles' => [], 'employees' => [], 'roles' => [],'rent_cycles' => [], 'ev_types' => [], 'ev_categories' =>[], 'battery_types' => [], 'profile_categories' => [], 'bike_types' => [], 'count' => $count, 'hub_parts' => [], 'accessories_categories' => []]);
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => [], 'vehicles' => [], 'employees' => [], 'roles' => [],'rent_cycles' => [], 'ev_types' => [], 'ev_categories' =>[], 'battery_types' => [], 'profile_categories' => [], 'bike_types' => [], 'count' => $count, 'hub_parts' => [], 'accessories_categories' => [],'vehicleCount' => 0, 'empCount' => 0, 'accessoriesinHub' => [], 'hubId' => ""]);
             }
         } catch (\Throwable $ex) {
             $result = [

@@ -25,6 +25,8 @@ class CreateHubsTable extends Migration
             $table->text('address_1')->nullable();
             $table->text('address_2')->nullable();
             $table->text('full_address')->nullable();
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
             $table->string('user_slug')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->tinyInteger('status_id')->default(1)->comment('1 => Active, 2 => Inactive, 3 => Deleted');

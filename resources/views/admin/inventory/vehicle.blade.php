@@ -70,7 +70,7 @@
                                                 <select class="form-control selectBasic" name="pay">
                                                     <option value="">Select</option>
                                                     @foreach($payment_status as $key => $pay_status)
-                                                    <option value="{{$pay_status}}" <?= (isset($_GET['pay']) && $pay_status == $_GET['pay']) ? 'selected' : '' ?>>{{$pay_status == 1 ? "Paid" : ($pay_status == 2 ? "Pending" : ($pay_status == 3 ? "Failed" : ($pay_status == 4 ? "Rejected" : "")))}}
+                                                    <option value="{{$pay_status}}" <?= (isset($_GET['pay']) && $pay_status == $_GET['pay']) ? 'selected' : '' ?>>{{$pay_status == 1 ? "Paid" : ($pay_status == 2 ? "Pending" : ($pay_status == 3 ? "Failed" : ($pay_status == 4 ? "Rejected" :($pay_status == 5 ? "Overdue" : "NA"))))}}
                                                     </option>
                                                     @endforeach
                                                 </select>

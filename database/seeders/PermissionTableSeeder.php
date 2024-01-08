@@ -276,6 +276,36 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'Assiegn Request',
                 "permission_slug" => "assiegn-request",
             ],
+            [
+                'module_slug' => "ORDERS",
+                'module_id' => 11,
+                'name' => 'View',
+                "permission_slug" => "view",
+            ],
+            [
+                'module_slug' => "ORDERS",
+                'module_id' => 11,
+                'name' => 'Assiegn EV',
+                "permission_slug" => "assign-ev",
+            ],
+            [
+                'module_slug' => "RETURNEXCHANGE",
+                'module_id' => 12,
+                'name' => 'View',
+                "permission_slug" => "view",
+            ],
+            [
+                'module_slug' => "RETURNEXCHANGE",
+                'module_id' => 12,
+                'name' => 'Return EV',
+                "permission_slug" => "return",
+            ],
+            [
+                'module_slug' => "RETURNEXCHANGE",
+                'module_id' => 12,
+                'name' => 'Exchange EV',
+                "permission_slug" => "exchange",
+            ],
         ];
         Permission::insert($permissions);
     }
