@@ -11,10 +11,10 @@ class ApiController extends Controller
 
     protected $errorMessage;
 
-    public function __construct()
+    /*public function __construct()
     {
         $this->middleware('auth:rider-api');
-    }
+    }*/
 
     /*--------------------------------------------------
     Developer : Chandra Shekhar

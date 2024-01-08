@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\KycApiController;
 use App\Http\Controllers\Api\AuthApiController;
+use App\Http\Controllers\Api\CommonDataController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +22,8 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     Route::post('validate-user', [AuthApiController::class, 'validateUser']);
     Route::post('reset-new-password', [AuthApiController::class, 'resetPassword']);
     Route::post('/upload-file', [KycApiController::class, 'uploadFile']);
+    Route::get('/faqs', [CommonDataController::class, 'getFaqs']);
+    Route::get('/get-complaint-category', [CommonDataController::class, 'complainCategory']);
 });
 
 
@@ -34,4 +37,7 @@ Route::middleware(['auth:rider-api'])->namespace('Api')->prefix('v1')->group(fun
     Route::post('create-order', [KycApiController::class, 'createOrder']);
     Route::post('update-kys-steps', [KycApiController::class, 'updateKycSteps']);
     Route::get('/get-kys-step', [KycApiController::class, 'getKycStep']);
+
+    Route::post('create-complaint', [CommonDataController::class, 'createComplaint']);
+    Route::get('/get-complaints', [CommonDataController::class, 'getComplaints']);
 });
