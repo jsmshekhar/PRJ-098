@@ -131,7 +131,7 @@
                                                     <td>{{ $record->rider->customer_id }}</td>
                                                     <td>{{ $record->product->ev_number }}</td>
                                                     <td>{{ $record->product->chassis_number }}</td>
-                                                    <td>{{ dateFormat($record->order->subscription_validity) }}</td>
+                                                    <td>{{ !is_null($record->order) ? dateFormat($record->order->subscription_validity) : "" }}</td>
                                                     <td>{{ $record->rider->phone }}</td>
                                                     <td>{{ $record->hub->hubId }}</td>
                                                     <td>{{ $record->request_for_name }}</td>
