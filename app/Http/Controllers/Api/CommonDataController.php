@@ -139,4 +139,37 @@ class CommonDataController extends ApiController
             return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
         }
     }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : Create Return/Exchange Request
+    Request   : Object
+    Return    : Json
+    --------------------------------------------------*/
+    public function returnExchangeRequest(Request $request)
+    {
+        try {
+            $requiredFields = [
+                'request_for' => [
+                    'required',
+                    Rule::in([config('constants.EV_REQUEST_TYPE.RETURN'), config('constants.EV_REQUEST_TYPE.EXCHANGE')]),
+                ],
+                'vehicle_slug' => "required",
+            ];
+            $messages = [];
+            if (!$this->checkValidation($request, $requiredFields, $messages)) {
+                return validationResponse(Response::HTTP_UNPROCESSABLE_ENTITY, Lang::get('messages.VALIDATION_ERROR'), $this->errorMessage);
+            } else {
+                $result = ApiModel::returnExchangeRequest($request);
+                return finalResponse($result);
+            }
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
 }

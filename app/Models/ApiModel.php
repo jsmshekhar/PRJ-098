@@ -219,4 +219,54 @@ class ApiModel extends Model
             return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
         }
     }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : Create Complaint
+    --------------------------------------------------*/
+    public static function returnExchangeRequest($request)
+    {
+        try {
+            $riderId = Auth::id();
+            $vehicleSlug = $request->vehicle_slug ?? null;
+            $requestFor = (int)$request->request_for ?? null;
+            $vehicle = DB::table('products')->where('slug', $vehicleSlug)->whereNull('deleted_at')->first();
+            if (!is_null($vehicle)) {
+                $vehicleId = $vehicle->product_id;
+                $orderDetails = DB::table('rider_orders')->where(['rider_id' => $riderId, 'vehicle_id' => $vehicleId, 'status_id' => 1, 'payment_status' => 1])->whereNull('deleted_at')->first();
+
+                if (!is_null($orderDetails)) {
+                    $orderId = $orderDetails->order_id;
+                    $hubId = $orderDetails->hub_id;
+                    $mappedVehicleId = $orderDetails->mapped_vehicle_id;
+                    $assignedDate = $orderDetails->assigned_date;
+
+                    $isRequested = ReturnExchange::where(['order_id' => $orderId, 'request_for' => $requestFor])->whereNull('deleted_at')->first();
+                    if (is_null($isRequested)) {
+                        $requestData = [
+                            'slug' => slug(),
+                            'order_id' => $orderId,
+                            'hub_id' => $hubId,
+                            'rider_id' => $riderId,
+                            'mapped_vehicle_id' => $mappedVehicleId,
+                            'assigned_date' => $assignedDate,
+                            'request_for' => $requestFor,
+                        ];
+                        $status = ReturnExchange::insert($requestData);
+                        if ($status) {
+                            return successResponse(Response::HTTP_OK, Lang::get('messages.INSERT'), (object)[]);
+                        }
+                    }
+                }
+            }
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), []);
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
 }
