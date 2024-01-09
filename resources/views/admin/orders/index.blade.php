@@ -2,92 +2,7 @@
 @section('title', 'Rider`s Order Management')
 @section('css')
 <style>
-    #client_address {
-        height: 80px;
-    }
-
-    .upload_box {
-        padding: 40px;
-    }
-
-    .uploadBtn {
-        display: inline-block;
-        font-weight: 600;
-        color: #fff;
-        text-align: center;
-        min-width: 116px;
-        padding: 5px;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        border: 2px solid;
-        background-color: #4045ba;
-        border-color: #4045ba;
-        border-radius: 10px;
-        line-height: 26px;
-        font-size: 14px;
-    }
-
-    .uploadInputfile {
-        width: 0.1px;
-        height: 0.1px;
-        opacity: 0;
-        overflow: hidden;
-        position: absolute;
-        z-index: -1;
-    }
-
-    .uploadBtnBox {
-        margin-bottom: 10px;
-    }
-
-    .uploadImgWrap {
-        display: flex;
-        flex-wrap: wrap;
-        margin: 0 -10px;
-    }
-
-    .uploadImgBox {
-        width: 100px;
-        padding: 0 10px;
-        margin-bottom: 12px;
-    }
-
-    .img-bg {
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: cover;
-        position: relative;
-        padding-bottom: 100%;
-    }
-
-    .uploadInputfile {
-        width: .1px;
-        height: .1px;
-        opacity: 0;
-        overflow: hidden;
-        position: absolute;
-        z-index: -1;
-    }
-
-    .uploadImgClose {
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        background-color: rgba(0, 0, 0, 0.5);
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        text-align: center;
-        line-height: 24px;
-        z-index: 1;
-        cursor: pointer;
-    }
-
-    .uploadImgClose:after {
-        content: "✖";
-        font-size: 14px;
-        color: white;
-    }
+   
 </style>
 @endsection
 
@@ -286,7 +201,7 @@
                         <div class="col-md-12">
                             <div class="form-group mb-2">
                                 <label for="address serach" class="col-form-label">Map EV</label>
-                                {{ Form::select('mapped_ev', $evList, null, ['class' => 'form-control selectBasic', 'placeholder' => 'Select Ev', 'id' => 'mapped_ev']) }} 
+{{ Form::select('mapped_ev', $evList, null, ['class' => 'form-control selectBasic', 'placeholder' => 'Select Ev', 'id' => 'mapped_ev']) }} 
                                 <span class="spanColor mapped_ev_error"></span>
                             </div>
                         </div>
@@ -316,15 +231,17 @@
                                     <textarea id="client_address" name="client_address" class="form-control" rows="5"></textarea>
                                 </div>
                             </div>
-                            <div class="col-md-12 mb-2 uploadImg">
-                                <div class="uploadBtnBox form-check">
+                            <div class="col-md-12 mb-2 mt-3 uploadImg">
+                                <label for="title" class="form-label">Image Upload</label>
+
+                                <div class="uploadBtnBox form-check p-0">
                                     <label class="uploadBtn">
-                                        <p>Upload Images</p>
+                                        <img class="upload_des_preview clickable selectedImage" src="{{asset('public/assets/images/uploadimg.png')}}" alt="example placeholder" />
                                         <input type="hidden" name="evImages" id="json_img">
                                         <input type="file" name="images[]" multiple="" class="uploadInputfile" id="uploadInputfile">
                                     </label>
+                                    <div class="uploadImgWrap"></div>
                                 </div>
-                                <div class="uploadImgWrap"></div>
                             </div>
                         </div>
                     </div>

@@ -56,7 +56,7 @@ html {
 }
 
 .logo {
-  line-height: 69px;
+  line-height: 50px;
   color: inherit !important;
 }
 
@@ -6175,14 +6175,11 @@ body[data-layout="horizontal"] .chat-conversation {
 }
 
 .btn-link-under {
-  color: rgba(15, 23, 42, 0.8);
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 150%; /* 24px */
-  letter-spacing: 0.2px;
-  text-decoration: underline !important;
-  text-underline-offset: 5px;
-  padding: 0;
+  color: #118845;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 160%; 
 }
 
 .card_wall_bal table thead th {
@@ -6878,4 +6875,118 @@ table .dropdown-menu.show .dropdown-item:hover {
   .noti-icon img{
     padding: 5px;
   }
+}
+
+#client_address {
+  height: 80px;
+}
+
+.upload_box {
+  padding: 40px;
+}
+
+.uploadBtn {
+  display: inline-block;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.uploadInputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.uploadBtnBox {
+  margin-bottom: 10px;
+}
+
+.uploadImgWrap {
+  display: flex;
+  margin: 0;
+  flex-wrap: wrap;
+}
+
+.uploadImgBox {
+  width: 90px;
+  padding: 0 10px 0 0;
+  margin-bottom: 12px;
+}
+
+.img-bg {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+  padding-bottom: 100%;
+}
+
+.uploadInputfile {
+  width: .1px;
+  height: .1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.uploadImgClose {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  text-align: center;
+  line-height: 24px;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.uploadImgClose:after {
+  content: "✖";
+  font-size: 14px;
+  color: white;
+}
+
+.uploadBtn .upload_des_preview {
+  width: 80px;
+  height: 80px;
+  float: left;
+}
+
+.text-dot-new{
+  color: #000000;
+  font-size: 14px;
+  font-weight: 600 !important;
+  margin: 0;
+}
+
+.text-dot-new span{
+  color: #008c34;
+  font-size: 16px;
+}
+
+.dot_btn{
+  border-bottom:1px dotted #008c34 ;
+  cursor: pointer;
+}
+
+.text-view{
+  color: #118845;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 160%;
+}
+
+.profil_img.new_active_profile .active{
+  right: 42%;
 }

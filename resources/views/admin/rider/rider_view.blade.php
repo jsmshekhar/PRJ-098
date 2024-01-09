@@ -22,24 +22,24 @@
                             <a href="javascript:void(0);" class="btn btn-link" onclick="showModal('detailModal');">
                                 <img src="{{ asset('public/assets/images/icons/edit-pen.svg') }}" alt="">
                             </a>
-                            <a href="javascript:void(0);" class="btn btn-link" onclick="showModal('targetModal');">
+                            <!-- <a href="javascript:void(0);" class="btn btn-link" onclick="showModal('targetModal');">
                                 <img src="{{ asset('public/assets/images/icons/edit-pen.svg') }}" alt="">
-                            </a>
+                            </a> -->
                         </div>
                     </div>
                     <div class="card-body">
                         <div class="detail_cnt">
-                            <div class="profil_img">
+                            <div class="profil_img mb-3 new_active_profile">
                                 <img class="img-thumbnail rounded-circle avatar-xl" alt="200x200"
                                     src="{{ asset('public/assets/images/users/avatar-3.jpg') }}"
                                     data-holder-rendered="true">
                                 <span class="active"></span>
                             </div>
-                            <p class="text-center text-success font-weight-bold">Profile Type :
-                                {{ $rider->profile_type_name }}</p>
-                            <p class="text-center text-success font-weight-bold">KYC Status :
-                                {{ $rider->kyc_status_name }}</p>
-                            <h5>User Id : <span>{{ $rider->slug }}</span></h5>
+                            <p class="text-center text-dot-new">Profile Type :
+                                <span>{{ $rider->profile_type_name }}</span></p>
+                            <p class="text-center text-dot-new">KYC Status :
+                                <span class="dot_btn" onclick="showModal('targetModal');">{{ $rider->kyc_status_name }}</span></p>
+                            <h5 class="mt-4">User Id : <span>{{ $rider->slug }}</span></h5>
                             <h5>Name : <span>{{ $rider->name }}</span></h5>
                             <h5>Email Id : <span>{{ $rider->email }}</span></h5>
                             <h5>Mobile number: <span> {{ $rider->phone }}</span></h5>
@@ -108,7 +108,7 @@
                         <div class="card">
                             <div class="card-header border-bottom">
                                 <h4>Updated Documents</h4>
-                                <div class="btn-card-header">
+                                <div class="btn-card-header text-view">
                                     Action
                                 </div>
                             </div>
@@ -272,7 +272,7 @@
                             <div class="col-md-12">
                                 <div class="form-group mb-2">
                                     <label for="address serach" class="col-form-label">Status</label>
-                                    {{ Form::select('kyc_status', $kycStatus, $rider->kyc_status, ['class' => 'form-control selectBasic', 'id' => 'kyc_status']) }}
+{{ Form::select('kyc_status', $kycStatus, $rider->kyc_status, ['class' => 'form-control selectBasic', 'id' => 'kyc_status']) }}
                                     <span class="spanColor kyc_status_error"></span>
                                 </div>
                                 <input type="hidden" name="rider_slug" value="{{ $rider->slug }}">

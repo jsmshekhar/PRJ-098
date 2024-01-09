@@ -50,6 +50,7 @@ if (auth()->user()->photo) {
                         <img src="{{ $companyLogo }}" alt="" height="58">
                     </span>
                 </a>
+                <div><b>Evatoz Solutions</b></div>
             </div>
 
             <button type="button" class="btn btn-sm px-3 font-size-16 header-item mob-insvisble" id="vertical-menu-btn">
