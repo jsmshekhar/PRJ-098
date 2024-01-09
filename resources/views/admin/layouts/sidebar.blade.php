@@ -101,8 +101,8 @@
                      </a>
                  </li>
                  @endcan
-                 <li class="{{ Request::routeIs('order-list') ? 'mm-active' : '' }}">
-                     <a href="{{ route('order-list') }}" class="{{ Request::routeIs('order-list') ? 'active' : '' }}">
+                 <li class="{{ Request::routeIs('return-exchange') ? 'mm-active' : '' }}">
+                     <a href="{{ route('return-exchange') }}" class="{{ Request::routeIs('return-exchange') ? 'active' : '' }}">
                          <img src="{{ asset('public/assets/images/icons/ReturnExchange.svg') }}" alt="">
                          <span>Return Exchange Module</span>
                      </a>

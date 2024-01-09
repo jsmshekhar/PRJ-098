@@ -113,4 +113,8 @@ return [
         'MOBILIZED' => 1,
         'IMMOBILIZED' => 2,
     ],
+    'EV_REQUEST_TYPE' => [
+        "RETURN" => 1,
+        "EXCHANGE" => 2,
+    ],
 ];
