@@ -45,7 +45,7 @@
                  @can('view_assigned_ev', $permission)
                  <li class="{{ Request::routeIs('vehicles') ? 'mm-active' : '' }}">
                      <a href=" {{ route('vehicles') }}" class="{{ Request::routeIs('vehicles') ? 'active' : '' }}">
-                         <img src="{{ asset('public/assets/images/icons/Management-icon.svg') }}" alt="">
+                         <img src="{{ asset('public/assets/images/icons/Vehicles.svg') }}" alt="">
                          <span>Vehicles</span>
                      </a>
                  </li>
@@ -96,11 +96,17 @@
                  @can('view', $permission)
                  <li class="{{ Request::routeIs('hub-part-accessories') ? 'mm-active' : '' }}">
                      <a href="{{ route('hub-part-accessories') }}" class="{{ Request::routeIs('hub-part-accessories') ? 'active' : '' }}">
-                         <img src="{{ asset('public/assets/images/icons/hub_part_accessories.svg') }}" alt="">
+                         <img src="{{ asset('public/assets/images/icons/hb.svg') }}" alt="">
                          <span>Hub Part Accessories</span>
                      </a>
                  </li>
                  @endcan
+                 <li class="{{ Request::routeIs('order-list') ? 'mm-active' : '' }}">
+                     <a href="{{ route('order-list') }}" class="{{ Request::routeIs('order-list') ? 'active' : '' }}">
+                         <img src="{{ asset('public/assets/images/icons/ReturnExchange.svg') }}" alt="">
+                         <span>Return Exchange Module</span>
+                     </a>
+                 </li>
                  <li class="{{ Request::routeIs('order-list') ? 'mm-active' : '' }}">
                      <a href="{{ route('order-list') }}" class="{{ Request::routeIs('order-list') ? 'active' : '' }}">
                          <img src="{{ asset('public/assets/images/icons/Order.svg') }}" alt="">
