@@ -178,4 +178,45 @@ class ApiModel extends Model
             return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
         }
     }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : Create Complaint
+    --------------------------------------------------*/
+    public static function serviceRequest($request)
+    {
+        try {
+            $riderId = Auth::id();
+            $serviceNumber = 101;
+            $complain = EvServiceRequset::whereNull('deleted_at')->orderBy('requset_id', 'DESC')->first();
+            if (!is_null($complain)) {
+                $serviceNumber = (int)$complain->service_number;
+                $serviceNumber = $serviceNumber + 1;
+            }
+
+            if (!is_null($riderId)) {
+                $serviceRequest = [
+                    'slug' => slug(),
+                    'service_number' => $serviceNumber,
+                    'rider_id' => $riderId,
+                    'name' => $request->name ?? "",
+                    'number' => $request->contact_number ?? "",
+                    'ev_number' => $request->ev_number,
+                    'description' => $request->description ?? "",
+                ];
+                $status = EvServiceRequset::insert($serviceRequest);
+                if ($status) {
+                    return successResponse(Response::HTTP_OK, Lang::get('messages.INSERT'), (object)[]);
+                }
+            }
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), []);
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
 }

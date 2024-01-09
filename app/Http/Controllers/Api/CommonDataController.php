@@ -107,4 +107,36 @@ class CommonDataController extends ApiController
             return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
         }
     }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : Create Service Request
+    Request   : Object
+    Return    : Json
+    --------------------------------------------------*/
+    public function serviceRequest(Request $request)
+    {
+        try {
+            $requiredFields = [
+                'name' => "required",
+                'contact_number' => "required",
+                // 'ev_number' => "required",
+                'description' => "required",
+            ];
+            $messages = [];
+            if (!$this->checkValidation($request, $requiredFields, $messages)) {
+                return validationResponse(Response::HTTP_UNPROCESSABLE_ENTITY, Lang::get('messages.VALIDATION_ERROR'), $this->errorMessage);
+            } else {
+                $result = ApiModel::serviceRequest($request);
+                return finalResponse($result);
+            }
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
 }
