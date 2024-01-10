@@ -48,7 +48,7 @@ use Illuminate\Support\Facades\DB;
                 <div class="card-body permission_tbl pt-0">
                     <div class="table-rep-plugin">
                         <div class="col-md-12">
-                            <div class="row permission_tbl_row">
+                            <div class="row permission_tbl_row d-none-xs">
                                 <div class="col-md-4">
                                     <h5>Role Name</h5>
                                 </div>
@@ -62,12 +62,13 @@ use Illuminate\Support\Facades\DB;
                             @foreach ($roles as $role)
                             <div class="row d-flex align-items-center border justify-content-between">
                                 <div class="col-md-4">
-                                    <p>{{ ucfirst($role->name) }} : Permissions</p>
+                                    <p><span class="role_label">Role Name</span>  {{ ucfirst($role->name) }} : Permissions</p>
                                 </div>
                                 <div class="col-md-4">
-                                    <p>{{ $role->roleUsers }}</p>
+                                    <p><span class="role_label">No of Users Mapped to the Role</span>  {{ $role->roleUsers }}</p>
                                 </div>
                                 <div class="col-md-4">
+                                    <span class="role_label">Action</span>
                                     <span>
                                         @can('edit_role', $permission)
                                         <a class="roleModelForm" data-toggle="modal" data-id="{{ $role->role_id }}" data-name="{{ $role->name }}" data-slug="{{ $role->slug }}" title="Edit Role" style="cursor: pointer;margin-right: 5px;"><i class="fa fa-edit"></i>

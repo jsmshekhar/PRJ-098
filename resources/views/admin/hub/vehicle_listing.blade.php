@@ -106,7 +106,7 @@
 </div>
 
 <div class="modal fade" id="vehicleModelForm" role="dialog" aria-labelledby="modalLabel" data-keyboard="false" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog" style="max-width: 50%;">
+    <div class="modal-dialog modal-lg" >
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="userModalLabel">Add Vehicle</h5>
@@ -242,7 +242,7 @@
 <!-- Customer overview -->
 
 <div class="modal fade" id="customerOverviewModelForm" role="dialog" aria-labelledby="modalLabel" data-keyboard="false" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog" style="max-width: 50%;">
+    <div class="modal-dialog modal-lg" >
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Customer Overview</h5>
