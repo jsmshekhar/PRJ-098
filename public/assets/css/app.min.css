@@ -7109,4 +7109,13 @@ table .dropdown-menu.show .dropdown-item:hover {
     margin-top: 0px
 }
 
+.table-filter{
+  display: flex;
+}
+
+.table-filter ul {
+  display: flex;
+  flex-flow: wrap;
+}
+
 }
