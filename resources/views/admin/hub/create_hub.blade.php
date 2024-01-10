@@ -65,7 +65,7 @@
                                             </div>
                                             {{-- <div class="col-xl-3 col-md-6">
                                                     <div class="form-group mb-3">
-                                                        <label class="form-label">Hub Locarion</label>
+                                                        <label class="form-label">Hub Location</label>
                                                         <input type="text" class="form-control" name="hub_location" />
                                                     </div>
                                                 </div> --}}

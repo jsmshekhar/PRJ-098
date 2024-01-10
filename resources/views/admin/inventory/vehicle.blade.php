@@ -47,7 +47,7 @@
                                                     <input type="text" class="form-control" name="ph" value="<?= isset($_GET['ph']) ? $_GET['ph'] : '' ?>" />
                                                 </div>
                                             </div>
-                                            <div class="col-xl-3 col-md-6">
+                                            <div class="col-xl-3 col-md-6 mb-3">
                                                 <label class="form-label">EV Category</label>
                                                 <select class="form-control selectBasic" name="ev_cat">
                                                     <option value="">Select</option>
@@ -56,7 +56,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="col-xl-3 col-md-6">
+                                            <div class="col-xl-3 col-md-6 mb-3">
                                                 <label class="form-label">Hub Id</label>
                                                 <select class="form-control selectBasic" name="hid">
                                                     <option value="">Select</option>
@@ -65,7 +65,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="col-xl-3 col-md-6">
+                                            <div class="col-xl-3 col-md-6 mb-3">
                                                 <label class="form-label">Payment Status</label>
                                                 <select class="form-control selectBasic" name="pay">
                                                     <option value="">Select</option>
@@ -75,7 +75,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="col-xl-3 col-md-6">
+                                            <div class="col-xl-3 col-md-6 mb-3">
                                                 <label class="form-label">Vehicle Status</label>
                                                 <select class="form-control selectBasic" name="status">
                                                     <option value="">Select</option>

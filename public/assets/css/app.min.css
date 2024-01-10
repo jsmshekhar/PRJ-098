@@ -7008,6 +7008,10 @@ table .dropdown-menu.show .dropdown-item:hover {
   line-height: normal;
 }
 
+.CategoryTop {
+  margin-top: 45px
+}
+
 @media (max-width:767px) {
   .auth-bg{
     height: 100vh;
@@ -7025,6 +7029,7 @@ table .dropdown-menu.show .dropdown-item:hover {
   .cmp_name{
     position: absolute;
     left: 23px;
+    width: max-content;
   }
 
   .d-none-xs{
@@ -7093,11 +7098,15 @@ table .dropdown-menu.show .dropdown-item:hover {
 
   .btn-card-header{
     text-align: right;
+    margin-top: 15px;
   }
 
   .table th{
     font-size: 14px;
   }
 
+  .CategoryTop {
+    margin-top: 0px
+}
 
 }
