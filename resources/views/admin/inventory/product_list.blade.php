@@ -65,8 +65,10 @@
             <div class="card">
                 <div class="card-header border-bottom bg-white py-3">
                     <h4>Products</h4>
-                    <a class="btn btn-success waves-effect waves-light" href="{{ route('product-create', request()->route('param')) }}" title="Add Product">Add
+                    <div class="btn-card-header">
+                        <a class="btn btn-success waves-effect waves-light" href="{{ route('product-create', request()->route('param')) }}" title="Add Product">Add
                         Product</a>
+                    </div>
                 </div>
                 <div class="cat_list cat_sub">
                     @if (count($products) > 0)

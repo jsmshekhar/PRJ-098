@@ -80,7 +80,7 @@
                                                     <input type="date" class="form-control" name="date" value="<?= isset($_GET['date']) ? $_GET['date'] : '' ?>" />
                                                 </div>
                                             </div>
-                                            <div class="col-xl-3 col-md-6">
+                                            <div class="col-xl-3 col-md-6 mb-3">
                                                 <label class="form-label">Complain Category</label>
                                                 <select class="form-control selectBasic" name="category">
                                                     <option value="">Select Category</option>
@@ -89,7 +89,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="col-xl-3 col-md-6">
+                                            <div class="col-xl-3 col-md-6 mb-3">
                                                 <label class="form-label">Complain Status</label>
                                                 <select class="form-control selectBasic" name="status">
                                                     <option value="">Select Status</option>
