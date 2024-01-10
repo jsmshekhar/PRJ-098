@@ -7012,6 +7012,12 @@ table .dropdown-menu.show .dropdown-item:hover {
   margin-top: 45px
 }
 
+.go-btn a{
+  background: green;
+  color: #fff;
+  padding: 10px 15px;
+}
+
 @media (max-width:767px) {
   .auth-bg{
     height: 100vh;
@@ -7116,6 +7122,10 @@ table .dropdown-menu.show .dropdown-item:hover {
 .table-filter ul {
   display: flex;
   flex-flow: wrap;
+}
+
+.go-btn a{
+  float: right;
 }
 
 }
