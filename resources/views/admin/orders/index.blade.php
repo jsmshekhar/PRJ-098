@@ -260,7 +260,7 @@
 </div>
 
 <div class="modal fade" id="orderOverviewModelForm" role="dialog" aria-labelledby="modalLabel" data-keyboard="false" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog" style="max-width: 50%;">
+    <div class="modal-dialog modal-lg" >
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Order Overview</h5>

@@ -357,11 +357,11 @@ body[data-topbar="dark"] .app-search span {
   }
 }
 
-@media (max-width: 380px) {
+/* @media (max-width: 380px) {
   .navbar-brand-box {
     display: none;
   }
-}
+} */
 
 body[data-layout="horizontal"] .navbar-brand-box {
   width: auto;
@@ -6989,4 +6989,115 @@ table .dropdown-menu.show .dropdown-item:hover {
 
 .profil_img.new_active_profile .active{
   right: 42%;
+}
+
+.d-cust-mob{
+  display: none;
+}
+
+.role_label{
+  display: none;
+}
+
+
+.modal-header h4{
+  margin: 0;
+}
+
+.modal-title{
+  line-height: normal;
+}
+
+@media (max-width:767px) {
+  .auth-bg{
+    height: 100vh;
+  }
+  .auth-full-page-content{
+    width: 96%;
+    margin: 0 auto;
+    height: auto;
+    min-height: auto;
+  }
+  .auth-content h5{
+    font-size: 24px;
+  }
+
+  .cmp_name{
+    position: absolute;
+    left: 23px;
+  }
+
+  .d-none-xs{
+    display: none !important;
+  }
+
+  .navbar-header{
+    padding: 0;
+  }
+
+  #page-header-user-dropdown{
+    display: flex;
+    place-content: center;
+    place-items: center;
+  }
+  
+  .d-cust-mob{
+    display: block;
+  }
+  .role_mob{
+    text-align: center;
+    width: 100%;
+    margin-bottom: 15px;
+    color: #008c34;
+    font-weight: 500;
+    display: block;
+  }
+
+  .header-item span.active{
+    right: 32px;
+    left: auto;
+  }
+
+  .card .card-body .accordion-item .accordion-header{
+    display: block;
+  }
+
+  .card .card-body .accordion-item .collaps_btns{
+    text-align: right;
+  }
+
+  .modelWidth{
+    max-width: 100% !important;
+  }
+
+  .role_label{
+    display: block;
+    color: rgba(0, 0, 0, 0.8);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 160%;
+  }
+
+  .modal-title{
+    line-height: normal;
+  }
+
+  .card-header{
+    display: block;
+  }
+
+  .page-title-left{
+    margin-top: 15px;
+    text-align: right;
+  }
+
+  .btn-card-header{
+    text-align: right;
+  }
+
+  .table th{
+    font-size: 14px;
+  }
+
+
 }
