@@ -97,7 +97,7 @@
             <div class="modal-body">
                 <form method="post" enctype="multipart/form-data" id="addUpdateUser">
                     @csrf
-                    <input type="hidden" class="form-control" name="slug" id="slug">
+                    <input type="hidden" class="form-control" name="slug" id="uSlug">
                     <input type="hidden" class="form-control" name="hub_id" id="hub_id">
                     <div class="form-group mb-1">
                         <label for="role-name" class="col-form-label">Employee Id</label>

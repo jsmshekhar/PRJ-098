@@ -189,9 +189,8 @@
             }
 
             $('#userModelForm').modal('show');
-            var hub_id = $(this).data('hub_id');
-            if (hub_id) {
-
+            var slug = $(this).data('slug');
+            if (slug) {
                 var first_name = $(this).data('fname');
                 var last_name = $(this).data('lname');
                 var email = $(this).data('email');
@@ -210,11 +209,11 @@
                 $("#rolename").val(rolename);
                 $("#hub_id").val(hub_id);
                 $("#employee_id").val(empid);
+                $("#uSlug").val(slug);
+            } else {
+                $("#userModalLabel").html('Add Employee');
+                $("#submitUser").html('Add');
             }
-
-
-
-
         });
         $('#submitUser').click(function(e) {
             e.preventDefault();
@@ -272,8 +271,9 @@
             }
 
             $('#vehicleModelForm').modal('show');
-            var hub_id = $(this).data('hub_id');
-            if (hub_id) {
+            // var hub_id = $(this).data('hub_id');
+            var slug = $(this).data('slug');
+            if (slug) {
                 var hub_id = $(this).data('hub_id');
                 var title = $(this).data('title');
                 var ev_number = $(this).data('ev_number');
@@ -293,6 +293,7 @@
                 var bike_type = $(this).data('bike_type');
                 var status_id = $(this).data('status');
                 var updateurl = $(this).data('updateurl');
+                var vSlug = $(this).data('slug');
 
                 $("#title").val(title);
                 $("#hub_id").val(hub_id);
@@ -312,6 +313,7 @@
                 $('#bike_type').val(bike_type).trigger('change');
                 $('#status_id').val(status_id).trigger('change');
                 $("#updateurl").val(updateurl);
+                $("#vSlug").val(vSlug);
                 var imageUrl = "{{ asset('public/upload/product')}}/" + image;
                 if (image) {
                     $('.selectImageRemove').html('<img class="upload_des_preview clickable selectedImage" src="' + imageUrl + '" alt = "vehicle image" >');
@@ -320,12 +322,15 @@
                 }
 
                 if (is_display_on_app == 1) {
-                    $('#is_display_on_app').prop('checked', true);
+                    $('#remember-check').prop('checked', true);
                 } else {
-                    $('#is_display_on_app').prop('checked', false);
+                    $('#remember-check').prop('checked', false);
                 }
-                $("#userModalLabel").html('Update Vehicle');
+                $("#vehicleModalLabel").html('Update Vehicle');
                 $("#submitVehicle").html('Update');
+            } else {
+                $("#vehicleModalLabel").html('Add Vehicle');
+                $("#submitVehicle").html('Add');
             }
 
         });
@@ -333,6 +338,7 @@
         $('#submitVehicle').click(function(e) {
             e.preventDefault();
             var hub_id = $('#hub_id').val();
+            var slug = $('#vSlug').val();
             var updateurl = $('#updateurl').val();
             var name = $('#title').val();
             if (name == "") {
@@ -360,7 +366,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 method: 'POST',
-                url: hub_id ? updateurl : "{{route('add-product')}}",
+                url: slug ? updateurl : "{{route('add-product')}}",
                 data: formDatas,
                 contentType: false,
                 processData: false,

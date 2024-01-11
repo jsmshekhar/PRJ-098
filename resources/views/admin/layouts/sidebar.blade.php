@@ -73,12 +73,12 @@
                      </a>
                  </li>
 
-                 <li class="{{ Request::routeIs('wallet-management') ? 'mm-active' : '' }}">
-                     <a href="{{ route('wallet-management') }}" class="{{ Request::routeIs('wallet-management') ? 'active' : '' }}">
-                         <img src="{{ asset('public/assets/images/icons/Wallet-icon.svg') }}" alt="">
-                         <span>Wallet Management</span>
-                     </a>
-                 </li>
+                 {{-- <li class="{{ Request::routeIs('wallet-management') ? 'mm-active' : '' }}">
+                 <a href="{{ route('wallet-management') }}" class="{{ Request::routeIs('wallet-management') ? 'active' : '' }}">
+                     <img src="{{ asset('public/assets/images/icons/Wallet-icon.svg') }}" alt="">
+                     <span>Wallet Management</span>
+                 </a>
+                 </li> --}}
                  @can('view_complaint', $permission)
                  <li class="{{ Request::routeIs('complain-queries') ? 'mm-active' : '' }}">
                      <a href="{{ route('complain-queries') }}" class="{{ Request::routeIs('complain-queries') ? 'active' : '' }}">
@@ -101,18 +101,22 @@
                      </a>
                  </li>
                  @endcan
+                 @can('view', $permission)
                  <li class="{{ Request::routeIs('return-exchange') ? 'mm-active' : '' }}">
                      <a href="{{ route('return-exchange') }}" class="{{ Request::routeIs('return-exchange') ? 'active' : '' }}">
                          <img src="{{ asset('public/assets/images/icons/ReturnExchange.svg') }}" alt="">
                          <span>Return Exchange Module</span>
                      </a>
                  </li>
+                 @endcan
+                 @can('view', $permission)
                  <li class="{{ Request::routeIs('order-list') ? 'mm-active' : '' }}">
                      <a href="{{ route('order-list') }}" class="{{ Request::routeIs('order-list') ? 'active' : '' }}">
                          <img src="{{ asset('public/assets/images/icons/Order.svg') }}" alt="">
                          <span>Order</span>
                      </a>
                  </li>
+                 @endcan
 
              </ul>
          </div>

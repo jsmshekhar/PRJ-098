@@ -142,7 +142,7 @@
                                         <td>{{$vehicle->ev_number}}</td>
                                         <td>{{$vehicle->ev_category_name}}</td>
                                         <td>{{$vehicle->profile_category_name}}</td>
-                                        <td><a href="{{ route('customer-view', $vehicle->slug) }}" title="View Customer" style="cursor: pointer;margin-right: 5px;" target="_blank">CUS{{$vehicle->customer_id}}</a>
+                                        <td><a href="{{ route('customer-view', $vehicle->slug) }}" title="View Customer" style="cursor: pointer;margin-right: 5px;">CUS{{$vehicle->customer_id}}</a>
                                         </td>
                                         <td>{{$vehicle->phone}}</td>
                                         <td>{{$vehicle->hubid}}</td>
