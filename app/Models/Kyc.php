@@ -205,60 +205,105 @@ class Kyc extends Model
     {
         try {
             $riderId = Auth::id();
-            $vehicleSlug = $request->vehicle_slug ?? null;
-            $vehicle = DB::table('products')->where('slug', $vehicleSlug)->whereNull('deleted_at')->first();
-            if (!is_null($vehicle)) {
-                if (isset($request->accessories) && !empty($request->accessories)) {
-                    $accessories = $request->accessories;
-                    $accessoriesSlug = $accessoriesIds = [];
-                    foreach ($accessories as $accessory) {
-                        $accessoriesSlug[] = $accessory['slug'] ?? null;
+            $riderKyc = DB::table('riders')->where('rider_id', $riderId)->where('kyc_step', 4)->whereNull('deleted_at')->first();
+
+            if (!is_null($riderKyc)) {
+                $kycStatus = $riderKyc->kyc_status;
+                if ($kycStatus == 1) {
+                    $vehicleSlug = $request->vehicle_slug ?? null;
+                    $vehicle = DB::table('products')->where('slug', $vehicleSlug)->whereNull('deleted_at')->first();
+
+                    $pendingOrder = DB::table('rider_orders')
+                        ->where('rider_id', '=', $riderId)
+                        ->whereNull('deleted_at')
+                        ->where(function ($query) {
+                            $query->where('status_id', '=', config('constants.ORDER_STATUS.PENDING'))
+                                ->orWhere('payment_status', '=', config('constants.PAYMENT_STATUS.PENDING'));
+                        })->first();
+
+                    if (is_null($pendingOrder)) {
+                        $currentOrder = DB::table('rider_orders')
+                            ->where('rider_id', $riderId)
+                            ->where('status_id', config('constants.ORDER_STATUS.ASSIGNED'))
+                            ->where('payment_status', config('constants.PAYMENT_STATUS.SUCCESS'))
+                            ->whereRaw('DATE(subscription_validity) >= DATE(NOW())')
+                            ->whereNull('deleted_at')
+                            ->first();
+                        if (is_null($currentOrder)) {
+                            if (!is_null($vehicle)) {
+                                if (isset($request->accessories) && !empty($request->accessories)) {
+                                    $accessories = $request->accessories;
+                                    $accessoriesSlug = $accessoriesIds = [];
+                                    foreach ($accessories as $accessory) {
+                                        $accessoriesSlug[] = $accessory['slug'] ?? null;
+                                    }
+                                    if (!empty($accessoriesSlug)) {
+                                        $accessoriesIds = DB::table('accessories')->whereIn('slug', $accessoriesSlug)->whereNull('deleted_at')->pluck('accessories_id')->toArray();
+                                    }
+                                }
+                                $orderCode = slug();
+                                $orderDetails = [
+                                    "rider_id" => $riderId,
+                                    "slug" => $orderCode,
+
+                                    "vehicle_id" => $vehicle->product_id,
+                                    "product_price" => $vehicle->per_day_rent,
+                                    "product_name" => $vehicle->title,
+
+                                    "accessories_id" => implode(',', $accessoriesIds),
+                                    "accessories_items" => json_encode($accessories),
+
+                                    "subscription_days" => $request->rent_cycle,
+                                    "order_date" => NOW(),
+                                    "ordered_ammount" => $request->gross_ammount ?? null,
+                                    "security_ammount" => $request->security_ammount ?? null,
+                                    "payment_status" => config('constants.PAYMENT_STATUS.PENDING'),
+                                    "status_id" => config('constants.ORDER_STATUS.PENDING'),
+                                    "requested_payload" => json_encode($request->all()),
+                                    "created_by" => $riderId,
+                                    "created_at" => NOW(),
+                                ];
+                                $orderId = DB::table('rider_orders')->insertGetId($orderDetails);
+                                if ($orderId) {
+                                    $result = ['order_code' => $orderCode];
+                                    $orderTransaction = [
+                                        "rider_id" => $riderId,
+                                        "order_id" => $orderId,
+                                        "transaction_type" => 1,
+                                        "slug" => slug(),
+                                        "payment_status" => config('constants.PAYMENT_STATUS.PENDING'),
+                                        "status_id" => config('constants.ORDER_STATUS.PENDING'),
+                                        "rider_id" => $riderId,
+                                        "created_by" => $riderId,
+                                        "created_at" => NOW(),
+                                    ];
+                                    DB::table('rider_transaction_histories')->insertGetId($orderTransaction);
+                                    return successResponse(Response::HTTP_OK, Lang::get('messages.ORDER_CREATED'), $result);
+                                }
+                                return errorResponse(Response::HTTP_OK, Lang::get('messages.ORDER_ERROR'), (object)[]);
+                            }
+                        }
+                        return errorResponse(Response::HTTP_OK, Lang::get('messages.ORDER_ONGOING'), (object)[]);
+                    } else {
+                        $orderCode = $pendingOrder->slug;
+                        $orderedAmmount = $pendingOrder->ordered_ammount;
+                        $paymentStatus = $pendingOrder->payment_status;
+                        if ($paymentStatus == config('constants.PAYMENT_STATUS.PENDING')) {
+                            $result = ['order_code' => $orderCode, 'ammount' => $orderedAmmount, 'payment_status' => $paymentStatus];
+                            return successResponse(Response::HTTP_OK, Lang::get('messages.ORDER_PENDING'), $result);
+                        } else {
+                            $result = ['order_code' => $orderCode];
+                            return successResponse(Response::HTTP_OK, Lang::get('messages.ORDER_SUPPORT'), $result);
+                        }
                     }
-                    if (!empty($accessoriesSlug)) {
-                        $accessoriesIds = DB::table('accessories')->whereIn('slug', $accessoriesSlug)->whereNull('deleted_at')->pluck('accessories_id')->toArray();
-                    }
+                    return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
+                } elseif ($kycStatus == 2) {
+                    return errorResponse(Response::HTTP_OK, Lang::get('messages.KYC_PENDING'), (object)[]);
+                } else {
+                    return errorResponse(Response::HTTP_OK, Lang::get('messages.KYC_RED_ALERT'), (object)[]);
                 }
-                $orderCode = slug();
-                $orderDetails = [
-                    "rider_id" => $riderId,
-                    "slug" => $orderCode,
-
-                    "vehicle_id" => $vehicle->product_id,
-                    "product_price" => $vehicle->per_day_rent,
-                    "product_name" => $vehicle->title,
-
-                    "accessories_id" => implode(',', $accessoriesIds),
-                    "accessories_items" => json_encode($accessories),
-
-                    "subscription_days" => $request->rent_cycle,
-                    "order_date" => NOW(),
-                    "ordered_ammount" => $request->gross_ammount ?? null,
-                    "security_ammount" => $request->security_ammount ?? null,
-                    "payment_status" => config('constants.PAYMENT_STATUS.PENDING'),
-                    "status_id" => config('constants.ORDER_STATUS.PENDING'),
-                    "requested_payload" => json_encode($request->all()),
-                    "created_by" => $riderId,
-                    "created_at" => NOW(),
-                ];
-                $orderId = DB::table('rider_orders')->insertGetId($orderDetails);
-                if ($orderId) {
-                    $result = ['order_code' => $orderCode];
-                    $orderTransaction = [
-                        "rider_id" => $riderId,
-                        "order_id" => $orderId,
-                        "slug" => slug(),
-                        "payment_status" => config('constants.PAYMENT_STATUS.PENDING'),
-                        "status_id" => config('constants.ORDER_STATUS.PENDING'),
-                        "rider_id" => $riderId,
-                        "created_by" => $riderId,
-                        "created_at" => NOW(),
-                    ];
-                    DB::table('rider_transaction_histories')->insertGetId($orderTransaction);
-                    return successResponse(Response::HTTP_OK, Lang::get('messages.ORDER_CREATED'), $result);
-                }
-                return errorResponse(Response::HTTP_OK, Lang::get('messages.ORDER_ERROR'), (object)[]);
             }
-            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.KYC_ALERT'), (object)[]);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -383,7 +428,7 @@ class Kyc extends Model
                     DB::table('rider_bank_details')->where('rider_id', $riderId)->delete();
                     $status = RiderBankDetail::insert($record);
                     if ($status) {
-                        Rider::where('rider_id', $riderId)->update(['is_bank_detail_done' => NOW()]);
+                        Rider::where('rider_id', $riderId)->update(['is_bank_detail_done' => NOW(), 'kyc_status' => 1]);
                     }
                 }
 
@@ -428,6 +473,42 @@ class Kyc extends Model
                     "is_bank_detail_done" => !is_null($riderDetails->is_bank_detail_done) ? true : false,
                 ];
                 return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), $result);
+            }
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : update-payment-status
+    Request   : Object
+    Return    : Json
+    --------------------------------------------------*/
+    public static function updatePaymentStatus($request)
+    {
+        try {
+            $riderId = Auth::id();
+            $orderCode = $request->order_code;
+            $order = RiderOrder::where('rider_id', $riderId)->where('slug', $orderCode)->whereNull('deleted_at')->first();
+            $status = false;
+            if ($riderId && !is_null($order)) {
+                $paymentStatus = (int)$request->payment_status;
+                $transactionMode = (int)$request->transaction_mode;
+                $orderId = (int)$order->order_id;
+                $status = RiderOrder::where('rider_id', $riderId)->where('slug', $orderCode)->update(['payment_status' => $paymentStatus]);
+                if ($status) {
+                    $status = RiderTransactionHistory::where('rider_id', $riderId)->where('order_id', $orderId)->update(['payment_status' => $paymentStatus, 'status_id' => $paymentStatus, 'transaction_mode' => $transactionMode]);
+
+                    $result = ['order_code' => $orderCode];
+                    return successResponse(Response::HTTP_OK, Lang::get('messages.UPDATE'), $result);
+                }
             }
             return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
         } catch (\Throwable $ex) {

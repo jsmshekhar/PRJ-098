@@ -42,4 +42,6 @@ Route::middleware(['auth:rider-api'])->namespace('Api')->prefix('v1')->group(fun
     Route::get('/get-complaints', [CommonDataController::class, 'getComplaints']);
     Route::post('service-request', [CommonDataController::class, 'serviceRequest']);
     Route::post('return-exchange-request', [CommonDataController::class, 'returnExchangeRequest']);
+    Route::get('/get-current-order', [CommonDataController::class, 'getCurrentOrder']);
+    Route::post('update-payment-status', [KycApiController::class, 'updatePaymentStatus']);
 });
