@@ -269,4 +269,36 @@ class ApiModel extends Model
             return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
         }
     }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : get-current-order
+    Request   : Object
+    Return    : Json
+    --------------------------------------------------*/
+    public static function getCurrentOrder($request)
+    {
+        try {
+            $riderId = Auth::id();
+            $currentOrder = DB::table('rider_orders as ro')
+                ->join('products as p', 'p.product_id', '=', 'ro.vehicle_id')
+                ->select('ro.slug as order_code', 'p.slug as vehicle_slug')
+                ->where('ro.rider_id', '=', $riderId)
+                ->where('ro.status_id', '=', config('constants.ORDER_STATUS.ASSIGNED'))
+                ->where('ro.payment_status', '=', config('constants.PAYMENT_STATUS.SUCCESS'))
+                ->whereDate('ro.subscription_validity', '>=', NOW())
+                ->first();
+            if (!is_null($currentOrder)) {
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), $currentOrder);
+            }
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
 }

@@ -173,7 +173,7 @@ class KycApiController extends ApiController
         }
     }
 
-     /*--------------------------------------------------
+    /*--------------------------------------------------
     Developer : Chandra Shekhar
     Action    : update-kys-steps
     Request   : Object
@@ -271,6 +271,43 @@ class KycApiController extends ApiController
         try {
             $result = Kyc::getKycStep($request);
             return finalResponse($result);
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : update-payment-status
+    Request   : Object
+    Return    : Json
+    --------------------------------------------------*/
+    public function updatePaymentStatus(Request $request)
+    {
+        try {
+            $requiredFields = [
+                'payment_status' => [
+                    'required',
+                    Rule::in([1, 2, 3, 4]),
+                ],
+                'transaction_mode' => [
+                    'required',
+                    Rule::in([1, 2, 3]),
+                ],
+                'order_code' => "required",
+            ];
+            $messages = [];
+            if (!$this->checkValidation($request, $requiredFields, $messages)) {
+                return validationResponse(Response::HTTP_UNPROCESSABLE_ENTITY, Lang::get('messages.VALIDATION_ERROR'), $this->errorMessage);
+            } else {
+                $result = $this->keyModel->updatePaymentStatus($request);
+                return finalResponse($result);
+            }
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),

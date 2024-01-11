@@ -163,7 +163,6 @@
                                                 <th>Email</th>
                                                 <th>Phone</th>
                                                 <th>Joining Date</th>
-                                                <th>Subscription Validity</th>
                                                 <th>Verification Status</th>
                                             </tr>
                                         </thead>
@@ -172,14 +171,14 @@
                                                 <tr>
                                                     <td>
                                                         <a href="{{ route('customer-view', $rider->slug) }}"
-                                                            title="View rider" style="cursor: pointer;margin-right: 5px;">CUS{{ $rider->customer_id }}
+                                                            title="View rider" style="cursor: pointer;margin-right: 5px;"
+                                                            target="_blank">{{ "CUS".$rider->customer_id }}
                                                         </a>
                                                     </td>
                                                     {{-- <td>ERF567GB</td> --}}
                                                     <td>{{ $rider->name }}</td>
                                                     <td>{{ $rider->email }}</td>
                                                     <td>{{ $rider->phone }}</td>
-                                                    <td>{{ dateFormat($rider->created_at) }}</td>
                                                     <td>{{ dateFormat($rider->created_at) }}</td>
                                                     <td>
                                                         @can('enable_disable_customer', $permission)
