@@ -80,7 +80,7 @@
                             <div class="d-flex justify-content-between">
                                 <span>{{$product->bike_type}}</span>
                                 <div class="sub_btns">
-                                    <a href="{{ route('product-edit', ['slug' => $product->slug, 'param' => $product->profile_category]) }}" target="_blank">
+                                    <a href="{{ route('product-edit', ['slug' => $product->slug, 'param' => $product->profile_category]) }}">
                                         <i class="fa fa-edit"></i>
                                     </a>
                                     @can('delete_inventry', $permission)
@@ -100,7 +100,7 @@
                                         <i class="fa fa-trash"></i>
                                     </a>
                                     @endcan
-                                    {{--<a href="#" target="_blank">
+                                    {{--<a href="#">
                                         <i class="fa fa-info-circle"></i>
                                     </a>--}}
                                 </div>

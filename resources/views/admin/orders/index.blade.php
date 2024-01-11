@@ -201,7 +201,7 @@
                         <div class="col-md-12">
                             <div class="form-group mb-2">
                                 <label for="address serach" class="col-form-label">Map EV</label>
-{{ Form::select('mapped_ev', $evList, null, ['class' => 'form-control selectBasic', 'placeholder' => 'Select Ev', 'id' => 'mapped_ev']) }} 
+{{--{{ Form::select('mapped_ev', $evList, null, ['class' => 'form-control selectBasic', 'placeholder' => 'Select Ev', 'id' => 'mapped_ev']) }} --}}
                                 <span class="spanColor mapped_ev_error"></span>
                             </div>
                         </div>
@@ -294,7 +294,7 @@
                             <label class="form-label">AOrder Amount</label>
                             <input class="form-control readOnlyClass" type="text" id="orderAmounts" readonly>
                         </div>
-                        <div class="col-md-12 mb-2 uploadImg">
+                       {{-- <div class="col-md-12 mb-2 uploadImg">
                             <div class="uploadBtnBox form-check">
                                 <label class="uploadBtn">
                                     <p>Images</p>
@@ -302,7 +302,7 @@
                             </div>
                             <div class="uploadImgWrap" id="imageContainer">
                             </div>
-                        </div>
+                        </div> --}}
                 </form>
             </div>
         </div>
@@ -379,13 +379,13 @@
         $("#orderQntys").val(qty);
         $("#orderAmounts").val(order_amount)
         $("#orderItems").val(items);
-        var imageContainer = $('#imageContainer');
-        imageContainer.empty();
-        images.forEach(function(imageUrl) {
-            var url = "{{ asset('public/upload/mediafiles') }}/" + imageUrl;
-            var imgElement = $('<img>').attr('src', url).addClass('modal-image');
-            imageContainer.append(imgElement);
-        });
+        // var imageContainer = $('#imageContainer');
+        // imageContainer.empty();
+        // images.forEach(function(imageUrl) {
+        //     var url = "{{ asset('public/upload/mediafiles') }}/" + imageUrl;
+        //     var imgElement = $('<img>').attr('src', url).addClass('modal-image');
+        //     imageContainer.append(imgElement);
+        // });
     });
 </script>
 @endsection

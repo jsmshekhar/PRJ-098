@@ -33,11 +33,16 @@ class ReturnExchangeController extends AdminAppController
     public function index(Request $request)
     {
         try {
-            $perPage = env('PER_PAGE');
             $permission = User::getPermissions();
-            $records = $this->model::with(['rider', 'product', 'hub', 'order'])->whereNull('deleted_at');
-            $records = $records->orderBy('created_at', 'DESC')->paginate($perPage);
-            return view($this->viewPath . '/return-exchange', compact('records', 'permission'));
+            if (Gate::allows('view', $permission)) {
+                $perPage = env('PER_PAGE');
+                $permission = User::getPermissions();
+                $records = $this->model::with(['rider', 'product', 'hub', 'order'])->whereNull('deleted_at');
+                $records = $records->orderBy('created_at', 'DESC')->paginate($perPage);
+                return view($this->viewPath . '/return-exchange', compact('records', 'permission'));
+            } else {
+                return view('admin.401.401');
+            }
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),

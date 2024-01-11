@@ -49,7 +49,7 @@ $count = DB::table('hub_part_accessories')
                         }
                         " title="reject"> Reject
                     </a>
-                    <a href="{{route('hub-part-accessories')}}" class="btn btn-success waves-effect waves-light" target="_blank">Open</a>
+                    <a href="{{route('hub-part-accessories')}}" class="btn btn-success waves-effect waves-light">Open</a>
 
                 </div>
             </div>
