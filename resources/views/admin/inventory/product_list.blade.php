@@ -65,8 +65,10 @@
             <div class="card">
                 <div class="card-header border-bottom bg-white py-3">
                     <h4>Products</h4>
-                    <a class="btn btn-success waves-effect waves-light" href="{{ route('product-create', request()->route('param')) }}" title="Add Product">Add
+                    <div class="btn-card-header">
+                        <a class="btn btn-success waves-effect waves-light" href="{{ route('product-create', request()->route('param')) }}" title="Add Product">Add
                         Product</a>
+                    </div>
                 </div>
                 <div class="cat_list cat_sub">
                     @if (count($products) > 0)
@@ -78,7 +80,7 @@
                             <div class="d-flex justify-content-between">
                                 <span>{{$product->bike_type}}</span>
                                 <div class="sub_btns">
-                                    <a href="{{ route('product-edit', ['slug' => $product->slug, 'param' => $product->profile_category]) }}" target="_blank">
+                                    <a href="{{ route('product-edit', ['slug' => $product->slug, 'param' => $product->profile_category]) }}">
                                         <i class="fa fa-edit"></i>
                                     </a>
                                     @can('delete_inventry', $permission)
@@ -98,7 +100,7 @@
                                         <i class="fa fa-trash"></i>
                                     </a>
                                     @endcan
-                                    {{--<a href="#" target="_blank">
+                                    {{--<a href="#">
                                         <i class="fa fa-info-circle"></i>
                                     </a>--}}
                                 </div>

@@ -65,7 +65,7 @@
                                             </div>
                                             {{-- <div class="col-xl-3 col-md-6">
                                                     <div class="form-group mb-3">
-                                                        <label class="form-label">Hub Locarion</label>
+                                                        <label class="form-label">Hub Location</label>
                                                         <input type="text" class="form-control" name="hub_location" />
                                                     </div>
                                                 </div> --}}
@@ -145,7 +145,7 @@
                                         <tr>
                                             <td>
                                                 @can('hub_view', $permission)
-                                                <a href="{{ route('hub-view', ['slug' => $hub->slug, 'param' => 'vehicle']) }}" title="View Hub" style="cursor: pointer;margin-right: 5px;" target="_blank">{{ $hub->hubId }}
+                                                <a href="{{ route('hub-view', ['slug' => $hub->slug, 'param' => 'vehicle']) }}" title="View Hub" style="cursor: pointer;margin-right: 5px;">{{ $hub->hubId }}
                                                 </a>
                                                 @endcan
                                             </td>
@@ -174,7 +174,7 @@
                                                         </a>
                                                         @endcan
                                                         @can('hub_view', $permission)
-                                                        <a class="dropdown-item" href="{{ route('hub-view', ['slug' => $hub->slug, 'param' => 'vehicle']) }}" title="View Hub" style="cursor: pointer;margin-right: 5px;" target="_blank"><i class="fa fa-eye"> View</i>
+                                                        <a class="dropdown-item" href="{{ route('hub-view', ['slug' => $hub->slug, 'param' => 'vehicle']) }}" title="View Hub" style="cursor: pointer;margin-right: 5px;"><i class="fa fa-eye"> View</i>
                                                         </a>
                                                         @endcan
                                                         @can('delete_hub', $permission)

@@ -50,47 +50,21 @@ if (auth()->user()->photo) {
                         <img src="{{ $companyLogo }}" alt="" height="58">
                     </span>
                 </a>
-                <div><b>{{ $companyName }}</b></div>
+                <div class="cmp_name"><b>{{ $companyName }}</b></div>
+                
             </div>
+            
 
             <button type="button" class="btn btn-sm px-3 font-size-16 header-item mob-insvisble"
                 id="vertical-menu-btn">
                 <i class="fa fa-fw fa-bars"></i>
             </button>
 
-            <!-- App Search-->
-            <form class="app-search d-none d-lg-block">
-                <div class="position-relative">
-                    <img src="{{ asset('public/assets/images/icons/Search.svg') }}" alt="" class="search_inpot">
-                    <input type="text" class="form-control" placeholder="Search...">
-                </div>
-            </form>
+            
         </div>
 
         <div class="d-flex">
-
-            <div class="dropdown d-inline-block d-lg-none ms-2">
-                <button type="button" class="btn header-item" id="page-header-search-dropdown"
-                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i data-feather="search" class="icon-lg"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
-                    aria-labelledby="page-header-search-dropdown">
-
-                    <form class="p-3">
-                        <div class="form-group m-0">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search ..."
-                                    aria-label="Search Result">
-
-                                <button class="btn btn-primary" type="submit"><i class="mdi mdi-magnify"></i></button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-
+            
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item noti-icon position-relative"
                     id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -123,10 +97,10 @@ if (auth()->user()->photo) {
                     <img class="rounded-circle header-profile-user" src="{{ $userImage }}"
                         alt="{{ Auth::user()->first_name }}">
                     <span class="active"></span>
-                    <span class="d-none d-xl-inline-block fw-medium">{{ Auth::user()->first_name }}
+                    <span class="d-none d-xl-inline-block fw-medium d-none-xs">{{ Auth::user()->first_name }}
                         {{ Auth::user()->last_name }}</span>
-                    <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
-                    <span class="d-grid d-grid justify-content-start">{{ $role }}</span>
+                    <i class="mdi mdi-chevron-down d-xl-inline-block"></i>
+                    <span class="d-grid d-grid justify-content-start d-none-xs d-tab-none">{{ $role }}</span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end admin_profilt_pop">
                     <div data-simplebar>
@@ -138,6 +112,9 @@ if (auth()->user()->photo) {
                             <img class="img-thumbnail rounded-circle avatar-xl" alt="200x200"
                                 src="{{ $userImage }}" data-holder-rendered="true">
                             <span class="active"></span>
+                        </div>
+                        <div class="d-cust-mob">
+                            <span class="role_mob">{{ $role }}</span>
                         </div>
                         <ul>
                             <li>Name : <span>{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</span></li>

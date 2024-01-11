@@ -232,15 +232,15 @@
                             </div>
                             <div class="col-md-12">
                                 <?php
-                                $currentDate = date("Y-m-d");
+                                $currentDate = date('Y-m-d');
                                 $date = date('Y-m-d', strtotime($currentDate . ' +15 days'));
                                 ?>
                                 <div class="form-group mb-2">
                                     <label for="subscription_validity" class="col-form-label">Subscription
                                         Validity</label>
                                     <input name="subscription_validity" type="date"
-                                        class="floating-input form-control" autocomplete="off"
-                                        id="subscription_validity" min="<?php echo $date; ?>">
+                                        class="floating-input form-control" autocomplete="off" id="subscription_validity"
+                                        min="<?php echo $date; ?>">
                                     <span class="spanColor subscription_validity_error"></span>
                                 </div>
                             </div>
@@ -307,7 +307,7 @@
 
     <div class="modal fade" id="orderOverviewModelForm" role="dialog" aria-labelledby="modalLabel"
         data-keyboard="false" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog" style="max-width: 50%;">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Order Overview</h5>
@@ -341,104 +341,105 @@
                                 <label class="form-label">AOrder Amount</label>
                                 <input class="form-control readOnlyClass" type="text" id="orderAmounts" readonly>
                             </div>
-                            <div class="col-md-12 mb-2 uploadImg">
-                                <div class="uploadBtnBox form-check">
-                                    <label class="uploadBtn">
-                                        <p>Images</p>
-                                    </label>
-                                </div>
-                                <div class="uploadImgWrap" id="imageContainer">
-                                </div>
+                            {{-- <div class="col-md-12 mb-2 uploadImg">
+                            <div class="uploadBtnBox form-check">
+                                <label class="uploadBtn">
+                                    <p>Images</p>
+                                </label>
                             </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Customer Name</label>
+                                <input class="form-control readOnlyClass" type="text" id="customerNames" readonly>
+                            </div>
+                        </div> --}}
                     </form>
                 </div>
             </div>
         </div>
-    </div>
-@endsection
+    @endsection
 
-@section('js')
-    <script type="text/javascript">
-        $('.isVendor').hide();
+    @section('js')
+        <script type="text/javascript">
+            $('.isVendor').hide();
 
-        function showModal(customerId = "", customerType = "", slug = "") {
-            if (customerType == 1) {
-                $('.isVendor').show();
+            function showModal(customerId = "", customerType = "", slug = "") {
+                if (customerType == 1) {
+                    $('.isVendor').show();
+                }
+                $('#customerSlug').text("Customer Id - CUS" + customerId);
+                $('#orderSlug').val(slug);
+                $("#targetModal").modal('show');
             }
-            $('#customerSlug').text("Customer Id - CUS" + customerId);
-            $('#orderSlug').val(slug);
-            $("#targetModal").modal('show');
-        }
 
-        $(document).ready(function() {
-            $('#submitAssignEvForm').click(function(e) {
-                e.preventDefault();
-                var mappedEv = $('#mapped_ev').val();
-                if (mappedEv == "") {
-                    $(".mapped_ev_error").html('This field is required!');
-                    $("input#mapped_ev").focus();
-                    return false;
-                }
-                var subscriptionValidity = $('#subscription_validity').val();
-                if (subscriptionValidity == "") {
-                    $(".subscription_validity_error").html('This field is required!');
-                    $("input#subscription_validity").focus();
-                    return false;
-                }
-                $('#submitAssignEvForm').prop('disabled', true);
-                $('#submitAssignEvForm').html('Please wait...')
-                var formDatas = new FormData(document.getElementById('assignEvsForm'));
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    method: 'POST',
-                    url: "{{ route('assign-ev-customer') }}",
-                    data: formDatas,
-                    contentType: false,
-                    processData: false,
-                    success: function(data) {
-                        $('#message').html("<span class='sussecmsg'>" + data.message +
-                            "</span>");
-
-                        $('#submitCompanyForm').prop('disabled', false);
-                        setTimeout(function() {
-                            window.location.reload();
-                        }, 1000);
-
-                    },
-                    errors: function() {
-                        $('#message').html(
-                            "<span class='sussecmsg'>Somthing went wrong!</span>");
+            $(document).ready(function() {
+                $('#submitAssignEvForm').click(function(e) {
+                    e.preventDefault();
+                    var mappedEv = $('#mapped_ev').val();
+                    if (mappedEv == "") {
+                        $(".mapped_ev_error").html('This field is required!');
+                        $("input#mapped_ev").focus();
+                        return false;
                     }
+                    var subscriptionValidity = $('#subscription_validity').val();
+                    if (subscriptionValidity == "") {
+                        $(".subscription_validity_error").html('This field is required!');
+                        $("input#subscription_validity").focus();
+                        return false;
+                    }
+                    $('#submitAssignEvForm').prop('disabled', true);
+                    $('#submitAssignEvForm').html('Please wait...')
+                    var formDatas = new FormData(document.getElementById('assignEvsForm'));
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        method: 'POST',
+                        url: "{{ route('assign-ev-customer') }}",
+                        data: formDatas,
+                        contentType: false,
+                        processData: false,
+                        success: function(data) {
+                            $('#message').html("<span class='sussecmsg'>" + data.message +
+                                "</span>");
+
+                            $('#submitCompanyForm').prop('disabled', false);
+                            setTimeout(function() {
+                                window.location.reload();
+                            }, 1000);
+
+                        },
+                        errors: function() {
+                            $('#message').html(
+                                "<span class='sussecmsg'>Somthing went wrong!</span>");
+                        }
+                    });
                 });
             });
-        });
 
-        $('.orderOverviewModelForm').on('click', function(event) {
-            event.preventDefault();
-            $('#orderOverviewModelForm').modal('show');
-            var customer_id = $(this).data('customer_id');
-            var customer_name = $(this).data('customer_name');
-            var order_date = $(this).data('order_date');
-            var qty = $(this).data('qty');
-            var items = $(this).data('items');
-            var order_amount = $(this).data('order_amount');
-            var images = $(this).data('images');
-            console.log(images);
-            $("#customerIds").val(customer_id);
-            $("#customerNames").val(customer_name);
-            $("#orderDates").val(order_date);
-            $("#orderQntys").val(qty);
-            $("#orderAmounts").val(order_amount)
-            $("#orderItems").val(items);
-            var imageContainer = $('#imageContainer');
-            imageContainer.empty();
-            images.forEach(function(imageUrl) {
-                var url = "{{ asset('public/upload/mediafiles') }}/" + imageUrl;
-                var imgElement = $('<img>').attr('src', url).addClass('modal-image');
-                imageContainer.append(imgElement);
+            $('.orderOverviewModelForm').on('click', function(event) {
+                event.preventDefault();
+                $('#orderOverviewModelForm').modal('show');
+                var customer_id = $(this).data('customer_id');
+                var customer_name = $(this).data('customer_name');
+                var order_date = $(this).data('order_date');
+                var qty = $(this).data('qty');
+                var items = $(this).data('items');
+                var order_amount = $(this).data('order_amount');
+                var images = $(this).data('images');
+                console.log(images);
+                $("#customerIds").val(customer_id);
+                $("#customerNames").val(customer_name);
+                $("#orderDates").val(order_date);
+                $("#orderQntys").val(qty);
+                $("#orderAmounts").val(order_amount)
+                $("#orderItems").val(items);
+                // var imageContainer = $('#imageContainer');
+                // imageContainer.empty();
+                // images.forEach(function(imageUrl) {
+                //     var url = "{{ asset('public/upload/mediafiles') }}/" + imageUrl;
+                //     var imgElement = $('<img>').attr('src', url).addClass('modal-image');
+                //     imageContainer.append(imgElement);
+                // });
             });
-        });
-    </script>
-@endsection
+        </script>
+    @endsection

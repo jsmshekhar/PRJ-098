@@ -24,6 +24,15 @@
  <script src="{{ asset('public/assets/js/app.js') }}"></script>
  <script src="{{ asset('public/assets/js/common.js') }}"></script>
 
+         <!-- apexcharts js -->
+         <script src="{{ asset('public/assets/libs/apexcharts/apexcharts.min.js') }}"></script>
+
+<!-- apexcharts init -->
+<script src="{{ asset('public/assets/js/pages/apexcharts.init.js') }}"></script>
+
+<script src="assets/js/pages/apexcharts.init.js"></script>
+
+
  <script>
      window.addEventListener('load', () => {
          $('.select2').select2();

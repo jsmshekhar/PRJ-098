@@ -106,10 +106,10 @@
 </div>
 
 <div class="modal fade" id="vehicleModelForm" role="dialog" aria-labelledby="modalLabel" data-keyboard="false" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog" style="max-width: 50%;">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="userModalLabel">Add Vehicle</h5>
+                <h5 class="modal-title" id="vehicleModalLabel">Add Vehicle</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -119,7 +119,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="example-title-input" class="form-label">Title* &nbsp; <span class="spanColor title_error"></span></label>
-                            <input type="hidden" class="form-control" name="slug" id="slug">
+                            <input type="hidden" class="form-control" name="slug" id="vSlug">
                             <input type="hidden" class="form-control" name="hub_id" id="hub_id">
                             <input type="hidden" class="form-control" name="updateurl" id="updateurl">
                             <input class="form-control" type="text" name="title" id="title" value="">
@@ -220,7 +220,7 @@
                         <div class="col-md-6 mb-4">
                             <label for="hub_id" class="form-label">Product Visivility on App</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="remember-check" name="is_display_on_app" checked>
+                                <input class="form-check-input" type="checkbox" id="remember-check" name="is_display_on_app">
                                 <label class="form-check-label mt-1" for="remember-check">
                                     &nbsp; The product is displayed on the app.
                                 </label>
@@ -242,7 +242,7 @@
 <!-- Customer overview -->
 
 <div class="modal fade" id="customerOverviewModelForm" role="dialog" aria-labelledby="modalLabel" data-keyboard="false" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog" style="max-width: 50%;">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Customer Overview</h5>

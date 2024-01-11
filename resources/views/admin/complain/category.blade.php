@@ -2,13 +2,8 @@
 @section('title', 'Complain Categories')
 @section('css')
 <style>
-    .CategoryTop {
-        margin-top: 45px
-    }
+ 
 
-    .AddCat {
-        margin-left: 15px;
-    }
 </style>
 @endsection
 @section('content')
@@ -30,7 +25,7 @@
                 <div class="table-filter">
                     <form method="post" enctype="multipart/form-data" action="{{route('add-update-complain-category')}}" id="updateCategory" autocomplete="off">
                         @csrf
-                        <div class="row">
+                        <div class="row m-0 p-2">
                             <div class="col-md-4 AddCat">
                                 <div class="form-group mb-2">
                                     <label for="category_name" class="col-form-label">Category Name</label>
