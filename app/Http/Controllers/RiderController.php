@@ -77,7 +77,6 @@ class RiderController extends AdminAppController
         try {
             $permission = User::getPermissions();
             $kycStatus = ['1' => 'Verified', '2' => 'Pending', '3' => 'Red Flag'];
-            // $rider = Rider::with(['evDetail'])->where('slug', $slug)->whereNull('deleted_at')->first();
             $rider = Rider::with(['bankDetail', 'documents', 'transactions', 'complaints'])->where('slug', $slug)->whereNull('deleted_at')->first();
             if (!is_null($rider)) {
                 $walletBalence = 0;
