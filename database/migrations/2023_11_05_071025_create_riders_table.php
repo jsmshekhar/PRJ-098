@@ -41,10 +41,10 @@ class CreateRidersTable extends Migration
             $table->tinyInteger('kyc_status')->default(2)->comment('1 => Verified, 2 => Pending, 3 => Red Flag');
             $table->tinyInteger('kyc_step')->default(0)->comment('Current Kys Steps');
             $table->tinyInteger('status_id')->default(1)->comment('1 => Active, 2 => Pending, 3 => Inactive, 4 => Deleted');
-            $table->dateTime('is_step_selfie_done')->nullable()->useCurrentOnUpdate();
-            $table->dateTime('is_personal_detail_done')->nullable()->useCurrentOnUpdate();
-            $table->dateTime('is_id_proof_done')->nullable()->useCurrentOnUpdate();
-            $table->dateTime('is_bank_detail_done')->nullable()->useCurrentOnUpdate();
+            $table->timestamp('is_step_selfie_done')->nullable()->useCurrentOnUpdate();
+            $table->timestamp('is_personal_detail_done')->nullable()->useCurrentOnUpdate();
+            $table->timestamp('is_id_proof_done')->nullable()->useCurrentOnUpdate();
+            $table->timestamp('is_bank_detail_done')->nullable()->useCurrentOnUpdate();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamp('created_at')->nullable()->useCurrent();

@@ -423,12 +423,11 @@ class Kyc extends Model
                         'ifsc_code' => $request->ifsc_code,
                         'branch_name' => $request->branch_name ?? null,
                         'upi_id' => $request->upi_id,
-                        'kyc_step' => $requestedStep,
                     ];
                     DB::table('rider_bank_details')->where('rider_id', $riderId)->delete();
                     $status = RiderBankDetail::insert($record);
                     if ($status) {
-                        Rider::where('rider_id', $riderId)->update(['is_bank_detail_done' => NOW(), 'kyc_status' => 1]);
+                        Rider::where('rider_id', $riderId)->update(['is_bank_detail_done' => NOW(), 'kyc_status' => 1, 'kyc_step' => $requestedStep]);
                     }
                 }
 
