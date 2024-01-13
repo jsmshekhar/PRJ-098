@@ -22,6 +22,7 @@ class CreateProductsTable extends Migration
             $table->integer('rent_cycle')->nullable()->comment('15-Days, 30-Days');
             $table->string('per_day_rent')->nullable();
             $table->string('total_rent')->nullable();
+            $table->integer('total_range')->nullable()->comment('Monthly Range (Distance) Cover by EV	');;
             $table->integer('bettery_type')->nullable()->comment('1-Swappable, 2-Fixed');
             $table->string('km_per_charge')->nullable()->comment('Single charge Run Time');;
             $table->unsignedBigInteger('hub_id')->nullable();

@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
-@section('title', 'Distributed Hub')
+@section('title', 'EV Types')
 @section('css')
 <style>
     input[switch]+label {
@@ -24,7 +24,7 @@
                     <li><a href="{{ route('product-ev-types') }}" class="active" title="Ev Types">Ev Types</a></li>
                     @if(Auth::user()->role_id == 0)
                     <li><a href="{{ route('accessories') }}" class="" title="Accessories">Accessories</a>
-                    @endif
+                        @endif
                     </li>
 
                 </ul>
@@ -48,9 +48,11 @@
                                 <thead>
                                     <tr>
                                         <th>Ev Type</th>
+                                        <th>Ev Category</th>
+                                        <th>Rent/Day</th>
                                         <th>Range</th>
                                         <th>Speed</th>
-                                        <th>Ev Category</th>
+                                        <th>Monthly Range</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -58,12 +60,14 @@
                                     @foreach ($ev_types as $key => $type)
                                     <tr>
                                         <td>{{ $type->ev_type_name }}</td>
-                                        <td>Up to {{ $type->range }} km</td>
-                                        <td>{{ $type->speed }}</td>
                                         <td>{{ $type->ev_category == 1 ? 'Two Wheeler' : ($type->ev_category == 2 ? 'Three Wheeler' : '') }}
                                         </td>
+                                        <td>Rs{{ $type->rs_perday }}</td>
+                                        <td>Up to {{ $type->range }} km</td>
+                                        <td>{{ $type->speed }} km/h</td>
+                                        <td>{{ $type->total_range }} km</td>
                                         <td>
-                                            <a class="typeModelForm" data-toggle="modal" data-type="{{ $type->ev_type_name }}" data-slug="{{ $type->slug }}" data-range="{{ $type->range }}" data-speed="{{ $type->speed }}" data-ev_category="{{ $type->ev_category }}" title="Edit Ev Type" style="cursor: pointer;margin-right: 5px;"><i class="fa fa-edit"></i>
+                                            <a class="typeModelForm" data-toggle="modal" data-type="{{ $type->ev_type_name }}" data-slug="{{ $type->slug }}" data-rs_perday="{{ $type->rs_perday }}" data-range="{{ $type->range }}" data-speed="{{ $type->speed }}" data-ev_category="{{ $type->ev_category }}" data-total_range="{{ $type->total_range }}" title="Edit Ev Type" style="cursor: pointer;margin-right: 5px;"><i class="fa fa-edit"></i>
                                             </a>
                                         </td>
                                     </tr>
@@ -114,22 +118,28 @@
                                 <input type="text" name="ev_type_name" class="form-control" id="ev_type_name">
                             </div>
                         </div>
-                        {{--<div class="col-12">
-                            <div class="form-group mb-2">
-                                <label for="range" class="col-form-label ">Range &nbsp;<span class="spanColor onlyDigit_error" id="range_errors"></span></label>
-                                <input type="text" name="range" class="form-control onlyDigit" id="range">
-                            </div>
-                        </div>--}}
                         <div class="col-12">
                             <div class="form-group mb-2">
-                                <label for="range" class="col-form-label ">Range &nbsp;<span class="spanColor" id="range_errors"></span></label>
-                                <input type="text" name="range" class="form-control" id="range">
+                                <label for="example-title-input" class="form-label">Rent per Day(Rs) &nbsp; <span class="spanColor onlyDigitRent_error rent_error" id="rent_error"> </span></label>
+                                <input class="form-control onlyDigitRent" type="text" name="rs_perday" id="rs_perday" value="">
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group mb-2">
-                                <label for="speed" class="col-form-label">Speed</label>
-                                <input type="text" name="speed" class="form-control" id="speed">
+                                <label for="range" class="col-form-label ">Single charge Run Time* (km) &nbsp;<span class="spanColor onlyDigit_error range_error" id="range_error"></span></label>
+                                <input type="text" name="range" class="form-control onlyDigit" id="range">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group mb-2">
+                                <label for="speed" class="col-form-label">Speed* (km/h) &nbsp;<span class="spanColor onlyDigitSpeed_error speed_error" id="speed_error"></span></label>
+                                <input type="text" name="speed" class="form-control onlyDigitSpeed" id="speed">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group mb-2">
+                                <label for="range" class="form-label ">Monthly Range (km) &nbsp;<span class="spanColor onlyDigitMonthly_error monthly_range_error" id="monthly_range_error"></span></label>
+                                <input class="form-control onlyDigitMonthly" type="text" name="total_range" id="total_range" value="2500">
                             </div>
                         </div>
                     </div>
@@ -158,11 +168,15 @@
                 var slug = $(this).data('slug');
                 var range = $(this).data('range');
                 var ev_category = $(this).data('ev_category');
+                var rs_perday = $(this).data('rs_perday');
+                var total_range = $(this).data('total_range');
 
                 $("#evslug").val(slug);
                 $("#ev_type_name").val(type);
+                $("#rs_perday").val(rs_perday);
                 $("#speed").val(speed);
                 $("#range").val(range);
+                $("#total_range").val(total_range);
                 $('#ev_category').val(ev_category).trigger('change');
             }
 
@@ -177,6 +191,23 @@
             if (ev_type_name == "") {
                 $(".ev_type_name_error").html('This field is required!');
                 $("input#ev_type_name").focus();
+                return false;
+            }
+            var range = $('#range').val();
+            if (range == "") {
+                $(".range_error").css("display", "");
+                $(".range_error").html('This field is required!');
+                $(".ev_type_name_error").html('');
+                $("input#range").focus();
+                return false;
+            }
+            var speed = $('#speed').val();
+            if (speed == "") {
+                $(".speed_error").css("display", "");
+                $(".speed_error").html('This field is required!');
+                $(".ev_type_name_error").html('');
+                $(".range_error").html('');
+                $("input#speed").focus();
                 return false;
             }
             $('#submitEvType').prop('disabled', true);

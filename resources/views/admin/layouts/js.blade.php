@@ -255,4 +255,5 @@
              $(this).parent().parent().remove();
          });
      }
+     
  </script>

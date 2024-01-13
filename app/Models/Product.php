@@ -114,6 +114,7 @@ class Product extends Model
             $is_display_on_app = !empty($request->is_display_on_app) ? 1 : 2;
             $status_id = !empty($request->status_id) ? $request->status_id : 1;
             $bike_type = !empty($request->bike_type) ? $request->bike_type : 2;
+            $total_range = !empty($request->total_range) ? $request->total_range : null;
             $product_image = '';
             if ($request->image) {
                 $image = $request->file('image');
@@ -142,6 +143,7 @@ class Product extends Model
                 "hub_id" => $hub_id,
                 "is_display_on_app" => $is_display_on_app,
                 "bike_type" => $bike_type,
+                "total_range" => $total_range,
                 'image' => !empty($product_image) ? $product_image : "",
                 "user_id" => $auth->user_id,
                 "user_slug" => $auth->slug,
@@ -224,6 +226,7 @@ class Product extends Model
             $is_display_on_app = !empty($request->is_display_on_app) ? 1 : 2;
             $status_id = !empty($request->status_id) ? $request->status_id : 1;
             $bike_type = !empty($request->bike_type) ? $request->bike_type : 2;
+            $total_range = !empty($request->total_range) ? $request->total_range : null;
            
             $product_image = '';
             if ($request->image) {
@@ -250,6 +253,7 @@ class Product extends Model
                     "hub_id" => $hub_id,
                     "is_display_on_app" => $is_display_on_app,
                     "bike_type" => $bike_type,
+                    "total_range" => $total_range,
                     'image' => $product_image,
                     "user_id" => $auth->user_id,
                     "user_slug" => $auth->slug,
@@ -274,6 +278,7 @@ class Product extends Model
                     "hub_id" => $hub_id,
                     "is_display_on_app" => $is_display_on_app,
                     "bike_type" => $bike_type,
+                    "total_range" => $total_range,
                     "user_id" => $auth->user_id,
                     "user_slug" => $auth->slug,
                     "updated_by" => $auth->user_id,

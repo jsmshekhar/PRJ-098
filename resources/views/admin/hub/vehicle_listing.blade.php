@@ -74,7 +74,7 @@
 
                             <div class="dropdown-menu">
                                 @can('edit_inventry', $permission)
-                                <a class="dropdown-item vehicleModelForm" data-toggle="modal" data-product_id="{{ $vehicle->product_id }}" data-slug="{{ $vehicle->slug }}" data-hub_id="{{ $vehicle->hub_id }}" data-title="{{ $vehicle->title }}" data-ev_number="{{ $vehicle->ev_number }}" data-ev_type_id="{{ $vehicle->ev_type_id }}" data-ev_category_id="{{ $vehicle->ev_category_id }}" data-profile_category="{{ $vehicle->profile_category }}" data-speed="{{ $vehicle->speed }}" data-rent_cycle="{{ $vehicle->rent_cycle }}" data-per_day_rent="{{ $vehicle->per_day_rent }}" data-bettery_type="{{ $vehicle->bettery_type }}" data-km_per_charge="{{ $vehicle->km_per_charge }}" data-description="{{ $vehicle->description }}" data-is_display_on_app="{{ $vehicle->is_display_on_app }}" data-chassis_number="{{ $vehicle->chassis_number }}" data-gps_emei_number="{{ $vehicle->gps_emei_number }}" data-image="{{ $vehicle->image }}" data-bike_type="{{ $vehicle->bike_type }}" data-status="{{ $vehicle->status_id }}" data-updateurl="{{ route('update-product',['slug'=>$vehicle->slug]) }}" title="Edit Vehicle" style="cursor: pointer;margin-right: 5px;"><i class="fa fa-edit"></i> Edit
+                                <a class="dropdown-item vehicleModelForm" data-toggle="modal" data-product_id="{{ $vehicle->product_id }}" data-slug="{{ $vehicle->slug }}" data-hub_id="{{ $vehicle->hub_id }}" data-title="{{ $vehicle->title }}" data-ev_number="{{ $vehicle->ev_number }}" data-ev_type_id="{{ $vehicle->ev_type_id }}" data-ev_category_id="{{ $vehicle->ev_category_id }}" data-profile_category="{{ $vehicle->profile_category }}" data-speed="{{ $vehicle->speed }}" data-rent_cycle="{{ $vehicle->rent_cycle }}" data-per_day_rent="{{ $vehicle->per_day_rent }}" data-bettery_type="{{ $vehicle->bettery_type }}" data-km_per_charge="{{ $vehicle->km_per_charge }}" data-total_range="{{ $vehicle->total_range }}" data-description="{{ $vehicle->description }}" data-is_display_on_app="{{ $vehicle->is_display_on_app }}" data-chassis_number="{{ $vehicle->chassis_number }}" data-gps_emei_number="{{ $vehicle->gps_emei_number }}" data-image="{{ $vehicle->image }}" data-bike_type="{{ $vehicle->bike_type }}" data-status="{{ $vehicle->status_id }}" data-updateurl="{{ route('update-product',['slug'=>$vehicle->slug]) }}" title="Edit Vehicle" style="cursor: pointer;margin-right: 5px;"><i class="fa fa-edit"></i> Edit
                                 </a>
                                 @endcan
                                 @can('delete_inventry', $permission)
@@ -136,17 +136,38 @@
                             <label for="example-title-input" class="form-label">GPS IMEI</label>
                             <input class="form-control" type="text" name="gps_emei_number" id="gps_emei_number" value="">
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="example-title-input" class="form-label">Speed (km/h)</label>
-                            <input class="form-control" type="text" name="speed" id="speed" value="">
+                        <div class="col-md-6 mb-3">
+                            <label for="ev_category" class="form-label">EV Category </label>
+                            <select class="form-control selectBasic" name="ev_category" id="ev_category">
+                                @foreach($ev_categories as $key => $ev_category)
+                                <option value="{{$ev_category}}">{{$ev_category == 1 ? "Two Wheeler" : "Three Wheeler"}}</option>
+                                @endforeach
+                            </select>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="example-title-input" class="form-label">Single charge Run Time(km)</label>
-                            <input class="form-control" type="text" name="km_per_charge" id="km_per_charge" value="">
+                        <div class="col-md-6 mb-3">
+                            <label for="ev_type_id" class="form-label">EV Type* &nbsp;<span class="spanColor ev_type_id_error"></span></label>
+                            <select class="form-control selectBasic" name="ev_type_id" id="ev_type_id">
+                                <option value=""> Select EV Type </option>
+                                @foreach($ev_types as $key => $ev_type)
+                                <option value="{{$ev_type->ev_type_id}}" data-value1="{{$ev_type->speed}}" data-value2="{{$ev_type->range}}" data-value3="{{$ev_type->rs_perday}}" data-value4="{{$ev_type->total_range}}">{{$ev_type->ev_type_name}}</option>
+                                @endforeach
+                            </select>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="example-title-input" class="form-label">Rent per Day(Rs)</label>
-                            <input class="form-control" type="text" name="per_day_rent" id="per_day_rent" value="">
+                        <div class="col-md-3 mb-3">
+                            <label for="speed" class="form-label">Speed* (km/h) &nbsp;<span class="spanColor onlyDigitSpeed_error speed_error" id="speed_error"></span></label>
+                            <input class="form-control onlyDigitSpeed" type="text" name="speed" id="speed" value="">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="range" class="form-label ">Single charge Run* (km) &nbsp;<span class="spanColor onlyDigit_error range_error" id="range_error"></span></label>
+                            <input class="form-control onlyDigit" type="text" name="km_per_charge" id="km_per_charge" value="">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="example-title-input" class="form-label">Rent per Day(Rs) &nbsp; <span class="spanColor onlyDigitRent_error rent_error" id="rent_error"> </span></label>
+                            <input class="form-control onlyDigitRent" type="text" name="per_day_rent" id="per_day_rent" value="">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="range" class="form-label ">Monthly Range (km) &nbsp;<span class="spanColor onlyDigitMonthly_error monthly_range_error" id="monthly_range_error"></span></label>
+                            <input class="form-control onlyDigitMonthly" type="text" name="total_range" id="total_range" value="">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="profile_category" class="form-label">Profile Category</label>
@@ -180,22 +201,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="ev_category" class="form-label">EV Category</label>
-                            <select class="form-control selectBasic" name="ev_category" id="ev_category">
-                                @foreach($ev_categories as $key => $ev_category)
-                                <option value="{{$ev_category}}">{{$ev_category == 1 ? "Two Wheeler" : "Three Wheeler"}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="ev_type_id" class="form-label">EV Type</label>
-                            <select class="form-control selectBasic" name="ev_type_id" id="ev_type_id">
-                                @foreach($ev_types as $key => $ev_type)
-                                <option value="{{$ev_type->ev_type_id}}">{{$ev_type->ev_type_name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
+
                         <div class="col-md-8 mb-3">
                             <label for="title" class="form-label">Description &nbsp; <span class="spanColor description_error"></span></label>
                             <textarea id="description" name="description" class="form-control" rows="6" placeholder="Write here." style="height: 150px;"></textarea>
