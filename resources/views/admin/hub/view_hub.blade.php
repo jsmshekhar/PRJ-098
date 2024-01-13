@@ -294,15 +294,14 @@
                 var status_id = $(this).data('status');
                 var updateurl = $(this).data('updateurl');
                 var vSlug = $(this).data('slug');
+                var total_range = $(this).data('total_range');
+
 
                 $("#title").val(title);
                 $("#hub_id").val(hub_id);
                 $("#ev_number").val(ev_number);
-                $("#speed").val(speed);
                 $("#hub_id").val(hub_id);
                 $("#chassis_number").val(chassis_number);
-                $("#per_day_rent").val(per_day_rent);
-                $("#km_per_charge").val(km_per_charge);
                 $("#gps_emei_number").val(gps_emei_number);
                 $("#description").val(description);
                 $('#ev_type_id').val(ev_type_id).trigger('change');
@@ -314,6 +313,11 @@
                 $('#status_id').val(status_id).trigger('change');
                 $("#updateurl").val(updateurl);
                 $("#vSlug").val(vSlug);
+                $("#speed").val(speed);
+                $("#per_day_rent").val(per_day_rent);
+                $("#km_per_charge").val(km_per_charge);
+                $("#total_range").val(total_range);
+
                 var imageUrl = "{{ asset('public/upload/product')}}/" + image;
                 if (image) {
                     $('.selectImageRemove').html('<img class="upload_des_preview clickable selectedImage" src="' + imageUrl + '" alt = "vehicle image" >');
@@ -340,22 +344,44 @@
             var hub_id = $('#hub_id').val();
             var slug = $('#vSlug').val();
             var updateurl = $('#updateurl').val();
-            var name = $('#title').val();
-            if (name == "") {
+            var title = $('#title').val();
+            if (title == "") {
                 $(".title_error").html('This field is required!');
                 $("input#title").focus();
                 return false;
             }
-            var name = $('#ev_number').val();
-            if (name == "") {
+            var evnumber = $('#ev_number').val();
+            if (evnumber == "") {
                 $(".ev_number_error").html('This field is required!');
                 $("input#ev_number").focus();
                 return false;
             }
-            var name = $('#chassis_number').val();
-            if (name == "") {
+            var chassis = $('#chassis_number').val();
+            if (chassis == "") {
                 $(".chassis_number_error").html('This field is required!');
                 $("input#chassis_number").focus();
+                return false;
+            }
+            var ev_type_id = $('#ev_type_id').val();
+            if (ev_type_id == "") {
+                $(".ev_type_id_error").html('This field is required!');
+                $("input#ev_type_id").focus();
+                return false;
+            }
+            var speed = $('#speed').val();
+            if (speed == "") {
+                $(".speed_error").css("display", "");
+                $(".speed_error").html('This field is required!');
+
+                $("input#speed").focus();
+                return false;
+            }
+            var range = $('#range').val();
+            if (range == "") {
+                $(".range_error").css("display", "");
+                $(".range_error").html('This field is required!');
+                $(".range_error").html('');
+                $("input#km_per_charge").focus();
                 return false;
             }
             $('#submitForm').prop('disabled', true);
@@ -418,6 +444,19 @@
             $("#orderClientName").val(client_name);
             $("#orderTlName").val(tl_name);
             $("#orderClientAddress").val(client_address);
+        });
+
+        $('#ev_type_id').change(function() {
+            var selectedOption = $(this).find('option:selected');
+            var value1 = selectedOption.data('value1');
+            var value2 = selectedOption.data('value2');
+            var value3 = selectedOption.data('value3');
+            var value4 = selectedOption.data('value4');
+
+            $('#km_per_charge').val(value1);
+            $('#speed').val(value2);
+            $('#per_day_rent').val(value3);
+            $('#total_range').val(value4);
         });
     });
 

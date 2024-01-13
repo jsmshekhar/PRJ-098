@@ -52,8 +52,10 @@ class EvType extends Model
             $ev_type_name = !empty($request->ev_type_name) ? $request->ev_type_name : "";
             $range = !empty($request->range) ? $request->range : "";
             $speed = !empty($request->speed) ? $request->speed : "";
+            $rs_perday = !empty($request->rs_perday) ? $request->rs_perday : null;
             $slug = !empty($request->slug) ? $request->slug : "";
             $ev_category = !empty($request->ev_category) ? $request->ev_category : null;
+            $total_range = !empty($request->total_range) ? $request->total_range : null;
 
             $auth = Auth::user();
             if (!empty($request->slug)) {
@@ -61,7 +63,9 @@ class EvType extends Model
                     "ev_type_name" => $ev_type_name,
                     "range" => $range,
                     "speed" => $speed,
+                    "rs_perday" => $rs_perday,
                     "ev_category" => $ev_category,
+                    "total_range" => $total_range,
                     "updated_by" => $auth->user_id,
                 ]);
             } else {
@@ -71,7 +75,9 @@ class EvType extends Model
                     "ev_type_name" => $ev_type_name,
                     "range" => $range,
                     "speed" => $speed,
+                    "rs_perday" => $rs_perday,
                     "ev_category" => $ev_category,
+                    "total_range" => $total_range,
                     "user_id" => $auth->user_id,
                     "user_slug" => $auth->slug,
                     "created_by" => $auth->user_id,

@@ -1,4 +1,4 @@
-// number only count hub limit
+// number only
 $(".onlyDigit").keypress(function (e) {
     if (
         e.which != 8 &&
@@ -7,12 +7,94 @@ $(".onlyDigit").keypress(function (e) {
         e.which != 107 &&
         (e.which < 48 || e.which > 57)
     ) {
+         if (e.key.toLowerCase() == "k") {
+             $(".onlyDigit_error")
+                 .html("Enter Digits Only")
+                 .show()
+                 .fadeOut(3000);
+             return false;
+         }
         //display error message
-        $(".onlyDigit_error").html("Enter Digits Only").show().fadeOut(5000);
+        $(".onlyDigit_error")
+                 .html("Enter Digits Only")
+                 .show()
+                 .fadeOut(3000);
         return false;
     }
 });
 
+$(".onlyDigitSpeed").keypress(function (e) {
+    if (
+        e.which != 8 &&
+        e.which != 0 &&
+        e.which != 43 &&
+        e.which != 107 &&
+        (e.which < 48 || e.which > 57)
+    ) {
+        if (e.key.toLowerCase() == "k") {
+            $(".onlyDigitSpeed_error")
+                .html("Enter Digits Only")
+                .show()
+                .fadeOut(3000);
+            return false;
+        }
+
+        //display error message
+        $(".onlyDigitSpeed_error")
+            .html("Enter Digits Only")
+            .show()
+            .fadeOut(3000);
+        return false;
+    }
+});
+$(".onlyDigitRent").keypress(function (e) {
+    if (
+        e.which != 8 &&
+        e.which != 0 &&
+        e.which != 43 &&
+        e.which != 107 &&
+        (e.which < 48 || e.which > 57)
+    ) {
+        if (e.key.toLowerCase() == "k") {
+            $(".onlyDigitRent_error")
+                .html("Enter Digits Only")
+                .show()
+                .fadeOut(3000);
+            return false;
+        }
+
+        //display error message
+        $(".onlyDigitRent_error")
+            .html("Enter Digits Only")
+            .show()
+            .fadeOut(3000);
+        return false;
+    }
+});
+$(".onlyDigitMonthly").keypress(function (e) {
+    if (
+        e.which != 8 &&
+        e.which != 0 &&
+        e.which != 43 &&
+        e.which != 107 &&
+        (e.which < 48 || e.which > 57)
+    ) {
+        if (e.key.toLowerCase() == "k") {
+            $(".onlyDigitMonthly_error")
+                .html("Enter Digits Only")
+                .show()
+                .fadeOut(3000);
+            return false;
+        }
+
+        //display error message
+        $(".onlyDigitMonthly_error")
+            .html("Enter Digits Only")
+            .show()
+            .fadeOut(3000);
+        return false;
+    }
+});
 
 document.addEventListener("DOMContentLoaded", function () {
     const fileInputs = document.querySelectorAll(".customFile");
