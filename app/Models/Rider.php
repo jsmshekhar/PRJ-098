@@ -18,7 +18,7 @@ class Rider extends Authenticatable
     protected $table = "riders";
     protected $primaryKey = 'rider_id';
     protected $fillable = [
-        'slug', 'name', 'email', 'email_verified_at', 'activated_at', 'phone', 'password', 'current_address', 'permanent_address', 'state_id', 'city_id', 'vehicle_id', 'photo', 'subscription_days', 'joining_date', 'subscription_validity', 'api_token', 'status_id', 'created_by', 'updated_by', 'created_at', 'updated_at', 'deleted_at', 'customer_id',
+        'slug', 'name', 'email', 'email_verified_at', 'activated_at', 'phone', 'password', 'current_address', 'permanent_address', 'state_id', 'city_id', 'vehicle_id', 'photo', 'subscription_days', 'joining_date', 'subscription_validity', 'api_token', 'status_id', 'created_by', 'updated_by', 'created_at', 'updated_at', 'deleted_at', 'customer_id','profile_type',
     ];
     protected $hidden = [
         'api_token', 'password'
