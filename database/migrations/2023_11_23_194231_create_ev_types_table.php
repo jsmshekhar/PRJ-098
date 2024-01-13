@@ -20,6 +20,7 @@ class CreateEvTypesTable extends Migration
             $table->string('ev_type_name')->nullable();
             $table->float('rs_perday')->nullable();
             $table->integer('range')->nullable();
+            $table->integer('total_range')->nullable()->comment('Monthly Range (Distance) Cover by EV');
             $table->string('carrying_capecity')->nullable();
             $table->string('speed')->nullable();
             $table->string('battery_capacity')->nullable();
