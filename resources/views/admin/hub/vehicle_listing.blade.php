@@ -61,6 +61,8 @@
                         <label class="text-info">Pending</label>
                         @elseif($vehicle->kyc_status == 3)
                         <label class="text-danger">Red Flag</label>
+                        @elseif($vehicle->kyc_status == 3)
+                        <label class="text-danger">Not Verified</label>
                         @else
                         <label class="text-secondary">NA</label>
                         @endif
@@ -218,8 +220,8 @@
                         <div class="col-md-6 mb-3">
                             <label for="status_id" class="form-label">Status</label>
                             <select class="form-control selectBasic" name="status_id" id="status_id">
-                                @foreach($vehicleStatus as $key => $status_id)
-                                <option value="{{$status_id}}">{{$status_id == 1 ? "Active" : ($status_id == 2 ? 'Inactive' : ($status_id == 3 ? 'Non Functional' : 'Not Available'))}}</option>
+                                @foreach($evStatus as $key => $status_id)
+                                <option value="{{$key}}">{{$status_id}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -311,6 +313,93 @@
                     </div>
                 </form>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="vehicleFilterForm" role="dialog" aria-labelledby="modalLabel" data-keyboard="false" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Advance Filter</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="get" action="<?= url()->current() ?>">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="example-title-input" class="form-label">EV Number</label>
+                            <input type="hidden" name="is_search" value="1" />
+                            <input class="form-control" type="text" name="ev" value="<?= isset($_GET['ev']) ? $_GET['ev'] : '' ?>">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="example-title-input" class="form-label">Chassis Number</label>
+                            <input class="form-control" type="text" name="ch_no" value="<?= isset($_GET['ch_no']) ? $_GET['ch_no'] : '' ?>">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">EV Category </label>
+                            <select class="form-control selectBasic" name="ev_cat">
+                                <option value=""> Select EV Category</option>
+                                @foreach($ev_categories as $key => $ev_category)
+                                <option value="{{$ev_category}}" <?= (isset($_GET['ev_cat']) && $ev_category == $_GET['ev_cat']) ? 'selected' : '' ?>>{{$ev_category == 1 ? "Two Wheeler" : "Three Wheeler"}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="profile_category" class="form-label">Profile Category</label>
+                            <select class="form-control selectBasic" name="pro_cat">
+                                <option value=""> Select Profile Category</option>
+                                @foreach($profile_categories as $key => $profile_category)
+                                <option value="{{$profile_category}}" <?= (isset($_GET['pro_cat']) && $profile_category == $_GET['pro_cat']) ? 'selected' : '' ?>>{{$profile_category == 1 ? "Corporate" : ($profile_category == 2 ? 'Individual' : ($profile_category == 3 ? 'Student' : ($profile_category == 4 ? 'Vendor' : '')))}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="status_id" class="form-label">GPS Device</label>
+                            <select class="form-control selectBasic" name="gps">
+                                <option value=""> Select GPS Device</option>
+                                @foreach($gpsDevice as $key => $device)
+                                <option value="{{$key}}" <?= (isset($_GET['gps']) && $key == $_GET['gps']) ? 'selected' : '' ?>>{{$device}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="status_id" class="form-label">Status</label>
+                            <select class="form-control selectBasic" name="status">
+                                <option value=""> Select Status</option>
+                                @foreach($evStatus as $key => $status_id)
+                                <option value="{{$key}}" <?= (isset($_GET['status']) && $key == $_GET['status']) ? 'selected' : '' ?>>{{$status_id}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="rent_cycle" class="form-label">Payment Status</label>
+                            <select class="form-control selectBasic" name="pay_status">
+                                <option value="">Select Payment Status</option>
+                                @foreach($paymentStatus as $key => $pay_status)
+                                <option value="{{$key}}" <?= (isset($_GET['pay_status']) && $key == $_GET['pay_status']) ? 'selected' : '' ?>>{{$pay_status}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="rent_cycle" class="form-label">Kyc Status</label>
+                            <select class="form-control selectBasic" name="kyc">
+                                <option value="">Select Kyc Status</option>
+                                @foreach($kycStatus as $key => $kyc_status)
+                                <option value="{{$key}}" <?= (isset($_GET['kyc']) && $key == $_GET['kyc']) ? 'selected' : '' ?>>{{$kyc_status}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success waves-effect waves-light">Search
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

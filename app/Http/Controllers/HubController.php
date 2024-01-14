@@ -54,11 +54,12 @@ class HubController extends AdminAppController
     --------------------------------------------------*/
     public function viewHub(Request $request, $slug, $param)
     {
+       // dd($request->all());
         try {
             $permission = User::getPermissions();
             if (Gate::allows('hub_view', $permission)) {
                 $hubs = $this->hub->viewHub($request, $slug, $param);
-                // /dd($hubs);
+                //dd($hubs);
                 $hub = $hubs['result']['hubs'];
                 $vehicles = $hubs['result']['vehicles'];
                 $employees = $hubs['result']['employees'];
@@ -76,8 +77,12 @@ class HubController extends AdminAppController
                 $vehicleCount = $hubs['result']['vehicleCount'];
                 $accessoriesinHub = $hubs['result']['accessoriesinHub'];
                 $accessories_categories = $hubs['result']['accessories_categories'];
+                $paymentStatus = $hubs['result']['paymentStatus'];
+                $kycStatus = $hubs['result']['kycStatus'];
                 $hubId = $hubs['result']['hubId'];
-                return view('admin.hub.view_hub', compact('hub', 'vehicles', 'employees', 'roles','rent_cycles', 'ev_types', 'ev_categories', 'battery_types', 'profile_categories', 'vehicleStatus', 'permission', 'bike_types', 'count', 'hub_parts', 'accessories_categories','empCount', 'vehicleCount', 'accessoriesinHub','hubId'));
+                $evStatus = $hubs['result']['evStatus'];
+                $gpsDevice = $hubs['result']['gpsDevice'];
+                return view('admin.hub.view_hub', compact('hub', 'vehicles', 'employees', 'roles','rent_cycles', 'ev_types', 'ev_categories', 'battery_types', 'profile_categories', 'vehicleStatus', 'permission', 'bike_types', 'count', 'hub_parts', 'accessories_categories','empCount', 'vehicleCount', 'accessoriesinHub','hubId', 'paymentStatus','kycStatus', 'evStatus', 'gpsDevice'));
             } else {
                 return view('admin.401.401');
             }
