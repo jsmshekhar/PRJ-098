@@ -56,8 +56,6 @@
                                 <span>Vendor</span>
                             </a>
                         </li>
-
-
                     </ul>
                 </div>
             </div>
@@ -67,7 +65,7 @@
                     <h4>Products</h4>
                     <div class="btn-card-header">
                         <a class="btn btn-success waves-effect waves-light" href="{{ route('product-create', request()->route('param')) }}" title="Add Product">Add
-                        Product</a>
+                            Product</a>
                     </div>
                 </div>
                 <div class="cat_list cat_sub">
@@ -76,7 +74,7 @@
                         @foreach($products as $key => $product)
                         <li class="">
                             <div class="cat_suv">{{$product->title}} <span class="stock_in">{{$product->status_id }}</span> </div>
-                            <img class="card-img img-fluid" src="{{ asset('public/upload/product/'.$product->image) }}" alt="product image">
+                            <img class="card-img img-fluid" src="{{ $product->image ? asset('public/upload/product/'.$product->image) : asset('public/assets/images/logo-sm.svg') }}" alt="product image">
                             <div class="d-flex justify-content-between">
                                 <span>{{$product->bike_type}}</span>
                                 <div class="sub_btns">

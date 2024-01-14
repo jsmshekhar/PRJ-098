@@ -108,8 +108,8 @@
                                 <div class="col-md-4 mb-3">
                                     <label for="status_id" class="form-label">Status</label>
                                     <select class="form-control selectBasic" name="status_id" id="status_id">
-                                        @foreach($vehicleStatus as $key => $status_id)
-                                        <option value="{{$status_id}}" @if($status_id==$product->status_id) selected @endif>{{$status_id == 1 ? "Active" : ($status_id == 2 ? 'Inactive' : ($status_id == 3 ? 'Non Functional' : 'Not Available'))}}</option>
+                                        @foreach($evStatus as $key => $status_id)
+                                        <option value="{{$status_id}}" @if($status_id==$product->status_id) selected @endif>{{$status_id == 1 ? "Active" : ($status_id == 2 ? 'Inactive' : ($status_id == 3 ? 'Non Functional' : ($status_id == 4 ? 'Assigned' : ($status_id == 6 ? 'RFD' : ''))))}}</option>
                                         @endforeach
                                     </select>
                                 </div>

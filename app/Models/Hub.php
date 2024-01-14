@@ -95,7 +95,11 @@ class Hub extends Model
             $bike_types = [];
             $profile_categories = [];
             $vehicleStatus = [];
+            $evStatus = [];
             $accessories_categories = [];
+            $paymentStatus = [];
+            $kycStatus = [];
+            $gpsDevice = [];
             $count = 0;
             $hub = Hub::where('slug', $slug)->whereNull('deleted_at')->first();
             $empCount = User::where('hub_id', $hub->hub_id)->whereNull('deleted_at')->count();
@@ -139,9 +143,39 @@ class Hub extends Model
                             WHEN products.profile_category = 4 THEN "Vendor" 
                             ELSE "" 
                         END as profile_category_name')
-                    )
-                ->orderBy('products.created_at', 'DESC')
-                ->paginate($perPage);
+                );
+              
+                if (isset($request->is_search) && $request->is_search == 1) {
+                    if (isset($request->ev) && !empty($request->ev)) {
+                        $vehicles = $vehicles->where('products.ev_number', 'LIKE', "%{$request->ev}%");
+                    }
+                    if (isset($request->ch_no) && !empty($request->ch_no)) {
+                        $vehicles = $vehicles->where('products.chassis_number', 'LIKE', "%{$request->ch_no}%");
+                    }
+                    if (isset($request->ev_cat) && !empty($request->ev_cat)) {
+                        $vehicles = $vehicles->where('products.ev_category_id', 'LIKE', $request->ev_cat);
+                    }
+                    if (isset($request->pro_cat) && !empty($request->pro_cat)) {
+                        $vehicles = $vehicles->where('riders.profile_type', 'LIKE', $request->pro_cat);
+                    }
+                    if (isset($request->status) && !empty($request->status)) {
+                        $vehicles = $vehicles->where('products.status_id', 'LIKE', $request->status);
+                    }
+                    if (isset($request->pay_status) && !empty($request->pay_status)) {
+                        $vehicles = $vehicles->where('rider_orders.payment_status', 'LIKE', $request->pay_status);
+                    }
+                    if (isset($request->kyc) && !empty($request->kyc)) {
+                        $vehicles = $vehicles->where('riders.kyc_status', 'LIKE', $request->kyc);
+                    }
+                    if (isset($request->gps) && !empty($request->gps)&& $request->gps == 1) {
+                        $vehicles = $vehicles->where('products.gps_emei_number', '!=', '');
+                    }
+                    if (isset($request->gps) && !empty($request->gps) && $request->gps == 2) {
+                        $vehicles = $vehicles->where('products.gps_emei_number', '');
+                    }
+                }
+                $vehicles = $vehicles->orderBy('products.created_at', 'DESC')->paginate($perPage);
+                
                 $ev_types = EvType::orderBy('created_at', 'DESC')->get();
                 $ev_categories = config('constants.EV_CATEGORIES');
                 $rent_cycles = config('constants.RENT_CYCLE');
@@ -149,6 +183,10 @@ class Hub extends Model
                 $profile_categories = config('constants.PROFILE_CATEGORIES');
                 $vehicleStatus = config('constants.VEHICLE_STATUS');
                 $bike_types = config('constants.BIKE_TYPE');
+                $evStatus = ['1' => 'Active', '2' => 'Inactive', '3' => 'Non Functional', '4' => 'Assigned', '5' => 'RFD'];
+                $kycStatus = ['1' => 'Verified', '2' => 'Pending', '3' => 'Red Flag', '4' => 'Not Verified'];
+                $paymentStatus = ['1' => 'Paid', '2' => 'Pending', '3' => 'Failed', '4' => 'Rejected'];
+                $gpsDevice = ['1' => 'Installed', '2' => 'No Device'];
                 $count = Product::where('hub_id', $hub->hub_id)->whereNull('deleted_at')->count();
             }
             if ($param == 'employee') {
@@ -190,10 +228,10 @@ class Hub extends Model
            
 
             if ($hub) {
-                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => $hub, 'vehicles' => $vehicles, 'employees' => $employees, 'roles' => $roles,'rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'battery_types' => $battery_types, 'profile_categories' => $profile_categories, 'vehicleStatus' => $vehicleStatus, 'bike_types' => $bike_types, 'count' => $count, 'hub_parts' => $hub_parts, 'accessories_categories' => $accessories_categories, 'vehicleCount'=> $vehicleCount, 'empCount'=>$empCount, 'accessoriesinHub' => $accessoriesinHub, 'hubId' => $hub->hubId]);
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => $hub, 'vehicles' => $vehicles, 'employees' => $employees, 'roles' => $roles,'rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'battery_types' => $battery_types, 'profile_categories' => $profile_categories, 'vehicleStatus' => $vehicleStatus, 'bike_types' => $bike_types, 'count' => $count, 'hub_parts' => $hub_parts, 'accessories_categories' => $accessories_categories, 'vehicleCount'=> $vehicleCount, 'empCount'=>$empCount, 'accessoriesinHub' => $accessoriesinHub, 'hubId' => $hub->hubId, 'paymentStatus'=> $paymentStatus, 'kycStatus' => $kycStatus, 'evStatus'=> $evStatus, 'gpsDevice'=> $gpsDevice]);
             } else {
                 
-                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => [], 'vehicles' => [], 'employees' => [], 'roles' => [],'rent_cycles' => [], 'ev_types' => [], 'ev_categories' =>[], 'battery_types' => [], 'profile_categories' => [], 'bike_types' => [], 'count' => $count, 'hub_parts' => [], 'accessories_categories' => [],'vehicleCount' => 0, 'empCount' => 0, 'accessoriesinHub' => [], 'hubId' => ""]);
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => [], 'vehicles' => [], 'employees' => [], 'roles' => [],'rent_cycles' => [], 'ev_types' => [], 'ev_categories' =>[], 'battery_types' => [], 'profile_categories' => [], 'bike_types' => [], 'count' => $count, 'hub_parts' => [], 'accessories_categories' => [],'vehicleCount' => 0, 'empCount' => 0, 'accessoriesinHub' => [],'paymentStatus'=> [], 'kycStatus' => [], 'evStatus'=>[], 'hubId' => "", 'gpsDevice'=>[]]);
             }
         } catch (\Throwable $ex) {
             $result = [

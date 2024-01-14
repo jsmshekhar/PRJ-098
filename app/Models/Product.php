@@ -77,9 +77,9 @@ class Product extends Model
             $ev_categories = config('constants.EV_CATEGORIES');
             $rent_cycles = config('constants.RENT_CYCLE');
             $battery_types = config('constants.BATTERY_TYPE');
-            $vehicleStatus = config('constants.VEHICLE_STATUS');
+            $evStatus = config('constants.EV_STATUS');
             $bike_types = config('constants.BIKE_TYPE');
-            return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'hubs' => $hubs, 'battery_types' => $battery_types, 'vehicleStatus' => $vehicleStatus, 'bike_types' => $bike_types]);
+            return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'hubs' => $hubs, 'battery_types' => $battery_types, 'evStatus' => $evStatus, 'bike_types' => $bike_types]);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -190,9 +190,9 @@ class Product extends Model
             $ev_categories = config('constants.EV_CATEGORIES');
             $rent_cycles = config('constants.RENT_CYCLE');
             $battery_types = config('constants.BATTERY_TYPE');
-            $vehicleStatus = config('constants.VEHICLE_STATUS');
+            $evStatus = config('constants.EV_STATUS');
             $bike_types = config('constants.BIKE_TYPE');
-            return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['product'=> $product, 'rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'hubs' => $hubs, 'battery_types' => $battery_types, 'vehicleStatus' =>$vehicleStatus, 'bike_types' => $bike_types]);
+            return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['product'=> $product, 'rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'hubs' => $hubs, 'battery_types' => $battery_types, 'evStatus' => $evStatus, 'bike_types' => $bike_types]);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),

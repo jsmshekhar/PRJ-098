@@ -59,9 +59,9 @@ class ProductController extends AdminAppController
             $ev_categories = $data['result']['ev_categories'];
             $hubs = $data['result']['hubs'];
             $battery_types = $data['result']['battery_types'];
-            $vehicleStatus = $data['result']['vehicleStatus'];
+            $evStatus = $data['result']['evStatus'];
             $bike_types = $data['result']['bike_types'];
-            return view('admin.inventory.create_product', compact('rent_cycles', 'ev_types', 'ev_categories', 'permission','hubs', 'battery_types', 'vehicleStatus', 'bike_types'));
+            return view('admin.inventory.create_product', compact('rent_cycles', 'ev_types', 'ev_categories', 'permission','hubs', 'battery_types', 'evStatus', 'bike_types'));
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -130,9 +130,9 @@ class ProductController extends AdminAppController
             $ev_categories = $data['result']['ev_categories'];
             $hubs = $data['result']['hubs'];
             $battery_types = $data['result']['battery_types'];
-            $vehicleStatus = $data['result']['vehicleStatus'];
+            $evStatus = $data['result']['evStatus'];
             $bike_types = $data['result']['bike_types'];
-            return view('admin.inventory.edit_product', compact('product', 'rent_cycles', 'ev_types', 'ev_categories', 'permission', 'hubs', 'battery_types', 'vehicleStatus', 'bike_types'));
+            return view('admin.inventory.edit_product', compact('product', 'rent_cycles', 'ev_types', 'ev_categories', 'permission', 'hubs', 'battery_types', 'evStatus', 'bike_types'));
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),

@@ -46,9 +46,12 @@ return [
     ],
     'USER_BASE_NOTIFICATION' => [
         'NEWLLY_ONBOARDED' => 1,
-        'RIDER_WITG_IMMOBILIZED_VEHICLE' => 2,
-        'RIDER_RAISED_EV_RETURN_REQUEST' => 3,
-        'ALL' => 4,
+        'MOBILIZED' => 2,
+        'IMMOBILIZED' => 3,
+        'EV_RETURN_REQUEST' => 4,
+        'EV_SERVICE_REQUIRED' => 5,
+        'DUE_PAYMENT' => 6,
+        'ALL' => 7,
     ],
     'EV_CATEGORIES' => [
         'TWO_WHEELER' => 1,
@@ -83,13 +86,6 @@ return [
         //"MOBILE_HOLDER" => 3,
     ],
 
-    'VEHICLE_STATUS' => [
-        'ACTIVE' => 1,
-        'INACTIVE' => 2,
-        'NON_FUNCTIONAL' => 3,
-        'NOT_AVAILABLE' => 4,
-    ],
-
     'ORDER_STATUS' => [
         'ASSIGNED' => 1,
         'PENDING' => 2,
@@ -101,6 +97,7 @@ return [
         'NON_FUNCTIONAL' => 3,
         'ASSIGNED' => 4,
         'DELETED' => 5,
+        'RFD' => 6
     ],
     'PAYMENT_STATUS' => [
         'SUCCESS' => 1,

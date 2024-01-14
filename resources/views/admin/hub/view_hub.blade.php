@@ -93,6 +93,7 @@
                         <li><a href="{{route('hub-view',['slug' => request()->route('slug'), 'param' => 'vehicle'])}}" class="{{request()->route('param')=='vehicle' ? 'active' : ''}}">Hub Inventory</a></li>
                         <li><a href="{{route('hub-view',['slug' => request()->route('slug'), 'param' => 'employee'])}}" class="{{request()->route('param')=='employee' ? 'active' : ''}}">Employees</a></li>
                         <li><a href="{{route('hub-view',['slug' => request()->route('slug'), 'param' => 'accessories'])}}" class="{{request()->route('param')=='accessories' ? 'active' : ''}}">Accessories</a></li>
+
                     </ul>
                 </div>
             </div>
@@ -122,6 +123,11 @@
                                         <img src="{{asset('public/assets/images/icons/download.svg')}}" alt=""> Export
                                     </button>
                                 </li>
+                                @if(request()->route('param') == 'vehicle')
+                                <li style="float:right">
+                                    <a class="btn btn-success waves-effect waves-light vehicleFilterForm" data-toggle="modal" data-target="#vehicleFilterForm">Advance Search</a></h1>
+                                </li>
+                                @endif
                                 @can('add_user', $permission)
                                 @if(request()->route('param') == 'employee')
                                 <li style="float:right">
@@ -445,7 +451,11 @@
             $("#orderTlName").val(tl_name);
             $("#orderClientAddress").val(client_address);
         });
-
+        //Customer overview
+        $('.vehicleFilterForm').on('click', function(event) {
+            event.preventDefault();
+            $('#vehicleFilterForm').modal('show');
+        });
         $('#ev_type_id').change(function() {
             var selectedOption = $(this).find('option:selected');
             var value1 = selectedOption.data('value1');
