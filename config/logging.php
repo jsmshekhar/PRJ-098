@@ -99,6 +99,14 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+        'payment_webhook' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/webhook/payment_webhook.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 0,
+            'permission' => 0777,
+
+        ],
     ],
 
 ];

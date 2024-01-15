@@ -193,4 +193,109 @@ class CommonDataController extends ApiController
             return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
         }
     }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : get-transactions
+    Request   : Object
+    Return    : Json
+    --------------------------------------------------*/
+    public function getTransactions(Request $request)
+    {
+        try {
+            $result = ApiModel::getTransactions($request);
+            return finalResponse($result);
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : get-ev-details
+    Request   : Object
+    Return    : Json
+    --------------------------------------------------*/
+    public function getEvDetails(Request $request)
+    {
+        try {
+            $result = ApiModel::getEvDetails($request);
+            return finalResponse($result);
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : get-near-hub-center
+    Request   : Object
+    Return    : Json
+    --------------------------------------------------*/
+    public function getNearHubCenter(Request $request)
+    {
+        try {
+            $result = ApiModel::getNearHubCenter($request);
+            return finalResponse($result);
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : get-upcomming-rent
+    Request   : Object
+    Return    : Json
+    --------------------------------------------------*/
+    public function getUpcommingRent(Request $request)
+    {
+        try {
+            $result = ApiModel::getUpcommingRent($request);
+            return finalResponse($result);
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : pay-rent-bill
+    Request   : Object
+    Return    : Json
+    --------------------------------------------------*/
+    public function payUpcommingRent(Request $request)
+    {
+        try {
+            $result = ApiModel::payUpcommingRent($request);
+            return finalResponse($result);
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
 }
