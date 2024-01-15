@@ -60,7 +60,7 @@
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card nav_page">
                 <div class="card-header border-bottom bg-white py-3">
                     <h4>Products</h4>
                     <div class="btn-card-header">
@@ -68,8 +68,9 @@
                             Product</a>
                     </div>
                 </div>
+                @if (count($products) > 0)
                 <div class="cat_list cat_sub">
-                    @if (count($products) > 0)
+                 
                     <ul>
                         @foreach($products as $key => $product)
                         <li class="">
@@ -106,13 +107,14 @@
                         </li>
                         @endforeach
                     </ul>
-                    {{ $products->withQueryString()->links('pagination::bootstrap-4') }}
+                    
+                </div>
+                {{ $products->withQueryString()->links('pagination::bootstrap-4') }}
                     @else
                     <div>
                         @include('admin.common.no_record')
                     </div>
                     @endif
-                </div>
             </div>
         </div>
     </div>
