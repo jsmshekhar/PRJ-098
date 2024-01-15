@@ -148,3 +148,12 @@ if (!function_exists('dateFormat')) {
         return $formattedDate;
     }
 }
+
+if (!function_exists('dateTimeFormat')) {
+    function dateTimeFormat($dateTimeString)
+    {
+        $dateTime = Carbon::parse($dateTimeString);
+        $formattedDate = $dateTime->format('Y-m-d h:i:s');
+        return $formattedDate;
+    }
+}

@@ -18,12 +18,13 @@ class CreateRiderTransactionHistoriesTable extends Migration
             $table->unsignedBigInteger('rider_id')->nullable();
             $table->unsignedBigInteger('order_id')->nullable();
             $table->string('slug', 12)->nullable();
-            $table->string('transaction_id',151)->nullable();
-            $table->string('transaction_ammount',50)->nullable();
+            $table->string('transaction_id', 151)->nullable();
+            $table->string('transaction_ammount', 50)->nullable();
             $table->tinyInteger('transaction_type')->nullable()->comment('1 => Credited, 2 => Debited');
             $table->tinyInteger('transaction_mode')->nullable()->comment('1 => Card, 2 => Wallet, 3 => UPI');
             $table->tinyInteger('status_id')->nullable()->comment('1 => Succes, 2 => Pending, 3 => Failed, 4 => Rejected');
             $table->tinyInteger('payment_status')->default(2)->comment('1 => Succes, 2 => Pending, 3 => Failed, 4 => Rejected');
+            $table->text('transaction_payload')->nullable();
             $table->string('transaction_notes')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();

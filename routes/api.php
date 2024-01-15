@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\KycApiController;
 use App\Http\Controllers\Api\AuthApiController;
+use App\Http\Controllers\Api\WebhookController;
 use App\Http\Controllers\Api\CommonDataController;
 
 /*
@@ -24,6 +25,8 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     Route::post('/upload-file', [KycApiController::class, 'uploadFile']);
     Route::get('/faqs', [CommonDataController::class, 'getFaqs']);
     Route::get('/get-complaint-category', [CommonDataController::class, 'complainCategory']);
+    Route::post('get-near-hub-center', [CommonDataController::class, 'getNearHubCenter']);
+    Route::post('payment-webhook', [WebhookController::class, 'paymentWebhook']);
 });
 
 
@@ -44,4 +47,10 @@ Route::middleware(['auth:rider-api'])->namespace('Api')->prefix('v1')->group(fun
     Route::post('return-exchange-request', [CommonDataController::class, 'returnExchangeRequest']);
     Route::get('/get-current-order', [CommonDataController::class, 'getCurrentOrder']);
     Route::post('update-payment-status', [KycApiController::class, 'updatePaymentStatus']);
+
+    Route::get('/get-transactions', [CommonDataController::class, 'getTransactions']);
+    Route::get('/get-ev-details', [CommonDataController::class, 'getEvDetails']);
+
+    Route::get('/get-upcomming-rent', [CommonDataController::class, 'getUpcommingRent']);
+    Route::post('pay-upcomming-rent', [CommonDataController::class, 'payUpcommingRent']);
 });

@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use App\Models\Rider;
+use Illuminate\Http\Response;
+use App\Traits\UploadsImageTrait;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\DB;
-use App\Traits\UploadsImageTrait;
-use Illuminate\Support\Facades\Auth;
 
 class RiderOrder extends Model
 {
@@ -63,10 +64,17 @@ class RiderOrder extends Model
             $orderDetails = RiderOrder::where(['slug' => $orderSlug, 'status_id' => config('constants.ORDER_STATUS.PENDING'), 'payment_status' => config('constants.PAYMENT_STATUS.SUCCESS')])->whereNull('deleted_at')->first();
             if (!is_null($orderDetails)) {
                 $riderId = $orderDetails->rider_id ?? null;
+                $orderId = $orderDetails->order_id ?? null;
                 $evSlug = $request->mapped_ev ?? null;
                 $rider = Rider::where(['rider_id' => $riderId])->whereNull('deleted_at')->first();
                 $product = Product::where(['slug' => $evSlug])->where('status_id', config('constants.ACTIVE_STATUS'))->whereNull('deleted_at')->first();
                 if (!is_null($rider) && !is_null($product)) {
+                    $rentCycle = (int)$orderDetails->subscription_days;
+                    $assignDate = NOW();
+                    $currentDate = Carbon::now();
+                    $toDate = $currentDate->addDays($rentCycle);
+
+                    $mappedVehicleId = $product->product_id;
                     $records = [
                         'status_id' => config('constants.ORDER_STATUS.ASSIGNED'),
                         'mapped_vehicle_id' => $product->product_id,
@@ -106,6 +114,16 @@ class RiderOrder extends Model
                         }
                     }
                     if ($status) {
+                        $riderOrderPayments = [
+                            'slug' => slug(),
+                            'order_id' => $orderId,
+                            'rider_id' => $riderId,
+                            'mapped_vehicle_id' => $mappedVehicleId,
+                            'from_date' => $assignDate,
+                            'to_date' => $toDate,
+                            'status_id' => 1,
+                        ];
+                        RiderOrderPayment::insert($riderOrderPayments);
                         Product::where('slug', $evSlug)->update(['status_id' => config('constants.EV_STATUS.ASSIGNED')]);
                         $response = [
                             'status' => Response::HTTP_OK,

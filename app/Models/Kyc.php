@@ -266,7 +266,7 @@ class Kyc extends Model
                                 $orderId = DB::table('rider_orders')->insertGetId($orderDetails);
                                 if ($orderId) {
                                     $result = ['order_code' => $orderCode];
-                                    $orderTransaction = [
+                                    /*$orderTransaction = [
                                         "rider_id" => $riderId,
                                         "order_id" => $orderId,
                                         "transaction_type" => 1,
@@ -278,6 +278,7 @@ class Kyc extends Model
                                         "created_at" => NOW(),
                                     ];
                                     DB::table('rider_transaction_histories')->insertGetId($orderTransaction);
+                                    */
                                     return successResponse(Response::HTTP_OK, Lang::get('messages.ORDER_CREATED'), $result);
                                 }
                                 return errorResponse(Response::HTTP_OK, Lang::get('messages.ORDER_ERROR'), (object)[]);
@@ -503,8 +504,23 @@ class Kyc extends Model
                 $orderId = (int)$order->order_id;
                 $status = RiderOrder::where('rider_id', $riderId)->where('slug', $orderCode)->update(['payment_status' => $paymentStatus]);
                 if ($status) {
-                    $status = RiderTransactionHistory::where('rider_id', $riderId)->where('order_id', $orderId)->update(['payment_status' => $paymentStatus, 'status_id' => $paymentStatus, 'transaction_mode' => $transactionMode]);
+                    $orderTransaction = [
+                        "rider_id" => $riderId,
+                        "order_id" => $orderId,
+                        "slug" => slug(),
+                        "transaction_ammount" => $order->product_price,
+                        "transaction_type" => 1, //Credited
+                        'transaction_mode' => $transactionMode,
 
+                        'status_id' => $paymentStatus,
+                        'payment_status' => $paymentStatus,
+                        'transaction_id' => $request->transaction_id ?? null,
+                        'transaction_payload' => $request->transaction_payload ?? null,
+                        'transaction_notes' => 'Status update from Mobile APP',
+                        "created_by" => $riderId,
+                        "created_at" => NOW(),
+                    ];
+                    DB::table('rider_transaction_histories')->insertGetId($orderTransaction);
                     $result = ['order_code' => $orderCode];
                     return successResponse(Response::HTTP_OK, Lang::get('messages.UPDATE'), $result);
                 }
