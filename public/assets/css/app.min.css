@@ -7064,6 +7064,14 @@ table .dropdown-menu.show .dropdown-item:hover {
   padding: 15px;
 }
 
+.nav_page nav{
+  padding: 0 29px 10px;
+}
+
+.page-link:focus{
+  box-shadow:none
+}
+
 @media (max-width:1450px) {
   .card_dash_two .col-xl-6.col-md-6{
     width: 100%;

@@ -92,7 +92,7 @@
                                             <label for="role-name" class="col-form-label">Notification User Base</label>
                                             <select class="form-control selectBasic" name="notification_user_based" id="notification_user_based">
                                                 @foreach($user_base as $key => $uBased)
-                                                <option value="{{$uBased}}" @if($uBased==$notification->notification_user_based) selected @endif>{{$uBased == 1 ? "Newly Onboarded" : ($uBased == 2 ? "Rider With Immobilized Vehicle" : ($uBased == 3 ? "Rider Raised Return EV Request" : "All"))}}</option>
+                                                <option value="{{$uBased}}" @if($uBased==$notification->notification_user_based) selected @endif>{{$uBased == 1 ? "Newly Onboarded" : ($uBased == 2 ? "Mobilized" : ($uBased == 3 ? "Immmobilized" : ($uBased == 4 ? "EV Return Request" : ($uBased == 5 ? "EV Service Request" :  ($uBased == 6 ? "Due Payment" : "All")))))}}</option>
                                                 @endforeach
                                             </select>
                                         </div>

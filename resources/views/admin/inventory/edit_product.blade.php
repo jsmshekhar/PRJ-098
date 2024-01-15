@@ -41,17 +41,37 @@
                                     <label for="example-title-input" class="form-label">GPS IMEI</label>
                                     <input class="form-control" type="text" name="gps_emei_number" id="gps_emei_number" value="{{$product->gps_emei_number}}">
                                 </div>
-                                <div class="col-md-4 mb-3">
-                                    <label for="example-title-input" class="form-label">Speed (km/h)</label>
-                                    <input class="form-control" type="text" name="speed" id="speed" value="{{$product->speed}}">
+                                <div class="col-md-6 mb-3">
+                                    <label for="ev_category" class="form-label">EV Category</label>
+                                    <select class="form-control selectBasic" name="ev_category" id="ev_category">
+                                        @foreach($ev_categories as $key => $ev_category)
+                                        <option value="{{$ev_category}}" @if($ev_category==$product->ev_category_id) selected @endif>{{$ev_category == 1 ? "Two Wheeler" : "Three Wheeler"}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="ev_type_id" class="form-label">EV Type</label>
+                                    <select class="form-control selectBasic" name="ev_type_id" id="ev_type_id">
+                                        @foreach($ev_types as $key => $ev_type)
+                                        <option value="{{$ev_type->ev_type_id}}" @if($ev_type->ev_type_id==$product->ev_type_id) selected @endif>{{$ev_type->ev_type_name}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <label for="example-title-input" class="form-label">Single charge Run Time(km)</label>
-                                    <input class="form-control" type="text" name="km_per_charge" id="km_per_charge" value="{{$product->km_per_charge}}">
+                                    <label for="speed" class="form-label">Speed* (km/h) &nbsp;<span class="spanColor onlyDigitSpeed_error speed_error" id="speed_error"></span></label>
+                                    <input class="form-control onlyDigitSpeed" type="text" name="speed" id="speed" value="{{$product->speed}}">
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <label for="example-title-input" class="form-label">Rent per Day(Rs) &nbsp; <span class="spanColor onlyDigit_error"> </span></label>
-                                    <input class="form-control onlyDigit" type="text" name="per_day_rent" id="per_day_rent" value="{{$product->per_day_rent}}">
+                                    <label for="range" class="form-label ">Single charge Run Time* (km) &nbsp;<span class="spanColor onlyDigit_error range_error" id="range_error"></span></label>
+                                    <input class="form-control onlyDigit" type="text" name="km_per_charge" id="km_per_charge" value="{{$product->km_per_charge}}">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="example-title-input" class="form-label">Rent per Day(Rs) &nbsp; <span class="spanColor onlyDigitRent_error rent_error" id="rent_error"> </span></label>
+                                    <input class="form-control onlyDigitRent" type="text" name="per_day_rent" id="per_day_rent" value="{{$product->per_day_rent}}">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="range" class="form-label ">Monthly Range (km) &nbsp;<span class="spanColor onlyDigitMonthly_error monthly_range_error" id="monthly_range_error"></span></label>
+                                    <input class="form-control onlyDigitMonthly" type="text" name="total_range" id="total_range" value="{{$product->total_range}}">
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="rent_cycle" class="form-label">Rent Cycle</label>
@@ -77,24 +97,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="ev_category" class="form-label">EV Category</label>
-                                    <select class="form-control selectBasic" name="ev_category" id="ev_category">
-                                        @foreach($ev_categories as $key => $ev_category)
-                                        <option value="{{$ev_category}}" @if($ev_category==$product->ev_category_id) selected @endif>{{$ev_category == 1 ? "Two Wheeler" : "Three Wheeler"}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="ev_type_id" class="form-label">EV Type</label>
-                                    <select class="form-control selectBasic" name="ev_type_id" id="ev_type_id">
-                                        @foreach($ev_types as $key => $ev_type)
-                                        <option value="{{$ev_type->ev_type_id}}" @if($ev_type->ev_type_id==$product->ev_type_id) selected @endif>{{$ev_type->ev_type_name}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label for="hub_id" class="form-label">Hub</label>
                                     <select class="form-control selectBasic" name="hub_id" id="hub_id">
                                         @foreach($hubs as $key => $hub)
@@ -102,11 +105,11 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label for="status_id" class="form-label">Status</label>
                                     <select class="form-control selectBasic" name="status_id" id="status_id">
-                                        @foreach($vehicleStatus as $key => $status_id)
-                                        <option value="{{$status_id}}" @if($status_id==$product->status_id) selected @endif>{{$status_id == 1 ? "Active" : ($status_id == 2 ? 'Inactive' : ($status_id == 3 ? 'Non Functional' : 'Not Available'))}}</option>
+                                        @foreach($evStatus as $key => $status_id)
+                                        <option value="{{$status_id}}" @if($status_id==$product->status_id) selected @endif>{{$status_id == 1 ? "Active" : ($status_id == 2 ? 'Inactive' : ($status_id == 3 ? 'Non Functional' : ($status_id == 4 ? 'Assigned' : ($status_id == 6 ? 'RFD' : ''))))}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -171,6 +174,23 @@
             if (name == "") {
                 $(".chassis_number_error").html('This field is required!');
                 $("input#chassis_number").focus();
+                return false;
+            }
+            var speed = $('#speed').val();
+            if (speed == "") {
+                $(".speed_error").css("display", "");
+                $(".speed_error").html('This field is required!');
+                $(".ev_type_name_error").html('');
+                $(".range_error").html('');
+                $("input#speed").focus();
+                return false;
+            }
+            var range = $('#range').val();
+            if (range == "") {
+                $(".range_error").css("display", "");
+                $(".range_error").html('This field is required!');
+                $(".ev_type_name_error").html('');
+                $("input#km_per_charge").focus();
                 return false;
             }
             $('#submitForm').prop('disabled', true);

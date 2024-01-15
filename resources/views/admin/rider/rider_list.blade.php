@@ -171,8 +171,7 @@
                                                 <tr>
                                                     <td>
                                                         <a href="{{ route('customer-view', $rider->slug) }}"
-                                                            title="View rider" style="cursor: pointer;margin-right: 5px;"
-                                                            target="_blank">{{ "CUS".$rider->customer_id }}
+                                                            title="View rider" style="cursor: pointer;margin-right: 5px;">{{ "CUS".$rider->customer_id }}
                                                         </a>
                                                     </td>
                                                     {{-- <td>ERF567GB</td> --}}

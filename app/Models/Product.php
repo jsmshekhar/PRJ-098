@@ -77,9 +77,9 @@ class Product extends Model
             $ev_categories = config('constants.EV_CATEGORIES');
             $rent_cycles = config('constants.RENT_CYCLE');
             $battery_types = config('constants.BATTERY_TYPE');
-            $vehicleStatus = config('constants.VEHICLE_STATUS');
+            $evStatus = config('constants.EV_STATUS');
             $bike_types = config('constants.BIKE_TYPE');
-            return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'hubs' => $hubs, 'battery_types' => $battery_types, 'vehicleStatus' => $vehicleStatus, 'bike_types' => $bike_types]);
+            return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'hubs' => $hubs, 'battery_types' => $battery_types, 'evStatus' => $evStatus, 'bike_types' => $bike_types]);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -114,6 +114,7 @@ class Product extends Model
             $is_display_on_app = !empty($request->is_display_on_app) ? 1 : 2;
             $status_id = !empty($request->status_id) ? $request->status_id : 1;
             $bike_type = !empty($request->bike_type) ? $request->bike_type : 2;
+            $total_range = !empty($request->total_range) ? $request->total_range : null;
             $product_image = '';
             if ($request->image) {
                 $image = $request->file('image');
@@ -142,6 +143,7 @@ class Product extends Model
                 "hub_id" => $hub_id,
                 "is_display_on_app" => $is_display_on_app,
                 "bike_type" => $bike_type,
+                "total_range" => $total_range,
                 'image' => !empty($product_image) ? $product_image : "",
                 "user_id" => $auth->user_id,
                 "user_slug" => $auth->slug,
@@ -188,9 +190,9 @@ class Product extends Model
             $ev_categories = config('constants.EV_CATEGORIES');
             $rent_cycles = config('constants.RENT_CYCLE');
             $battery_types = config('constants.BATTERY_TYPE');
-            $vehicleStatus = config('constants.VEHICLE_STATUS');
+            $evStatus = config('constants.EV_STATUS');
             $bike_types = config('constants.BIKE_TYPE');
-            return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['product'=> $product, 'rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'hubs' => $hubs, 'battery_types' => $battery_types, 'vehicleStatus' =>$vehicleStatus, 'bike_types' => $bike_types]);
+            return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['product'=> $product, 'rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'hubs' => $hubs, 'battery_types' => $battery_types, 'evStatus' => $evStatus, 'bike_types' => $bike_types]);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -224,6 +226,7 @@ class Product extends Model
             $is_display_on_app = !empty($request->is_display_on_app) ? 1 : 2;
             $status_id = !empty($request->status_id) ? $request->status_id : 1;
             $bike_type = !empty($request->bike_type) ? $request->bike_type : 2;
+            $total_range = !empty($request->total_range) ? $request->total_range : null;
            
             $product_image = '';
             if ($request->image) {
@@ -250,6 +253,7 @@ class Product extends Model
                     "hub_id" => $hub_id,
                     "is_display_on_app" => $is_display_on_app,
                     "bike_type" => $bike_type,
+                    "total_range" => $total_range,
                     'image' => $product_image,
                     "user_id" => $auth->user_id,
                     "user_slug" => $auth->slug,
@@ -274,6 +278,7 @@ class Product extends Model
                     "hub_id" => $hub_id,
                     "is_display_on_app" => $is_display_on_app,
                     "bike_type" => $bike_type,
+                    "total_range" => $total_range,
                     "user_id" => $auth->user_id,
                     "user_slug" => $auth->slug,
                     "updated_by" => $auth->user_id,
