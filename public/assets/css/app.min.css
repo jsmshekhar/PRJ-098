@@ -6856,9 +6856,16 @@ table .dropdown-menu.show .dropdown-item:hover {
 }
 
 
+
 @media (max-width:1523px) {
   .cat_list ul li {
-    width: 32%;
+    width: 23%;
+  }
+}
+
+@media (max-width:1440px) {
+  .cat_list ul li {
+    width: 23.5%;
   }
 }
 
