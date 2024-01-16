@@ -201,7 +201,7 @@
                 theme: 'maximized',
                 colors: ['#F59E0B', '#EC4899', '#14B8A6', '#3B82F6'],
             };
-            
+
 
             var pieChart = new google.visualization.PieChart(document.getElementById('donutChart2W'));
             pieChart.draw(data, options);
@@ -279,21 +279,17 @@
     google.charts.setOnLoadCallback(drawChart);
 
     function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-            ['Year', 'Corporate', 'Individual', 'Student', 'Vendor'],
-            ['2023', 200, 350, 200, 1000],
-            ['2024', 120, 250, 10, 900],
-            ['2025', 5, 6, 2, 4],
-            ['2026', 1, 2, 5, 3],
-            ['2027', 0, 1, 3, 0]
-        ]);
+        var data = google.visualization.arrayToDataTable(<?php echo json_encode($ridersArray); ?>);
 
         var options = {
+           legend: { position: 'top', maxLines: 3 },
+            hAxis: { minValue: 0, title: 'Value' },
             bars: 'verticle',
             hAxis: {
                 format: 'decimal'
             },
-            height: 400,
+
+            height: 510,
             colors: ['#5BF0CC', '#C81997', '#3B82F6', '#F59E0B'],
             axes: {
                 y: {

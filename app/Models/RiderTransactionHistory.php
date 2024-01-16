@@ -2,8 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Http\Response;
+use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
 
 class RiderTransactionHistory extends Model
 {
@@ -64,7 +69,7 @@ class RiderTransactionHistory extends Model
         } else {
             switch ($this->payment_status) {
                 case 1:
-                    return 'Succes';
+                    return 'Success';
                     break;
                 case 2:
                     return 'Pending';
@@ -78,6 +83,72 @@ class RiderTransactionHistory extends Model
                 default:
                     return "Pending";
             }
+        }
+    }
+
+    public function getTransactionHistory($request)
+    {
+        try {
+            $auth = Auth::user();
+            $transactions = RiderTransactionHistory::leftJoin('riders', 'rider_transaction_histories.rider_id','riders.rider_id')
+            ->select(
+                'rider_transaction_histories.transaction_id',
+                'rider_transaction_histories.transaction_ammount',
+                'rider_transaction_histories.created_at',
+                'riders.customer_id',
+                'rider_transaction_histories.transaction_type',
+                'rider_transaction_histories.transaction_notes',
+                DB::raw('CASE 
+                            WHEN rider_transaction_histories.transaction_mode = 1 THEN "Card" 
+                            WHEN rider_transaction_histories.transaction_mode = 2 THEN "Wallet" 
+                            WHEN rider_transaction_histories.transaction_mode = 3 THEN "UPI" 
+                            WHEN rider_transaction_histories.transaction_mode = 4 THEN "Net Banking" 
+                            ELSE "" 
+                        END as transaction_mode'),
+                DB::raw('CASE 
+                            WHEN rider_transaction_histories.payment_status = 1 THEN "Success" 
+                            WHEN rider_transaction_histories.payment_status = 2 THEN "Pending" 
+                            WHEN rider_transaction_histories.payment_status = 3 THEN "Failed" 
+                            WHEN rider_transaction_histories.payment_status = 4 THEN "Rejected" 
+                            ELSE "" 
+                        END as payment_status')
+            );
+
+            if (isset($request->is_search) && $request->is_search == 1) {
+                if (isset($request->trans_id) && !empty($request->trans_id)) {
+                    $transactions = $transactions->where('rider_transaction_histories.transaction_id', 'LIKE', "%{$request->trans_id}%");
+                }
+                if (isset($request->ch_no) && !empty($request->ch_no)) {
+                    $transactions = $transactions->where('rider_transaction_histories.transaction_type', $request->ch_no);
+                }
+                if (isset($request->cust_id) && !empty($request->cust_id)) {
+                    $transactions = $transactions->where('riders.customer_id', 'LIKE', $request->cust_id);
+                }
+                if (isset($request->date) && !empty($request->date)) {
+                    $transactions = $transactions->where('rider_transaction_histories.created_at', $request->date);
+                }
+                if (isset($request->status) && !empty($request->status)) {
+                    $transactions = $transactions->where('rider_transaction_histories.payment_status', $request->status);
+                }
+            }
+            $transactions = $transactions->orderBy('created_at', 'DESC')->paginate(20);
+
+            $count = RiderTransactionHistory::leftJoin('riders', 'rider_transaction_histories.rider_id', 'riders.rider_id')
+              ->get();
+            $count = count($count);
+
+            if (count($transactions) > 0) {
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['transactions' => $transactions, 'count' => $count]);
+            } else {
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['transactions' => [], 'count' => '']);
+            }
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
         }
     }
 }

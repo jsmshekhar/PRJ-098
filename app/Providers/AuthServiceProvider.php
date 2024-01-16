@@ -13,6 +13,7 @@ use App\Models\Notification;
 use App\Models\Product;
 use App\Models\HubPartAccessories;
 use App\Models\RiderOrder;
+use App\Models\RiderTransactionHistory;
 use App\Policies\UserPolicy;
 use App\Policies\HubPolicy;
 use App\Policies\InventryPolicy;
@@ -43,7 +44,7 @@ class AuthServiceProvider extends ServiceProvider
         HubPartAccessories::class => HubPartAccessoriesPolicy::class,
         Product::class => InventryPolicy::class,
         RiderOrder::class => OrderPolicy::class,
-        //Hub::class => ReturnExchangePolicy::class,
+        RiderTransactionHistory::class => TransactionPolicy::class,
     ];
 
     /**
@@ -110,6 +111,9 @@ class AuthServiceProvider extends ServiceProvider
         //Order Policies
         Gate::define('view', 'App\Policies\HubPartAccessoriesPolicy@view');
         Gate::define('assign_ev', 'App\Policies\HubPartAccessoriesPolicy@assign_ev');
+
+        //Transaction Policies
+        Gate::define('view', 'App\Policies\TransactionPolicy@view');
 
         Passport::routes();
         Passport::tokensExpireIn(now()->addDays(7));
