@@ -155,7 +155,9 @@
             <div class="col-12">
                 <h3 class="pt-0">Users Classification Data</h3>
             </div>
-            <!-- card body -->
+            <div class="dash_body_grp">
+                <div id="barchart_material"></div>
+            </div>
             <div>
 
             </div>
@@ -180,9 +182,10 @@
                 ['Non-Functional Vehicle', <?php echo $evstatus2W->non_functional; ?>],
             ]);
             var options = {
-                pieHole: 0.4,
+                pieHole: 0.5,
                 pieSliceText: 'percentage',
-                theme: 'maximized'
+                theme: 'maximized',
+                colors: ['#F59E0B', '#EC4899', '#14B8A6', '#3B82F6'],
             };
 
             var pieChart = new google.visualization.PieChart(document.getElementById('donutChart2W'));
@@ -197,7 +200,7 @@
             totalLabel.style.top = '60%';
             totalLabel.style.left = '50%';
             totalLabel.style.transform = 'translate(-50%, -50%)';
-            totalLabel.style.fontSize = '14px';
+            totalLabel.style.fontSize = '12px';
 
             document.getElementById('donutChart2W').appendChild(totalLabel);
         },
@@ -223,10 +226,10 @@
                 ['Non-Functional Vehicle', 4],
             ]);
             var options = {
-                pieHole: 0.4,
+                pieHole: 0.5,
                 pieSliceText: 'percentage',
                 theme: 'maximized',
-                colors: ['#4285F4', '#34A853', '#FBBC05', '#EA4335', '#0F9D58'] // Set colors for each section
+                colors: ['#D30BA7', '#41D9FB', '#55D10A', '#F4F911'] // Set colors for each section
             };
             var evCount3W = "<?php echo $evCount3W; ?>";
             if (evCount3W > 0) {
@@ -252,5 +255,43 @@
         },
         packages: ['corechart']
     });
+</script>
+<script type="text/javascript">
+    google.charts.load('current', {
+        'packages': ['bar']
+    });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+            ['Year', 'Corporate', 'Individual', 'Student', 'Vendor'],
+            ['2023', 200, 350, 200, 1000],
+            ['2024', 120, 250, 10, 900],
+            ['2025', 5, 6, 2, 4],
+            ['2026', 1, 2, 5, 3],
+            ['2027', 0, 1, 3, 0]
+        ]);
+
+        var options = {
+            bars: 'verticle',
+            hAxis: {
+                format: 'decimal'
+            },
+            height: 400,
+            colors: ['#5BF0CC', '#C81997', '#3B82F6', '#F59E0B'],
+            axes: {
+                y: {
+                    0: {
+                        side: 'left',
+                        label: 'Number of Customers'
+                    } // Top x-axis.
+                }
+            },
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('barchart_material'));
+
+        chart.draw(data, google.charts.Bar.convertOptions(options));
+    }
 </script>
 @endsection
