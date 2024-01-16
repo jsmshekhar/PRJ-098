@@ -124,20 +124,20 @@
                                     </button>
                                 </li>
                                 @if(request()->route('param') == 'vehicle')
-                                <li style="float:right">
+                                <li>
                                     <a class="btn btn-success waves-effect waves-light vehicleFilterForm" data-toggle="modal" data-target="#vehicleFilterForm">Advance Search</a></h1>
                                 </li>
                                 @endif
                                 @can('add_user', $permission)
                                 @if(request()->route('param') == 'employee')
-                                <li style="float:right">
+                                <li>
                                     <a href="" class="btn btn-success waves-effect waves-light userModelForm" data-toggle="modal" data-operation="add" data-hub_id="{{ $hub->hub_id }}" data-empid="{{ $hub->max_emp_id }}" data-target="#userModelForm">Create New Employee</a></h1>
                                 </li>
                                 @endif
                                 @endcan
                                 @can('raise_request', $permission)
                                 @if(request()->route('param') == 'accessories' && !empty(Auth::user()->hub_id))
-                                <li style="float:right">
+                                <li>
                                     <a class="btn btn-success waves-effect waves-light raiseModelForm" data-toggle="modal">Raise Request</a></h1>
                                 </li>
                                 @endif
