@@ -6856,9 +6856,16 @@ table .dropdown-menu.show .dropdown-item:hover {
 }
 
 
+
 @media (max-width:1523px) {
   .cat_list ul li {
-    width: 32%;
+    width: 23%;
+  }
+}
+
+@media (max-width:1440px) {
+  .cat_list ul li {
+    width: 23.5%;
   }
 }
 
@@ -7064,12 +7071,63 @@ table .dropdown-menu.show .dropdown-item:hover {
   padding: 15px;
 }
 
-.nav_page nav{
+nav ul.pagination{
   padding: 0 29px 10px;
 }
 
 .page-link:focus{
   box-shadow:none
+}
+
+ul.grp_list{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  left: 25%;
+}
+
+.grp_clr_box{
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.grp_green{
+  background-color: #4285F4;
+}
+
+.grp_red{
+  background-color: #EC4899;
+}
+
+.grp_yellow{
+  background-color: #F59E0B;
+}
+
+.grp_blue{
+  background-color: #14B8A6;
+}
+
+.grp_greendk{
+  background-color: #55D10A;
+}
+
+
+@media (max-width:1520px) {
+
+  .col-xl-6.col-md-6.dash_box_gp{
+    width: 100% !important;
+  }
+
+  ul.grp_list{
+    left: 35%;
+  }
+  
 }
 
 @media (max-width:1450px) {
@@ -7198,6 +7256,10 @@ table .dropdown-menu.show .dropdown-item:hover {
 
 .card_dash_two .row .col-md-6:first-child{
   margin-bottom: 20px;
+}
+
+ul.grp_list{
+  left: 25%;
 }
 
 }

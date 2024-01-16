@@ -79,7 +79,7 @@
 
 <div class="row card_dash card_dash_two p-0">
 
-    <div class="col-xl-6 col-md-6">
+    <div class="col-xl-6 col-md-6 dash_box_gp">
         <div class="row">
             <div class="col-md-6">
                 <div class="card card-h-100 m-0 ">
@@ -111,7 +111,7 @@
                     </div><!-- end card body -->
                 </div>
             </div>
-            <div class="col-xl-12">
+            <div class="col-xl-12 dash_box_gp">
                 <!-- card -->
                 <div class="card-body card mt-4">
                     <div class="col-12">
@@ -126,7 +126,15 @@
                                         <h4>Two Wheelers</h4>
                                     </div>
                                     <div class="dash_body_grp">
-                                        <div id="donutChart2W"></div>
+                                        <div id="donutChart2W" class="position-relative"></div>
+                                        <div class="position-relative">
+                                            <ul class="grp_list">
+                                                <li><span class="grp_clr_box grp_yellow"></span>Mobilized Vehicles</li>
+                                                <li><span class="grp_clr_box grp_red"></span>Immobilized Vehicles</li>
+                                                <li><span class="grp_clr_box grp_green"></span>Functional Vehicles</li>
+                                                <li><span class="grp_clr_box grp_blue"></span>Non-Functional Vehicles</li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -136,7 +144,13 @@
                                         <h4>Three Wheelers</h4>
                                     </div>
                                     <div class="dash_body_grp">
-                                        <div id="donutChart3W"></div>
+                                        <div id="donutChart3W" class="position-relative"></div>
+                                        <ul class="grp_list">
+                                            <li><span class="grp_clr_box grp_yellow"></span>Mobilized Vehicles</li>
+                                            <li><span class="grp_clr_box grp_red"></span>Immobilized Vehicles</li>
+                                            <li><span class="grp_clr_box grp_green"></span>Functional Vehicles</li>
+                                            <li><span class="grp_clr_box grp_blue"></span>Non-Functional Vehicles</li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
@@ -148,7 +162,7 @@
         </div>
     </div><!-- end col -->
 
-    <div class="col-xl-6 col-md-6">
+    <div class="col-xl-6 col-md-6 dash_box_gp">
 
         <!-- card -->
         <div class="card-body card m-0-cust">
@@ -187,6 +201,7 @@
                 theme: 'maximized',
                 colors: ['#F59E0B', '#EC4899', '#14B8A6', '#3B82F6'],
             };
+            
 
             var pieChart = new google.visualization.PieChart(document.getElementById('donutChart2W'));
             pieChart.draw(data, options);
@@ -197,11 +212,11 @@
             var totalLabel = document.createElement('div');
             totalLabel.innerHTML = "Total EVs <br> <b style='text-align:center'>" + totalValue + "<b>";
             totalLabel.style.position = 'absolute';
-            totalLabel.style.top = '60%';
+            totalLabel.style.top = '50%';
             totalLabel.style.left = '50%';
             totalLabel.style.transform = 'translate(-50%, -50%)';
             totalLabel.style.fontSize = '12px';
-
+            totalLabel.style.textAlign = 'center';
             document.getElementById('donutChart2W').appendChild(totalLabel);
         },
         packages: ['corechart']
@@ -229,7 +244,7 @@
                 pieHole: 0.5,
                 pieSliceText: 'percentage',
                 theme: 'maximized',
-                colors: ['#D30BA7', '#41D9FB', '#55D10A', '#F4F911'] // Set colors for each section
+                colors: ['#3B82F6', '#14B8A6', '#F59E0B', '#EC4899'] // Set colors for each section
             };
             var evCount3W = "<?php echo $evCount3W; ?>";
             if (evCount3W > 0) {
@@ -246,10 +261,11 @@
             var totalLabel = document.createElement('div');
             totalLabel.innerHTML = "Total EVs <br> <b style='text-align:center'>" + totalValue + "<b>";
             totalLabel.style.position = 'absolute';
-            totalLabel.style.top = '60%';
+            totalLabel.style.top = '50%';
             totalLabel.style.left = '50%';
             totalLabel.style.transform = 'translate(-50%, -50%)';
             totalLabel.style.fontSize = '12px';
+            totalLabel.style.textAlign = 'center';
 
             document.getElementById('donutChart3W').appendChild(totalLabel);
         },
