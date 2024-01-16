@@ -19,7 +19,7 @@ class TransactionPolicy
         //
     }
 
-    public function view_transaction_management()
+    public function view()
     {
         $permission = User::getPermissions();
         if(in_array('view-transaction-management', $permission)) {
