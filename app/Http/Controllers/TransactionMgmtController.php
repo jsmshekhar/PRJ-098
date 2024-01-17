@@ -28,7 +28,10 @@ class TransactionMgmtController extends AdminAppController
                 $transaction = $this->rider_transactions->getTransactionHistory($request);
                 $transactions = $transaction['result']['transactions'];
                 $count = $transaction['result']['count'];
-                return view($this->viewPath . '/index', compact('permission', 'transactions','count'));
+                $payStatus = $transaction['result']['payStatus'];
+                $payModes = $transaction['result']['payModes'];
+                $payTypes = $transaction['result']['payTypes'];
+                return view($this->viewPath . '/index', compact('permission', 'transactions','count', 'payTypes', 'payModes', 'payStatus'));
             } else {
                 return view('admin.401.401');
             }
