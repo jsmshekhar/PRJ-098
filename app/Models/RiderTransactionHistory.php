@@ -96,6 +96,7 @@ class RiderTransactionHistory extends Model
                 'rider_transaction_histories.transaction_ammount',
                 'rider_transaction_histories.created_at',
                 'riders.customer_id',
+                'riders.name',
                 'rider_transaction_histories.transaction_type',
                 'rider_transaction_histories.transaction_notes',
                 DB::raw('CASE 

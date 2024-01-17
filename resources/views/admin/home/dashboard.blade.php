@@ -17,7 +17,7 @@
                     <div class="col-12">
                         <span class="text-muted mb-3 lh-1 d-block text-truncate totally_info">Total Revenue</span>
                         <h4 class="">
-                            $2,50,000
+                            ₹{{$totalRevenue}}
                         </h4>
                     </div>
                 </div>
@@ -131,8 +131,8 @@
                                             <ul class="grp_list">
                                                 <li><span class="grp_clr_box grp_yellow"></span>Mobilized Vehicles</li>
                                                 <li><span class="grp_clr_box grp_red"></span>Immobilized Vehicles</li>
-                                                <li><span class="grp_clr_box grp_green"></span>Functional Vehicles</li>
-                                                <li><span class="grp_clr_box grp_blue"></span>Non-Functional Vehicles</li>
+                                                <li><span class="grp_clr_box grp_blue"></span>Functional Vehicles</li>
+                                                <li><span class="grp_clr_box grp_green"></span>Non-Functional Vehicles</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -146,10 +146,10 @@
                                     <div class="dash_body_grp">
                                         <div id="donutChart3W" class="position-relative"></div>
                                         <ul class="grp_list">
-                                            <li><span class="grp_clr_box grp_yellow"></span>Mobilized Vehicles</li>
                                             <li><span class="grp_clr_box grp_red"></span>Immobilized Vehicles</li>
-                                            <li><span class="grp_clr_box grp_green"></span>Functional Vehicles</li>
+                                            <li><span class="grp_clr_box grp_yellow"></span>Mobilized Vehicles</li>
                                             <li><span class="grp_clr_box grp_blue"></span>Non-Functional Vehicles</li>
+                                            <li><span class="grp_clr_box grp_green"></span>Functional Vehicles</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -282,8 +282,14 @@
         var data = google.visualization.arrayToDataTable(<?php echo json_encode($ridersArray); ?>);
 
         var options = {
-           legend: { position: 'top', maxLines: 3 },
-            hAxis: { minValue: 0, title: 'Value' },
+            legend: {
+                position: 'top',
+                maxLines: 3
+            },
+            hAxis: {
+                minValue: 0,
+                title: 'Value'
+            },
             bars: 'verticle',
             hAxis: {
                 format: 'decimal'

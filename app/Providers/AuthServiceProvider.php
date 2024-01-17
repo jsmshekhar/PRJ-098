@@ -12,6 +12,7 @@ use App\Models\Rider;
 use App\Models\Notification;
 use App\Models\Product;
 use App\Models\HubPartAccessories;
+use App\Models\ReturnExchange;
 use App\Models\RiderOrder;
 use App\Models\RiderTransactionHistory;
 use App\Policies\UserPolicy;
@@ -45,6 +46,7 @@ class AuthServiceProvider extends ServiceProvider
         Product::class => InventryPolicy::class,
         RiderOrder::class => OrderPolicy::class,
         RiderTransactionHistory::class => TransactionPolicy::class,
+        ReturnExchange::class => RefundPolicy::class,
     ];
 
     /**
@@ -114,6 +116,9 @@ class AuthServiceProvider extends ServiceProvider
 
         //Transaction Policies
         Gate::define('view', 'App\Policies\TransactionPolicy@view');
+
+        //Transaction Policies
+        Gate::define('view', 'App\Policies\RefundPolicy@view');
 
         Passport::routes();
         Passport::tokensExpireIn(now()->addDays(7));
