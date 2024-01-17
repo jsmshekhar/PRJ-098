@@ -24,33 +24,61 @@
                             </h2>
                             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    <form id="searchForm" method="get" action="http://localhost/PRJ-098/admin/distributed-hubs">
-                                        <input type="hidden" name="is_search" value="1">
-                                        <input type="hidden" name="per_page" id="perPageHidden">
+                                    <form id="searchForm" method="get" action="<?= url()->current() ?>">
+                                        <input type="hidden" name="is_search" id="isSearchHidden" value="0" />
+                                        <input type="hidden" name="per_page" id="perPageHidden" />
+                                        <input type="hidden" name="is_export" id="isExportHidden" />
                                         <div class="row">
                                             <div class="col-xl-3 col-md-6">
                                                 <div class="form-group mb-3">
                                                     <label class="form-label">Transaction Id</label>
-                                                    <input type="text" class="form-control" name="hub_id" value="">
+                                                    <input type="text" class="form-control" name="tr_id" value="<?= isset($_GET['tr_id']) ? $_GET['tr_id'] : '' ?>">
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-md-6">
                                                 <div class="form-group mb-3">
-                                                    <label class="form-label">Transaction Type</label>
-                                                    <input type="text" class="form-control" name="city" value="">
+                                                    <label class="form-label">Customer ID</label>
+                                                    <input type="text" class="form-control" name="cu_id" value="<?= isset($_GET['cu_id']) ? $_GET['cu_id'] : '' ?>">
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-3 col-md-6">
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label">Payment Type</label>
+                                                    <select class="form-control selectBasic" name="p_type">
+                                                        <option value="">Select Payment Type</option>
+                                                        @foreach($payTypes as $key => $pay_type)
+                                                        <option value="{{$key}}" <?= (isset($_GET['p_type']) && $key == $_GET['p_type']) ? 'selected' : '' ?>>{{$pay_type}}</option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
                                             </div>
 
                                             <div class="col-xl-3 col-md-6">
                                                 <div class="form-group mb-3">
-                                                    <label class="form-label">Transaction To</label>
-                                                    <input type="text" class="form-control" name="hub_capacity" value="">
+                                                    <label class="form-label">Payment Mode</label>
+                                                    <select class="form-control selectBasic" name="p_mode">
+                                                        <option value="">Select Payment Mode</option>
+                                                        @foreach($payModes as $key => $pay_mode)
+                                                        <option value="{{$key}}" <?= (isset($_GET['p_mode']) && $key == $_GET['p_mode']) ? 'selected' : '' ?>>{{$pay_mode}}</option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-md-6">
                                                 <div class="form-group mb-3">
-                                                    <label class="form-label">Transaction Detail</label>
-                                                    <input type="text" class="form-control" name="vehicle" value="">
+                                                    <label class="form-label">Payment Status</label>
+                                                    <select class="form-control selectBasic" name="p_status">
+                                                        <option value="">Select Payment Status</option>
+                                                        @foreach($payStatus as $key => $pay_status)
+                                                        <option value="{{$key}}" <?= (isset($_GET['p_status']) && $key == $_GET['p_status']) ? 'selected' : '' ?>>{{$pay_status}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-3 col-md-6">
+                                                <div class="form-group mb-3">
+                                                    <label class="form-label">Transaction Date</label>
+                                                    <input type="date" class="form-control" name="date" value="<?= isset($_GET['date']) ? $_GET['date'] : '' ?>" />
                                                 </div>
                                             </div>
                                         </div>

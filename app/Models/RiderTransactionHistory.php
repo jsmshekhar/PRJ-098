@@ -115,20 +115,23 @@ class RiderTransactionHistory extends Model
             );
 
             if (isset($request->is_search) && $request->is_search == 1) {
-                if (isset($request->trans_id) && !empty($request->trans_id)) {
-                    $transactions = $transactions->where('rider_transaction_histories.transaction_id', 'LIKE', "%{$request->trans_id}%");
-                }
-                if (isset($request->ch_no) && !empty($request->ch_no)) {
-                    $transactions = $transactions->where('rider_transaction_histories.transaction_type', $request->ch_no);
-                }
-                if (isset($request->cust_id) && !empty($request->cust_id)) {
-                    $transactions = $transactions->where('riders.customer_id', 'LIKE', $request->cust_id);
+                if (isset($request->tr_id) && !empty($request->tr_id)) {
+                    $transactions = $transactions->where('rider_transaction_histories.transaction_id', 'LIKE', "%{$request->tr_id}%");
+                }               
+                if (isset($request->cu_id) && !empty($request->cu_id)) {
+                    $transactions = $transactions->where('riders.customer_id', 'LIKE', $request->cu_id);
                 }
                 if (isset($request->date) && !empty($request->date)) {
-                    $transactions = $transactions->where('rider_transaction_histories.created_at', $request->date);
+                    $transactions = $transactions->whereDate('rider_transaction_histories.created_at', $request->date);
                 }
-                if (isset($request->status) && !empty($request->status)) {
-                    $transactions = $transactions->where('rider_transaction_histories.payment_status', $request->status);
+                if (isset($request->p_status) && !empty($request->p_status)) {
+                    $transactions = $transactions->where('rider_transaction_histories.payment_status', $request->p_status);
+                }
+                if (isset($request->p_mode) && !empty($request->p_mode)) {
+                    $transactions = $transactions->where('rider_transaction_histories.payment_status', $request->p_mode);
+                }
+                if (isset($request->p_type) && !empty($request->p_type)) {
+                    $transactions = $transactions->where('rider_transaction_histories.transaction_type', $request->p_type);
                 }
             }
             $transactions = $transactions->orderBy('created_at', 'DESC')->paginate(20);
@@ -136,11 +139,13 @@ class RiderTransactionHistory extends Model
             $count = RiderTransactionHistory::leftJoin('riders', 'rider_transaction_histories.rider_id', 'riders.rider_id')
               ->get();
             $count = count($count);
-
+            $payStatus = ['1' => 'Success', '2' => 'Pending', '3' => 'Failed', '4' => 'Reject'];
+            $payModes = ['1' => 'Card', '2' => 'Wallet', '3' => 'UPI', '4' => 'Net Banking'];
+            $payTypes = ['1' => 'Credit', '2' => 'Debit'];
             if (count($transactions) > 0) {
-                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['transactions' => $transactions, 'count' => $count]);
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['transactions' => $transactions, 'count' => $count, 'payStatus' => $payStatus, 'payModes' => $payModes, 'payTypes' => $payTypes]);
             } else {
-                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['transactions' => [], 'count' => '']);
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['transactions' => [], 'count' => '', 'payStatus' => $payStatus, 'payModes' => $payModes, 'payTypes' => $payTypes]);
             }
         } catch (\Throwable $ex) {
             $result = [
