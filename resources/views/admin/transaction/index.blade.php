@@ -142,7 +142,7 @@
                                         @foreach($transactions as $key => $transaction)
                                         <tr>
                                             <td>{{$transaction->transaction_id}}</td>
-                                            <td>CUS{{$transaction->customer_id}}<br>{{$transaction->name}}</td>
+                                            <td>CUS{{$transaction->customer_id}}<br><i><span class="d-flex heading_label"> {{$transaction->name}} </span></i></td>
                                             <td>Rs {{$transaction->transaction_ammount}}</td>
                                             <td>@if($transaction->transaction_type == 1)<label class="text-success m-0">Credit</label> @else <label class="text-danger m-0">Debit</label> @endif</td>
                                             <td>{{$transaction->transaction_mode}}</td>

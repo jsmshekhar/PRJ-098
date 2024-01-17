@@ -1,9 +1,9 @@
 @extends('admin.layouts.app')
 @section('title', 'Refund Management')
 @section('css')
-    <style>
+<style>
 
-    </style>
+</style>
 @endsection
 @section('content')
 <div class="container-fluid">
@@ -18,64 +18,56 @@
                                     Advance Search
                                 </button>
                                 <div class="collaps_btns">
-                                    <button type="button" class="btn btn-outline-danger waves-effect waves-light" onclick="clearSearch('http://localhost/PRJ-098/admin/distributed-hubs');">Clear</button>
+                                    <button type="button" class="btn btn-outline-danger waves-effect waves-light" onclick="clearSearch('<?= url()->current() ?>');">Clear</button>
                                     <button type="button" onclick="submitSearchForm();" class="btn btn-outline-success waves-effect waves-light">Search</button>
-                                                                    </div>
+                                </div>
                             </h2>
                             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    <form id="searchForm" method="get" action="http://localhost/PRJ-098/admin/distributed-hubs">
-                                        <input type="hidden" name="is_search" value="1">
-                                        <input type="hidden" name="per_page" id="perPageHidden">
+                                    <form id="searchForm" method="get" action="<?= url()->current() ?>">
+                                        <input type="hidden" name="is_search" id="isSearchHidden" value="0" />
+                                        <input type="hidden" name="per_page" id="perPageHidden" />
+                                        <input type="hidden" name="is_export" id="isExportHidden" />
                                         <div class="row">
                                             <div class="col-xl-3 col-md-6">
                                                 <div class="form-group mb-3">
                                                     <label class="form-label">Hub Id</label>
-                                                    <input type="text" class="form-control" name="hub_id" value="">
+                                                    <input type="text" class="form-control" name="hub_id" value="<?= isset($_GET['hub_id']) ? $_GET['hub_id'] : '' ?>">
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-md-6">
                                                 <div class="form-group mb-3">
                                                     <label class="form-label">Hub Manager Name</label>
-                                                    <input type="text" class="form-control" name="city" value="">
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col-xl-3 col-md-6">
-                                                <div class="form-group mb-3">
-                                                    <label class="form-label">Hub Manager Number</label>
-                                                    <input type="text" class="form-control" name="hub_capacity" value="">
+                                                    <input type="text" class="form-control" name="mng_name" value="<?= isset($_GET['mng_name']) ? $_GET['mng_name'] : '' ?>">
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-md-6">
                                                 <div class="form-group mb-3">
                                                     <label class="form-label">Rider ID</label>
-                                                    <input type="text" class="form-control" name="vehicle" value="">
+                                                    <input type="text" class="form-control" name="rider_id" value="<?= isset($_GET['rider_id']) ? $_GET['rider_id'] : '' ?>">
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-md-6">
                                                 <div class="form-group mb-3">
                                                     <label class="form-label">Rider Name</label>
-                                                    <input type="text" class="form-control" name="hub_id" value="">
+                                                    <input type="text" class="form-control" name="rd_name" value="<?= isset($_GET['rd_name']) ? $_GET['rd_name'] : '' ?>">
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-md-6">
                                                 <div class="form-group mb-3">
-                                                    <label class="form-label">Rider Contact Name</label>
-                                                    <input type="text" class="form-control" name="city" value="">
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col-xl-3 col-md-6">
-                                                <div class="form-group mb-3">
-                                                    <label class="form-label">Refund Amount</label>
-                                                    <input type="text" class="form-control" name="hub_capacity" value="">
+                                                    <label class="form-label">Refund Date</label>
+                                                    <input type="date" class="form-control" name="date" value="<?= isset($_GET['date']) ? $_GET['date'] : '' ?>" />
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-md-6">
                                                 <div class="form-group mb-3">
                                                     <label class="form-label">Refund Status</label>
-                                                    <input type="text" class="form-control" name="vehicle" value="">
+                                                    <select class="form-control selectBasic" name="status">
+                                                        <option value="">Select Status </option>
+                                                        @foreach($refundStatus as $key => $st)
+                                                        <option value="{{$key}}" <?= (isset($_GET['status']) && $key == $_GET['status']) ? 'selected' : '' ?>>{{$st}}</option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -95,155 +87,72 @@
                     <div class="table-filter">
                         <ul>
                             <li>
-                                <a href="javascript:void(0);" class="btn btn-link" onclick="refreshPage();">
-                                    <img src="http://localhost/PRJ-098/public/assets/images/icons/refresh.svg" alt="">
+                                <a href="#" class="btn btn-link" onclick="refreshPage();">
+                                    <img src="{{asset('public/assets/images/icons/refresh.svg')}}" alt="">
                                 </a>
                             </li>
                             <li>
-                                <p>Total Record : <span>255</span></p>
+                                <p>Total Record : <span>{{$count}}</span></p>
                             </li>
                             <li>
                                 <p>Display up to :
-                                </p><div class="form-group">
-                                    <select class="form-control perPage" name="choices-single-no-sorting" id="perPageDropdown" onchange="perPage(this);">
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-    </select>
+                                </p>
+                                <div class="form-group">
+                                    @include('admin.layouts.per_page')
                                 </div>
                                 <p></p>
                             </li>
                             <li>
                                 <button type="button" class="btn btn-success waves-effect waves-light">
-                                    <img src="http://localhost/PRJ-098/public/assets/images/icons/download.svg" alt="">
+                                    <img src="{{asset('public/assets/images/icons/download.svg')}}" alt="">
                                     Export
                                 </button>
                             </li>
                         </ul>
                     </div>
                     <div class="table-rep-plugin">
-                                                <div class="table-responsive mb-0 fixed-solution" data-pattern="priority-columns">
+                        @if(count($refunds) >0)
+                        <div class="table-responsive mb-0 fixed-solution" data-pattern="priority-columns">
                             <div class="sticky-table-header">
                                 <table class="table">
                                     <thead>
                                         <tr>
                                             <th>Hub Id</th>
-                                            <th>HUB MANAGER NAME</th>
-                                            <th>HUB MANAGER NUMBER</th>                                            
+                                            <th>MANAGER NAME</th>
+                                            <th>MANAGER PHONE</th>
                                             <th>RIDER ID</th>
-                                            <th>RIDER NAME</th>
-                                            <th>RIDER CONTACT NAME</th>
-                                            <th>REFUND AMOUNT</th>
-                                            <th>REFUND REASON</th>
-                                            <th>REFUND STATUS</th>
+                                            <th>RIDER PHONE</th>
+                                            <th>RFD AMOUNT</th>
+                                            <th>REFUND DATE</th>
+                                            <th>NOTE</th>
+                                            <th>STATUS</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach($refunds as $key => $refund)
                                         <tr>
-                                            <td>HUB451</td>
-                                            <td>Ankit Lodhi</td>
-                                            <td>9984784578</td>
-                                            <td>AN1254</td>
-                                            <td>Nitin pawar</td>
-                                            <td>6685742581</td>
-                                            <td>6000rs</td>
-                                            <td>XYZ reason..</td>
-                                            <td>Resolved</td>
+                                            <td>{{$refund->hubId}}</td>
+                                            <td>{{$refund->mng_name}}</td>
+                                            <td>{{$refund->mng_phone}}</td>
+                                            <td>CUS{{$refund->customer_id}}<br><i><span class="d-flex heading_label"> {{$refund->rider_name}} </span></i></td>
+                                            <td>{{$refund->rider_phone}}</td>
+                                            <td>Rs {{$refund->refund_ammount}}</td>
+                                            <td>{{ dateFormat($refund->refund_date) }}</td>
+                                            <td>{{$refund->note}}</td>
+                                            <td>@if($refund->status == 1)<label class="text-success m-0">Resolved</label> @else <label class="text-danger m-0">Pending</label> @endif</td>
                                         </tr>
-                                        <tr>
-                                            <td>HUB451</td>
-                                            <td>Ankit Lodhi</td>
-                                            <td>9984784578</td>
-                                            <td>AN1254</td>
-                                            <td>Nitin pawar</td>
-                                            <td>6685742581</td>
-                                            <td>6000rs</td>
-                                            <td>XYZ reason..</td>
-                                            <td>Resolved</td>
-                                        </tr>
-                                        <tr>
-                                            <td>HUB451</td>
-                                            <td>Ankit Lodhi</td>
-                                            <td>9984784578</td>
-                                            <td>AN1254</td>
-                                            <td>Nitin pawar</td>
-                                            <td>6685742581</td>
-                                            <td>6000rs</td>
-                                            <td>XYZ reason..</td>
-                                            <td>Resolved</td>
-                                        </tr>
-                                        <tr>
-                                            <td>HUB451</td>
-                                            <td>Ankit Lodhi</td>
-                                            <td>9984784578</td>
-                                            <td>AN1254</td>
-                                            <td>Nitin pawar</td>
-                                            <td>6685742581</td>
-                                            <td>6000rs</td>
-                                            <td>XYZ reason..</td>
-                                            <td>Resolved</td>
-                                        </tr>
-                                        <tr>
-                                            <td>HUB451</td>
-                                            <td>Ankit Lodhi</td>
-                                            <td>9984784578</td>
-                                            <td>AN1254</td>
-                                            <td>Nitin pawar</td>
-                                            <td>6685742581</td>
-                                            <td>6000rs</td>
-                                            <td>XYZ reason..</td>
-                                            <td>Resolved</td>
-                                        </tr>
-                                        <tr>
-                                            <td>HUB451</td>
-                                            <td>Ankit Lodhi</td>
-                                            <td>9984784578</td>
-                                            <td>AN1254</td>
-                                            <td>Nitin pawar</td>
-                                            <td>6685742581</td>
-                                            <td>6000rs</td>
-                                            <td>XYZ reason..</td>
-                                            <td>Resolved</td>
-                                        </tr>
-                                        <tr>
-                                            <td>HUB451</td>
-                                            <td>Ankit Lodhi</td>
-                                            <td>9984784578</td>
-                                            <td>AN1254</td>
-                                            <td>Nitin pawar</td>
-                                            <td>6685742581</td>
-                                            <td>6000rs</td>
-                                            <td>XYZ reason..</td>
-                                            <td>Resolved</td>
-                                        </tr>
-                                        <tr>
-                                            <td>HUB451</td>
-                                            <td>Ankit Lodhi</td>
-                                            <td>9984784578</td>
-                                            <td>AN1254</td>
-                                            <td>Nitin pawar</td>
-                                            <td>6685742581</td>
-                                            <td>6000rs</td>
-                                            <td>XYZ reason..</td>
-                                            <td>Resolved</td>
-                                        </tr>
-                                        <tr>
-                                            <td>HUB451</td>
-                                            <td>Ankit Lodhi</td>
-                                            <td>9984784578</td>
-                                            <td>AN1254</td>
-                                            <td>Nitin pawar</td>
-                                            <td>6685742581</td>
-                                            <td>6000rs</td>
-                                            <td>XYZ reason..</td>
-                                            <td>Resolved</td>
-                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
-                            
+                            {{ $refunds->withQueryString()->links('pagination::bootstrap-4') }}
                         </div>
-                                            </div>
+                        @else
+                        <div>
+                            @include('admin.common.no_record')
+                        </div>
+                        @endif
+                    </div>
 
                 </div>
             </div>
@@ -254,5 +163,5 @@
 </div>
 @endsection
 @section('js')
-    <script></script>
+<script></script>
 @endsection

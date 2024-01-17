@@ -19,7 +19,7 @@ class RefundPolicy
         //
     }
 
-    public function view_refund_report()
+    public function view()
     {
         $permission = User::getPermissions();
         if (in_array('view-refund-report', $permission)) {

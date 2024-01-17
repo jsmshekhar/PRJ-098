@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\AdminAppController;
 use App\Models\Product;
 use App\Models\Rider;
+use App\Models\RiderTransactionHistory;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -69,7 +70,11 @@ class HomeController extends AdminAppController
                 $ridersArray[$yearIndex][array_search($count['profile_type'], $ridersArray[0])] = $count['count'];
             }
         }
-        //dd($ridersArray);
-        return view($this->viewPath . '/dashboard', compact('permission', 'evstatus2W', 'evCount2W', 'evstatus3W', 'evCount3W', 'ridersArray'));
+        //Total Revenue
+        $sumOfcredit = RiderTransactionHistory::where('transaction_type',1)->sum('transaction_ammount');
+        $sumOfdebit = RiderTransactionHistory::where('transaction_type', 2)->sum('transaction_ammount');
+
+        $totalRevenue =  $sumOfcredit - $sumOfdebit;
+        return view($this->viewPath . '/dashboard', compact('permission', 'evstatus2W', 'evCount2W', 'evstatus3W', 'evCount3W', 'ridersArray', 'totalRevenue'));
     }
 }

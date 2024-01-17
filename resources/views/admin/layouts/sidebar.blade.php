@@ -87,12 +87,14 @@
                      </a>
                  </li>
                  @endcan
+                 @can('view', $permission)
                  <li class="{{ Request::routeIs('refund-management') ? 'mm-active' : '' }}">
                      <a href="{{ route('refund-management') }}" class="{{ Request::routeIs('refund-management') ? 'active' : '' }}">
                          <img src="{{ asset('public/assets/images/icons/Refund-icon.svg') }}" alt="">
                          <span>Refund Management</span>
                      </a>
                  </li>
+                 @endcan
                  @can('view', $permission)
                  <li class="{{ Request::routeIs('hub-part-accessories') ? 'mm-active' : '' }}">
                      <a href="{{ route('hub-part-accessories') }}" class="{{ Request::routeIs('hub-part-accessories') ? 'active' : '' }}">
