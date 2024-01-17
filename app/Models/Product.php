@@ -72,7 +72,7 @@ class Product extends Model
     {
         try {
             $auth = Auth::user();
-            $ev_types = EvType::orderBy('created_at', 'DESC')->get();
+            $ev_types = EvType::whereNull('deleted_at')->orderBy('created_at', 'DESC')->get();
             $hubs = Hub::select('hub_id', 'city')->orderBy('created_at', 'DESC')->get();
             $ev_categories = config('constants.EV_CATEGORIES');
             $rent_cycles = config('constants.RENT_CYCLE');
@@ -185,7 +185,7 @@ class Product extends Model
         try {
             $auth = Auth::user();
             $product = Product::where('slug', $slug)->first();
-            $ev_types = EvType::orderBy('created_at', 'DESC')->get();
+            $ev_types = EvType::whereNull('deleted_at')->orderBy('created_at', 'DESC')->get();
             $hubs = Hub::select('hub_id', 'city')->orderBy('created_at', 'DESC')->get();
             $ev_categories = config('constants.EV_CATEGORIES');
             $rent_cycles = config('constants.RENT_CYCLE');
