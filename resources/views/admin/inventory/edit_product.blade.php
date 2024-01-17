@@ -53,7 +53,7 @@
                                     <label for="ev_type_id" class="form-label">EV Type</label>
                                     <select class="form-control selectBasic" name="ev_type_id" id="ev_type_id">
                                         @foreach($ev_types as $key => $ev_type)
-                                        <option value="{{$ev_type->ev_type_id}}" @if($ev_type->ev_type_id==$product->ev_type_id) selected @endif>{{$ev_type->ev_type_name}}</option>
+                                        <option value="{{$ev_type->ev_type_id}}" data-value1="{{$ev_type->speed}}" data-value2="{{$ev_type->range}}" data-value3="{{$ev_type->rs_perday}}" data-value4="{{$ev_type->total_range}}" @if($ev_type->ev_type_id==$product->ev_type_id) selected @endif>{{$ev_type->ev_type_name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -156,6 +156,19 @@
 @section('js')
 <script>
     $(document).ready(function() {
+        $('#ev_type_id').change(function() {
+            var selectedOption = $(this).find('option:selected');
+            var value1 = selectedOption.data('value1');
+            var value2 = selectedOption.data('value2');
+            var value3 = selectedOption.data('value3');
+            var value4 = selectedOption.data('value4');
+
+            $('#km_per_charge').val(value1);
+            $('#speed').val(value2);
+            $('#per_day_rent').val(value3);
+            $('#total_range').val(value4);
+        });
+        
         $('#submitForm').click(function(e) {
             e.preventDefault();
             var name = $('#title').val();
