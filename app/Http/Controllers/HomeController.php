@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Rider;
 use App\Models\RiderTransactionHistory;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends AdminAppController
@@ -25,7 +26,7 @@ class HomeController extends AdminAppController
         $evstatus2W = Product::where('ev_category_id', 1)->select(
             DB::raw('COUNT(CASE WHEN status_id = 1 THEN 1 END) as functional'),
             DB::raw('COUNT(CASE WHEN status_id = 3 THEN 1 END) as non_functional'),
-            DB::raw('COUNT(CASE WHEN ev_status = 1 THEN 1 END) as mobilized'),
+            DB::raw('COUNT(CASE WHEN ev_status = 1 && status_id = 4 THEN 1 END) as mobilized'),
             DB::raw('COUNT(CASE WHEN ev_status = 2 THEN 1 END) as immobilized')
         )->first();
         $evstatus3W = Product::where('ev_category_id', 2)->select(
@@ -73,8 +74,16 @@ class HomeController extends AdminAppController
         //Total Revenue
         $sumOfcredit = RiderTransactionHistory::where('transaction_type',1)->sum('transaction_ammount');
         $sumOfdebit = RiderTransactionHistory::where('transaction_type', 2)->sum('transaction_ammount');
-
         $totalRevenue =  $sumOfcredit - $sumOfdebit;
-        return view($this->viewPath . '/dashboard', compact('permission', 'evstatus2W', 'evCount2W', 'evstatus3W', 'evCount3W', 'ridersArray', 'totalRevenue'));
+       
+        $startDate = Carbon::now()->startOfMonth();
+        $endDate = Carbon::now()->endOfMonth();
+
+        $recievedRevenue = RiderTransactionHistory::where(['transaction_type' => 1, 'payment_status' => 1])->whereBetween('created_at', [$startDate, $endDate])->get();
+        $thisMonthTotal = $recievedRevenue->sum('transaction_ammount');
+
+        // // CO Emission Savings=(CO2 emissions from traditional vehicle − CO2 emissions from electric vehicle)×Distance traveled by EV  ex. tradistion
+        // $co2Saving = 
+        return view($this->viewPath . '/dashboard', compact('permission', 'evstatus2W', 'evCount2W', 'evstatus3W', 'evCount3W', 'ridersArray', 'totalRevenue', 'thisMonthTotal'));
     }
 }

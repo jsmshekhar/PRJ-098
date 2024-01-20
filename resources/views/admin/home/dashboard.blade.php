@@ -32,9 +32,9 @@
             <div class="card-body">
                 <div class="row align-items-center">
                     <div class="col-12">
-                        <span class="text-muted mb-3 lh-1 d-block text-truncate totally_info">Received Revenue</span>
+                        <span class="text-muted mb-3 lh-1 d-block text-truncate totally_info">This Month Received</span>
                         <h4 class="">
-                            $2,00,000
+                            ₹{{$thisMonthTotal}}
                         </h4>
                     </div>
                 </div>
@@ -183,6 +183,7 @@
 
 @endsection
 @section('js')
+
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </script>
 <script type="text/javascript">

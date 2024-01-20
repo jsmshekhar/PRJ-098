@@ -106,8 +106,14 @@ class Hub extends Model
             $vehicleCount = Product::where('hub_id', $hub->hub_id)->whereNull('deleted_at')->count();
             $accessoriesinHub = array_unique(HubPartAccessories::where('hub_id', $hub->hub_id)->pluck('accessories_category_id')->toArray());
             if($param == 'vehicle'){
-                $vehicles = Product::leftJoin('rider_orders', 'rider_orders.mapped_vehicle_id', '=', 'products.product_id')
-                ->leftJoin('riders', 'riders.rider_id', '=', 'rider_orders.rider_id')
+                $vehicles = Product::leftJoin('rider_orders', function ($join) {
+                    $join->on('rider_orders.mapped_vehicle_id', '=', 'products.product_id');
+                    $join->where('rider_orders.status_id', 1);
+                })
+                ->leftJoin('riders', function ($join) {
+                    $join->on('riders.rider_id', '=', 'rider_orders.rider_id');
+                    $join->where('riders.status_id', 1);
+                })
                 ->leftJoin('ev_types as et', 'products.ev_type_id', '=', 'et.ev_type_id')
                 ->where('products.hub_id', $hub->hub_id)
                 ->whereNull('products.deleted_at')
@@ -184,7 +190,7 @@ class Hub extends Model
                 $vehicleStatus = config('constants.VEHICLE_STATUS');
                 $bike_types = config('constants.BIKE_TYPE');
                 $evStatus = ['1' => 'Active', '2' => 'Inactive', '3' => 'Non Functional', '4' => 'Assigned', '5' => 'RFD'];
-                $kycStatus = ['1' => 'Verified', '2' => 'Pending', '3' => 'Red Flag', '4' => 'Not Verified'];
+                $kycStatus = ['1' => 'Verified', '2' => 'Pending', '3' => 'Red Flag'];
                 $paymentStatus = ['1' => 'Paid', '2' => 'Pending', '3' => 'Failed', '4' => 'Rejected'];
                 $gpsDevice = ['1' => 'Installed', '2' => 'No Device'];
                 $count = Product::where('hub_id', $hub->hub_id)->whereNull('deleted_at')->count();
