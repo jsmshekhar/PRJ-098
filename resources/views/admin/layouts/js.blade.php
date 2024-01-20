@@ -24,13 +24,13 @@
  <script src="{{ asset('public/assets/js/app.js') }}"></script>
  <script src="{{ asset('public/assets/js/common.js') }}"></script>
 
-         <!-- apexcharts js -->
-         <script src="{{ asset('public/assets/libs/apexcharts/apexcharts.min.js') }}"></script>
+ <!-- apexcharts js -->
+ <script src="{{ asset('public/assets/libs/apexcharts/apexcharts.min.js') }}"></script>
 
-<!-- apexcharts init -->
-<script src="{{ asset('public/assets/js/pages/apexcharts.init.js') }}"></script>
+ <!-- apexcharts init -->
+ <script src="{{ asset('public/assets/js/pages/apexcharts.init.js') }}"></script>
 
-<script src="assets/js/pages/apexcharts.init.js"></script>
+ <script src="assets/js/pages/apexcharts.init.js"></script>
 
 
  <script>
@@ -255,5 +255,63 @@
              $(this).parent().parent().remove();
          });
      }
-     
+
+     //  mobilized
+
+     function mobilizedEv(productId, terminalId, riderId, action) {
+         $('.mobilizedEvMap').prop('disabled', true);
+         $('.mobilizedEvMap').html('Please wait...')
+         var token = $("meta[name='csrf-token']").attr("content");
+         $.ajax({
+             type: 'get',
+             url: '{{ route("mobilized-immobilized-ev") }}',
+             data: {
+                 productId: productId,
+                 terminalId: terminalId,
+                 riderId: riderId,
+                 actionType: action
+             },
+             success: function(response) {
+                 $('.mobilizedEvMap').prop('disabled', false);
+                 $('.mobilizedEvMap').html('Mobilized Now');
+                 $('#mobiImmobiMap').html("<span class='sussecmsg'>" + response.message +
+                     "</span>");
+                 setTimeout(function() {
+                     $('#mobiImmobiMap').html('');
+                 }, 3000);
+             },
+             error: function(error) {
+                 // Handle the error
+             }
+         });
+     }
+
+     // immobilized
+     function imMobilizedEv(productId, terminalId, riderId, action) {
+         $('.imMobilizedEvMap').prop('disabled', true);
+         $('.imMobilizedEvMap').html('Please wait..');
+         var token = $("meta[name='csrf-token']").attr("content");
+         $.ajax({
+             type: 'get',
+             url: '{{ route("mobilized-immobilized-ev") }}',
+             data: {
+                 productId: productId,
+                 terminalId: terminalId,
+                 riderId: riderId,
+                 actionType: action
+             },
+             success: function(response) {
+                 $('.imMobilizedEvMap').prop('disabled', false);
+                 $('.imMobilizedEvMap').html('Immobilized Now');
+                 $('#mobiImmobiMap').html("<span class='sussecmsg'>" + response.message +
+                     "</span>");
+                 setTimeout(function() {
+                     $('#mobiImmobiMap').html('');
+                 }, 3000);
+             },
+             error: function(error) {
+                 // Handle the error
+             }
+         });
+     }
  </script>

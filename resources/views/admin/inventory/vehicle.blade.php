@@ -128,11 +128,11 @@
                                     <tr>
                                         <th>EV NUMBER</th>
                                         <th>EV CATEGORY</th>
-                                        <th>Profile Category</th>
+                                        <th>Profile Type</th>
                                         <th>Customer Id</th>
                                         <th>Contact No.</th>
                                         <th>Hub Id</th>
-                                        <th>PAYMENT STATUS</th>
+                                        <th>PAY STATUS</th>
                                         <th>Veicle STATUS</th>
                                     </tr>
                                 </thead>
@@ -157,7 +157,15 @@
                                             <label class="text-danger">Reject</label>
                                             @endif
                                         </td>
-                                        <td>Mobilized</td>
+                                        <td>
+                                            @if ($vehicle->ev_status == 1)
+                                            <label class="text-success">Mobilized</label>
+                                            @elseif($vehicle->ev_status == 2)
+                                            <label class="text-danger">Immobilized</label>
+                                            @else($vehicle->payment_status == 3)
+                                            ""
+                                            @endif
+                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>

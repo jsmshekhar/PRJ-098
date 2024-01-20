@@ -348,22 +348,25 @@ class Product extends Model
     {
         try {
             $auth = Auth::user();
-            $vehicles = RiderOrder::join('products', function($q) {
-                    $q->on('products.product_id', '=', 'rider_orders.mapped_vehicle_id');
-                    $q->where('products.status_id', '=', 4);
-                })
-                ->join('riders', 'riders.rider_id', '=', 'rider_orders.rider_id')
+            $vehicles =
+            RiderOrder::leftJoin('products', 'products.product_id', '=', 'rider_orders.mapped_vehicle_id')
+                ->leftJoin('riders', 'riders.rider_id', '=', 'rider_orders.rider_id')
                 ->join('hubs', 'hubs.hub_id', '=', 'products.hub_id')
-                ->where('rider_orders.status_id','=', 1)
+                ->where(['rider_orders.status_id' => 1, 'riders.status_id' => 1, 'products.status_id' => 4])
                 ->select(
                     'rider_orders.payment_status',
                     'products.ev_number',
+                    'riders.name',
+                    'riders.phone',
+                    'riders.customer_id',
+                    'riders.slug',
+                    'products.ev_status',
                     DB::raw('CASE 
                         WHEN products.ev_category_id = 1 THEN "Two Wheeler" 
                         WHEN products.ev_category_id = 2 THEN "Three Wheeler" 
                         ELSE ""
                     END as ev_category_name'),
-                    'riders.name','riders.phone','riders.customer_id','riders.slug',
+                    
                     DB::raw('CASE 
                         WHEN riders.profile_type = 1 THEN "Corporate" 
                         WHEN riders.profile_type = 2 THEN "Individual" 
@@ -397,13 +400,11 @@ class Product extends Model
                 // }
             }
             $vehicles = $vehicles->orderBy('rider_orders.created_at', 'DESC')->paginate(20);
-            $count = RiderOrder::join('products', function ($q) {
-                    $q->on('products.product_id', '=', 'rider_orders.mapped_vehicle_id');
-                    $q->where('products.status_id', '=', 4);
-                })
-                ->join('riders', 'riders.rider_id', '=', 'rider_orders.rider_id')
+            $count = RiderOrder::leftJoin('products', 'products.product_id', '=', 'rider_orders.mapped_vehicle_id')
+                ->leftJoin('riders', 'riders.rider_id', '=', 'rider_orders.rider_id')
                 ->join('hubs', 'hubs.hub_id', '=', 'products.hub_id')
-                ->where('rider_orders.status_id', '=', 1)->count();
+                ->where(['rider_orders.status_id' => 1, 'riders.status_id' => 1, 'products.status_id' => 4])->count();
+
             $hubs = DB::table('hubs')->whereNull('deleted_at')->where('status_id', 1)->select('hub_id', 'city','hubid')->get();
             $payment_status = config('constants.PAYMENT_STATUS');
             $vehicle_status = config('constants.VEHICLE_STATUS');

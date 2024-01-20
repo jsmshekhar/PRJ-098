@@ -116,6 +116,10 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/update-user-profile', [UserController::class, 'updateProfileDetail'])->name('update-user-profile');
         Route::post('/change-password', [UserController::class, 'changePassword'])->name('change-password');
 
+        Route::get('/get_gps_ev_details', [LiveTrackingController::class, 'getGpsEvDetails'])->name('get_gps_ev_details');
+        Route::get('/rider-auto-search', [LiveTrackingController::class, 'riderAutoSerch'])->name('rider-auto-search');
+        Route::get('/mobilized-immobilized-ev', [LiveTrackingController::class, 'evMobilizedImmobilized'])->name('mobilized-immobilized-ev');
+
         /* Shekhar's - Route */
         @include('admin.php');
     });
