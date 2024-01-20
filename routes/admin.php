@@ -11,3 +11,10 @@ Route::post('/change-kyc-status', [RiderController::class, 'changeKycStatus'])->
 Route::post('/update-rider-details', [RiderController::class, 'updateRiderDetails'])->name('update-rider-details');
 
 Route::get('/return-exchange', [ReturnExchangeController::class, 'index'])->name('return-exchange');
+
+Route::get('/return-view/{slug}', [ReturnExchangeController::class, 'returnView'])->name('return-view');
+Route::get('/exchange-view/{slug}', [ReturnExchangeController::class, 'exchangeView'])->name('exchange-view');
+
+Route::post('/return-evs/{slug}', [ReturnExchangeController::class, 'returnEvs'])->name('return-evs');
+Route::post('/exchange-evs/{slug}', [ReturnExchangeController::class, 'exchangeEvs'])->name('exchange-evs');
+

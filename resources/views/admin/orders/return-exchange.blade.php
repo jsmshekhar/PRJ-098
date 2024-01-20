@@ -118,7 +118,6 @@
                                                 <th>Customer Id</th>
                                                 <th>EV Number</th>
                                                 <th>Chassis Number</th>
-                                                <th>Subscription Date</th>
                                                 <th>Phone Number</th>
                                                 <th>Hub Id</th>
                                                 <th>User Request</th>
@@ -128,13 +127,28 @@
                                         <tbody>
                                             @foreach ($records as $key => $record)
                                                 <tr>
-                                                    <td>{{ $record->rider->customer_id }}</td>
+                                                    <td>{{ 'CUS' . $record->rider->customer_id }}</td>
                                                     <td>{{ $record->product->ev_number }}</td>
                                                     <td>{{ $record->product->chassis_number }}</td>
-                                                    <td>{{ !is_null($record->order) ? dateFormat($record->order->subscription_validity) : "" }}</td>
                                                     <td>{{ $record->rider->phone }}</td>
                                                     <td>{{ $record->hub->hubId }}</td>
-                                                    <td>{{ $record->request_for_name }}</td>
+                                                    <td>
+
+                                                        @if ($record->request_for == 1 && $record->status_id == 2)
+                                                            <a href="{{ route('return-view', $record->slug) }}"
+                                                                title="Return"
+                                                                style="cursor: pointer;margin-right: 5px;">{{ $record->request_for_name }}
+                                                            </a>
+                                                        @elseif ($record->request_for == 2 && $record->status_id == 2)
+                                                            <a href="{{ route('exchange-view', $record->slug) }}"
+                                                                title="Exchange"
+                                                                style="cursor: pointer;margin-right: 5px;">{{ $record->request_for_name }}
+                                                            </a>
+                                                        @else
+                                                            {{ $record->request_for_name }}
+                                                        @endif
+
+                                                    </td>
                                                     <td>{{ $record->status_display }}</td>
 
                                                 </tr>

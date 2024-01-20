@@ -338,7 +338,7 @@
                                 <input class="form-control readOnlyClass" type="text" id="orderQntys" readonly>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">AOrder Amount</label>
+                                <label class="form-label">Order Amount</label>
                                 <input class="form-control readOnlyClass" type="text" id="orderAmounts" readonly>
                             </div>
                             {{-- <div class="col-md-12 mb-2 uploadImg">

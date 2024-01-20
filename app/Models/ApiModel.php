@@ -282,7 +282,7 @@ class ApiModel extends Model
         try {
             $riderId = Auth::id();
             $currentOrder = ApiModel::getCurrentOrderDetails();
-            if (!is_null($currentOrder)) {
+            if (!empty($currentOrder)) {
                 return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), $currentOrder);
             }
             return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
@@ -578,6 +578,31 @@ class ApiModel extends Model
                     $result = ['order_code' => $orderCode];
                     return successResponse(Response::HTTP_OK, Lang::get('messages.INSERT'), $result);
                 }
+            }
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : get-current-order
+    Request   : Object
+    Return    : Json
+    --------------------------------------------------*/
+    public static function getNotification($request)
+    {
+        try {
+            $riderId = Auth::id();
+            $notifications = RiderNotification::select(['slug', 'title', 'description'])->where('rider_id', $riderId)->get();
+            if (!empty($notifications)) {
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), $notifications);
             }
             return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
         } catch (\Throwable $ex) {
