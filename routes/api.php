@@ -53,4 +53,5 @@ Route::middleware(['auth:rider-api'])->namespace('Api')->prefix('v1')->group(fun
 
     Route::get('/get-upcomming-rent', [CommonDataController::class, 'getUpcommingRent']);
     Route::post('pay-upcomming-rent', [CommonDataController::class, 'payUpcommingRent']);
+    Route::get('/get-notification', [CommonDataController::class, 'getNotification']);
 });

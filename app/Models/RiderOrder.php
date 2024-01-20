@@ -124,7 +124,7 @@ class RiderOrder extends Model
                             'status_id' => 1,
                         ];
                         RiderOrderPayment::insert($riderOrderPayments);
-                        Product::where('slug', $evSlug)->update(['status_id' => config('constants.EV_STATUS.ASSIGNED')]);
+                        Product::where('slug', $evSlug)->update(['status_id' => config('constants.EV_STATUS.ASSIGNED'), 'ev_status' => 1]);
                         $response = [
                             'status' => Response::HTTP_OK,
                             'message' => Lang::get('messages.EV_ASSIGNED'),

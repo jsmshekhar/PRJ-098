@@ -25,6 +25,9 @@ class CreateReturnExchangesTable extends Migration
             $table->string('refund_ammount')->nullable();
             $table->dateTime('assigned_date')->nullable();
             $table->dateTime('refund_date')->nullable();
+            $table->dateTime('return_date')->nullable();
+            $table->string('damage_cost')->nullable();
+            $table->tinyInteger('damage_type')->default(2)->comment('1 => Paid, 2 => Unpaid');
             $table->text('note')->nullable();
 
             $table->tinyInteger('request_for')->default(0)->comment('1 => Return, 2 => Exchange');

@@ -226,7 +226,7 @@ class Kyc extends Model
                             ->where('rider_id', $riderId)
                             ->where('status_id', config('constants.ORDER_STATUS.ASSIGNED'))
                             ->where('payment_status', config('constants.PAYMENT_STATUS.SUCCESS'))
-                            ->whereRaw('DATE(subscription_validity) >= DATE(NOW())')
+                            // ->whereRaw('DATE(subscription_validity) >= DATE(NOW())')
                             ->whereNull('deleted_at')
                             ->first();
                         if (is_null($currentOrder)) {

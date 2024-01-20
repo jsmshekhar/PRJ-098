@@ -29,6 +29,7 @@
         <div class="main-content">
 
             <div class="page-content">
+                @include('admin.layouts.session-flash')
                 <!-- start page title -->
                 @yield('content')
                 <!-- end page title -->

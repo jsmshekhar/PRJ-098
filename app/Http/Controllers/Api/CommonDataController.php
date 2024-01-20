@@ -298,4 +298,25 @@ class CommonDataController extends ApiController
             return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
         }
     }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : get-notification
+    Request   : Object
+    Return    : Json
+    --------------------------------------------------*/
+    public function getNotification(Request $request)
+    {
+        try {
+            $result = ApiModel::getNotification($request);
+            return finalResponse($result);
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
 }

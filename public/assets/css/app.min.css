@@ -792,7 +792,7 @@ body[data-sidebar-size=sm] .vertical-menu .simplebar-mask {
 body[data-sidebar-size="sm"] .vertical-menu .simplebar-offset {
   bottom: 0 !important;
 }
-/* 
+/*
 body[data-sidebar-size=sm] .vertical-menu #sidebar-menu .badge,
 body[data-sidebar-size=sm] .vertical-menu #sidebar-menu .menu-title,
 body[data-sidebar-size=sm] .vertical-menu #sidebar-menu .sidebar-alert {
@@ -848,7 +848,7 @@ body[data-sidebar-size="sm"] .vertical-menu #sidebar-menu > ul > li > a svg {
     -webkit-transition: none;
     transition: none
 } */
-/* 
+/*
 body[data-sidebar-size=sm] .vertical-menu #sidebar-menu>ul>li:hover>a i {
     color: #49A257
 } */
@@ -1912,10 +1912,10 @@ body[data-layout="horizontal"][data-layout-size="boxed"] .navbar-header {
 
 /*!
  * Waves v0.7.6
- * http://fian.my.id/Waves 
- * 
- * Copyright 2014-2018 Alfiana E. Sibuea and other contributors 
- * Released under the MIT license 
+ * http://fian.my.id/Waves
+ *
+ * Copyright 2014-2018 Alfiana E. Sibuea and other contributors
+ * Released under the MIT license
  * https://github.com/fians/Waves/blob/master/LICENSE */
 
 .waves-effect {
@@ -6197,7 +6197,7 @@ body[data-layout="horizontal"] .chat-conversation {
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
-  line-height: 160%; 
+  line-height: 160%;
 }
 
 .card_wall_bal table thead th {
@@ -6233,7 +6233,7 @@ table .dropdown-menu.show .dropdown-item {
   font-size: 16px;
   font-weight: 400;
   line-height: 160%; /* 25.6px */
-  font-family: "Roboto", sans-serif !important;  
+  font-family: "Roboto", sans-serif !important;
 }
 
 table .dropdown-menu.show .dropdown-item:hover {
@@ -6555,7 +6555,7 @@ table .dropdown-menu.show .dropdown-item:hover {
   font-style: normal;
   font-weight: 400;
   margin: 0;
-} 
+}
 
 .modal{
   z-index: 9999;
@@ -6588,7 +6588,7 @@ table .dropdown-menu.show .dropdown-item:hover {
 
 .profil_img{
   margin: 0 0 20px 0;
-  text-align: center; 
+  text-align: center;
   position: relative;
 }
 
@@ -6597,7 +6597,7 @@ table .dropdown-menu.show .dropdown-item:hover {
   width: 75px;
   height: 75px;
   padding: 5px;
-  object-fit: cover; 
+  object-fit: cover;
 }
 
 
@@ -6650,7 +6650,7 @@ table .dropdown-menu.show .dropdown-item:hover {
   box-shadow: 0px 2px 10px 0px rgba(0, 9, 4, 0.10) inset;
 }
 
-.cat_list ul li a{  
+.cat_list ul li a{
   height: 70px;
   padding: 22px 15px 15px 15px;
 }
@@ -6840,7 +6840,7 @@ table .dropdown-menu.show .dropdown-item:hover {
 }
 
 .sub_btns a{
-  padding: 0 5px !important; 
+  padding: 0 5px !important;
 }
 
 .fa-edit{
@@ -6987,6 +6987,12 @@ table .dropdown-menu.show .dropdown-item:hover {
   float: left;
 }
 
+.uploadBtn .upload_des_preview1 {
+    width: 140px;
+    height: 140px;
+    float: left;
+  }
+
 .text-dot-new{
   color: #000000;
   font-size: 14px;
@@ -7127,7 +7133,7 @@ ul.grp_list{
   ul.grp_list{
     left: 35%;
   }
-  
+
 }
 
 @media (max-width:1450px) {
@@ -7173,7 +7179,7 @@ ul.grp_list{
     place-content: center;
     place-items: center;
   }
-  
+
   .d-cust-mob{
     display: block;
   }
