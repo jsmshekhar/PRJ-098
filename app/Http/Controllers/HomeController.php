@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\AdminAppController;
 use App\Models\Product;
 use App\Models\Rider;
+use App\Models\RiderOrderPayment;
 use App\Models\RiderTransactionHistory;
 use App\Models\User;
 use Carbon\Carbon;
@@ -26,7 +27,7 @@ class HomeController extends AdminAppController
         $evstatus2W = Product::where('ev_category_id', 1)->select(
             DB::raw('COUNT(CASE WHEN status_id = 1 THEN 1 END) as functional'),
             DB::raw('COUNT(CASE WHEN status_id = 3 THEN 1 END) as non_functional'),
-            DB::raw('COUNT(CASE WHEN ev_status = 1 && status_id = 4 THEN 1 END) as mobilized'),
+            DB::raw('COUNT(CASE WHEN ev_status = 1 THEN 1 END) as mobilized'),
             DB::raw('COUNT(CASE WHEN ev_status = 2 THEN 1 END) as immobilized')
         )->first();
         $evstatus3W = Product::where('ev_category_id', 2)->select(
@@ -35,8 +36,8 @@ class HomeController extends AdminAppController
             DB::raw('COUNT(CASE WHEN ev_status = 1 THEN 1 END) as mobilized'),
             DB::raw('COUNT(CASE WHEN ev_status = 2 THEN 1 END) as immobilized')
         )->first();
-        $evCount2W = Product::whereNull('deleted_at')->where('ev_category_id', 1)->count();
-        $evCount3W = Product::whereNull('deleted_at')->where('ev_category_id', 2)->count();
+        $evCount2W = Product::whereNull('deleted_at')->where('ev_category_id', 1)->where('status_id', '!=', 2)->count();
+        $evCount3W = Product::whereNull('deleted_at')->where('ev_category_id', 2)->where('status_id', '!=', 2)->count();
 
         $ridersData = Rider::where('status_id', 1)->whereNull('deleted_at')
         ->select(
@@ -82,8 +83,17 @@ class HomeController extends AdminAppController
         $recievedRevenue = RiderTransactionHistory::where(['transaction_type' => 1, 'payment_status' => 1])->whereBetween('created_at', [$startDate, $endDate])->get();
         $thisMonthTotal = $recievedRevenue->sum('transaction_ammount');
 
+        //upcomming revenu
+        $upcommingPayment = '';
+        $upcommingPayment = RiderOrderPayment::join('rider_orders', 'rider_orders.order_id', '=', 'rider_order_payments.order_id')
+            ->whereBetween('rider_order_payments.to_date', [$startDate, $endDate])
+            ->selectRaw('SUM(rider_orders.mapped_product_price * rider_orders.subscription_days) as totalAmount')
+            ->value('totalAmount');
+
         // // CO Emission Savings=(CO2 emissions from traditional vehicle − CO2 emissions from electric vehicle)×Distance traveled by EV  ex. tradistion
-        // $co2Saving = 
-        return view($this->viewPath . '/dashboard', compact('permission', 'evstatus2W', 'evCount2W', 'evstatus3W', 'evCount3W', 'ridersArray', 'totalRevenue', 'thisMonthTotal'));
+        $evDistance = Product::sum('ev_running_distance');
+        $co2Saving =  number_format((0.100 / $evDistance),2);
+        //$co2Saving = number_format($co2Saving, 2);
+        return view($this->viewPath . '/dashboard', compact('permission', 'evstatus2W', 'evCount2W', 'evstatus3W', 'evCount3W', 'ridersArray', 'totalRevenue', 'thisMonthTotal', 'co2Saving', 'evDistance', 'upcommingPayment'));
     }
 }

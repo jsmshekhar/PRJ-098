@@ -32,9 +32,9 @@
             <div class="card-body">
                 <div class="row align-items-center">
                     <div class="col-12">
-                        <span class="text-muted mb-3 lh-1 d-block text-truncate totally_info">This Month Received</span>
+                        <span class="text-muted mb-3 lh-1 d-block text-truncate totally_info">This Month Revenue</span>
                         <h4 class="">
-                            ₹{{$thisMonthTotal}}
+                            ₹{{$upcommingPayment}}
                         </h4>
                     </div>
                 </div>
@@ -49,9 +49,9 @@
             <div class="card-body">
                 <div class="row align-items-center">
                     <div class="col-12">
-                        <span class="text-muted mb-3 lh-1 d-block text-truncate totally_info">Outstanding Revenue</span>
+                        <span class="text-muted mb-3 lh-1 d-block text-truncate totally_info">This Month Recieved</span>
                         <h4 class="">
-                            $50,000
+                            ₹{{$thisMonthTotal}}
                         </h4>
                     </div>
                 </div>
@@ -66,9 +66,9 @@
             <div class="card-body">
                 <div class="row align-items-center">
                     <div class="col-12">
-                        <span class="text-muted mb-3 lh-1 d-block text-truncate totally_info">Total Expenses</span>
+                        <span class="text-muted mb-3 lh-1 d-block text-truncate totally_info">Total Outstanding</span>
                         <h4 class="">
-                            $1,50,000
+                            ₹{{$upcommingPayment-$thisMonthTotal}}
                         </h4>
                     </div>
                 </div>
@@ -89,7 +89,7 @@
                             <div class="col-12">
                                 <span class="text-muted text-center mb-3 lh-1 d-block text-truncate totally_info">CO2 Emission Saving</span>
                                 <h4 class="text-center text-primary">
-                                    0.82 KGs
+                                    {{$co2Saving}} KGs
                                 </h4>
                             </div>
                         </div>
@@ -104,7 +104,7 @@
                             <div class="col-12 text-center">
                                 <span class="text-muted mb-3 lh-1 d-block text-truncate totally_info">Total KMs</span>
                                 <h4 class="text-center text-blue-dash">
-                                    21.00 KMs
+                                    {{$evDistance}} KMs
                                 </h4>
                             </div>
                         </div>
@@ -146,10 +146,10 @@
                                     <div class="dash_body_grp">
                                         <div id="donutChart3W" class="position-relative"></div>
                                         <ul class="grp_list">
-                                            <li><span class="grp_clr_box grp_red"></span>Immobilized Vehicles</li>
-                                            <li><span class="grp_clr_box grp_yellow"></span>Mobilized Vehicles</li>
-                                            <li><span class="grp_clr_box grp_blue"></span>Non-Functional Vehicles</li>
-                                            <li><span class="grp_clr_box grp_green"></span>Functional Vehicles</li>
+                                            <li><span class="grp_clr_box grp_green"></span>Mobilized Vehicles</li>
+                                            <li><span class="grp_clr_box grp_blue"></span>Immobilized Vehicles</li>
+                                            <li><span class="grp_clr_box grp_yellow"></span>Functional Vehicles</li>
+                                            <li><span class="grp_clr_box grp_red"></span>Non-Functional Vehicles</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -236,9 +236,9 @@
 
             var data1 = google.visualization.arrayToDataTable([
                 ['Task', 'Three Wheeler'],
-                ['Mobilized Vehicle', 20],
+                ['Mobilized Vehicle', 5],
                 ['Immobilized Vehicle', 9],
-                ['Functional Vehicle', 25],
+                ['Functional Vehicle', 11],
                 ['Non-Functional Vehicle', 4],
             ]);
             var options = {

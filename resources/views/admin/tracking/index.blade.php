@@ -49,7 +49,7 @@
 </div>
 @endsection
 @section('js')
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAY0EeD3Qdxs10gIg1RgOZP04tGcAbwdDM&libraries=places&language=en&callback=initMap" type="text/javascript"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAY0EeD3Qdxs10gIg1RgOZP04tGcAbwdDM&language=en&callback=initMap&libraries=journeySharing" type="text/javascript"></script>
 <script type="text/javascript">
     var marker; // Declare marker globally to update its position later
     function updateMap(value) {
@@ -80,12 +80,12 @@
                 console.error(xhr.responseText);
                 setTimeout(function() {
                     updateMap(chassisNumber);
-                }, 10000);
+                }, 2000);
             },
             complete: function() {
                 setTimeout(function() {
                     updateMap(chassisNumber);
-                }, 10000);
+                }, 2000);
             }
         });
     }
