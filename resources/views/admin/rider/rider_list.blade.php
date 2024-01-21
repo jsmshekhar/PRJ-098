@@ -158,12 +158,13 @@
                                         <thead>
                                             <tr>
                                                 <th>Customer Id</th>
-                                                {{-- <th>Mapped EV</th> --}}
+                                                <th>Mapped EV</th>
+                                                <th>Hub Id</th>
                                                 <th>Name</th>
                                                 <th>Email</th>
                                                 <th>Phone</th>
                                                 <th>Joining Date</th>
-                                                <th>Verification Status</th>
+                                                <th>Rider Status</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -171,16 +172,31 @@
                                                 <tr>
                                                     <td>
                                                         <a href="{{ route('customer-view', $rider->slug) }}"
-                                                            title="View rider" style="cursor: pointer;margin-right: 5px;">{{ "CUS".$rider->customer_id }}
+                                                            title="View rider"
+                                                            style="cursor: pointer;margin-right: 5px;">{{ 'CUS' . $rider->customer_id }}
                                                         </a>
                                                     </td>
-                                                    {{-- <td>ERF567GB</td> --}}
+                                                    <td>
+                                                        @if ($rider->order && $rider->order->product)
+                                                            {{ $rider->order->product->ev_number }}
+                                                        @else
+                                                            {{ 'NA' }}
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($rider->order && $rider->order->hub)
+                                                            {{ $rider->order->hub->hubId }}
+                                                        @else
+                                                            {{ 'NA' }}
+                                                        @endif
+                                                    </td>
                                                     <td>{{ $rider->name }}</td>
                                                     <td>{{ $rider->email }}</td>
                                                     <td>{{ $rider->phone }}</td>
                                                     <td>{{ dateFormat($rider->created_at) }}</td>
                                                     <td>
-                                                        @can('enable_disable_customer', $permission)
+                                                        {{ $rider->kyc_status_name }}
+                                                        {{-- @can('enable_disable_customer', $permission)
                                                             <div class="d-flex flex-wrap gap-2">
                                                                 <input type="checkbox" id="switch3{{ $key }}"
                                                                     onclick="toggleStatus('switch3{{ $key }}')"
@@ -190,7 +206,7 @@
                                                                 <label for="switch3{{ $key }}"
                                                                     data-on-label="Verified" data-off-label="Pending"></label>
                                                             </div>
-                                                        @endcan
+                                                        @endcan --}}
                                                     </td>
                                                 </tr>
                                             @endforeach

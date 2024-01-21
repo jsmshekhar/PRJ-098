@@ -28,6 +28,7 @@ class CreateNotificationsTable extends Migration
             $table->tinyInteger('is_send_charge')->default(1)->comment('1 => Yes, 2 => No');
             $table->dateTime('schedule_date')->nullable();
             $table->tinyInteger('status_id')->default(1)->comment('1 => Active, 2 => Inactive, 3 => Expired');
+            $table->tinyInteger('notification_status')->default(2)->comment('1 => Sent, 2 => Pending, 3 => Queue');
             $table->string('user_slug')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();

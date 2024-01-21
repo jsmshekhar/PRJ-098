@@ -208,7 +208,7 @@ class ReturnExchangeController extends AdminAppController
                     "security_ammount" => $oldOrder->security_ammount ?? null,
 
                     "payment_status" =>  $oldOrder->payment_status ?? null,
-                    "status_id" =>  $oldOrder->status_id ?? null,
+                    "status_id" =>  1,
                     "requested_payload" => $oldOrder->requested_payload,
                     "created_by" => $oldOrder->created_by,
                     "created_at" => NOW(),
@@ -228,6 +228,7 @@ class ReturnExchangeController extends AdminAppController
                 if ($newOrderId) {
                     Product::where('product_id', $oldProductId)->update(['status_id' => 1, 'ev_status' => 3]);
                     RiderOrder::where('order_id', $oldorderId)->update(['status_id' => 4]);
+                    Product::where('product_id', $mappedVehicleId)->update(['status_id' => 4, 'ev_status' => 1]);
 
                     $rentCycle = (int)$oldOrder->subscription_days;
 

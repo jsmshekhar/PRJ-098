@@ -45,12 +45,12 @@ return [
         '-10 Days' => -10,
     ],
     'USER_BASE_NOTIFICATION' => [
-        'NEWLLY_ONBOARDED' => 1,
+        // 'NEWLLY_ONBOARDED' => 1,
         'MOBILIZED' => 2,
         'IMMOBILIZED' => 3,
         'EV_RETURN_REQUEST' => 4,
         'EV_SERVICE_REQUIRED' => 5,
-        'DUE_PAYMENT' => 6,
+        // 'DUE_PAYMENT' => 6,
         'ALL' => 7,
     ],
     'EV_CATEGORIES' => [

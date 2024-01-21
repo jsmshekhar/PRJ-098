@@ -24,7 +24,7 @@ class Notification extends Model
     {
         try {
             $auth = Auth::user();
-            $notifications = Notification::where('created_by', $auth->user_id)->orWhere('created_by','!=', $auth->user_id)->whereNull('deleted_at')->orderBy('created_at', 'DESC')->paginate(25);
+            $notifications = Notification::where('created_by', $auth->user_id)->orWhere('created_by', '!=', $auth->user_id)->whereNull('deleted_at')->orderBy('created_at', 'DESC')->paginate(25);
             foreach ($notifications as $key => $notification) {
                 $notification->param = strtolower($notification->notification_type);
             }
@@ -79,7 +79,7 @@ class Notification extends Model
             $drtn = config('constants.DISTANCE_REMAINING_TO_NOTIFY');
             $dayrtn = config('constants.DAYS_REMAINING_TO_NOTIFY');
             $userBase = config('constants.USER_BASE_NOTIFICATION');
-            
+
             return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['parameters' => $np, 'distance' => $drtn, 'days' => $dayrtn, 'user_base' => $userBase]);
         } catch (\Throwable $ex) {
             $result = [
@@ -147,24 +147,119 @@ class Notification extends Model
     Developer : Raj Kumar
     Action    : Schedule Notification
     --------------------------------------------------*/
-    public static function sendScheduleNotifications()
-    { 
-        // try {
-        //     $currentDate = date("Y-m-d");
-        //     $notifications = Notification::whereDate('schedule_date', $currentDate)
-        //         ->where('notification_type', 'Manual')
-        //         ->where('notification_parameter', 3) // 3=>scheduled
-        //         ->where('status_id', 1)
-        //         ->select('description', 'notification_user_based')
-        //         ->get(); 
-        //     $getCampaign = DB::table('rider_device_tokens')->join('rider', 'crm_campaigns.timezone', 'timezones.timezone_id');
-        // } catch (\Exception $ex) {
-        //     $result = [
-        //         'line' => $ex->getLine(),
-        //         'file' => $ex->getFile(),
-        //         'message' => $ex->getMessage(),
-        //     ];
-        //     return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
-        // }
+    public static function sendInstantNotification()
+    {
+        try {
+            $notifications = Notification::where('notification_type', 'Manual')->where(['status_id' => 1, 'notification_parameter' => 4, 'notification_status' => 2])->get();
+            if (!empty($notifications)) {
+                foreach ($notifications as $notification) {
+                    $notificationUserBase = (int)$notification->notification_user_based;
+                    $notificationId = $notification->notification_id;
+                    $title = $notification->title;
+                    $description = $notification->description;
+                    // Mark as in Queue
+                    Notification::where('notification_id', $notificationId)->update(['notification_status' => 3]);
+                    switch ($notificationUserBase) {
+                        case 2: // MOBILIZED
+                            $riderIds = RiderOrder::leftJoin('products', 'products.product_id', '=', 'rider_orders.mapped_vehicle_id')
+                                ->leftJoin('riders', 'riders.rider_id', '=', 'rider_orders.rider_id')
+                                ->where(['rider_orders.status_id' => 1, 'riders.status_id' => 1, 'products.ev_status' => 1])
+                                ->pluck('riders.rider_id')->toArray();
+                            if (!empty($riderIds)) {
+                                $data = ['title' => $title, 'description' => $description];
+                                Notification::sendPushNotification($riderIds, $notificationId, $data);
+                            }
+                            // Mark as in Send
+                            Notification::where('notification_id', $notificationId)->update(['notification_status' => 1]);
+                            break;
+                        case 3: // IMMOBILIZED
+                            $riderIds = RiderOrder::leftJoin('products', 'products.product_id', '=', 'rider_orders.mapped_vehicle_id')
+                                ->leftJoin('riders', 'riders.rider_id', '=', 'rider_orders.rider_id')
+                                ->where(['rider_orders.status_id' => 1, 'riders.status_id' => 1, 'products.ev_status' => 2])
+                                ->pluck('riders.rider_id')->toArray();
+                            if (!empty($riderIds)) {
+                                $data = ['title' => $title, 'description' => $description];
+                                Notification::sendPushNotification($riderIds, $notificationId, $data);
+                            }
+                            // Mark as in Send
+                            Notification::where('notification_id', $notificationId)->update(['notification_status' => 1]);
+                            break;
+                        case 4: // EV_RETURN_REQUEST
+                            $riderIds = ReturnExchange::where(['request_for' => 1, 'status_id' => 2])->pluck('rider_id')->toArray();
+                            if (!empty($riderIds)) {
+                                $data = ['title' => $title, 'description' => $description];
+                                Notification::sendPushNotification($riderIds, $notificationId, $data);
+                            }
+                            // Mark as in Send
+                            Notification::where('notification_id', $notificationId)->update(['notification_status' => 1]);
+                            break;
+                        case 5: // EV_SERVICE_REQUIRED
+                            /*$riderIds =  EvServiceRequset::where(['request_for' => 1, 'status_id' => 2])->pluck('rider_id')->toArray();
+                            if (!empty($riderIds)) {
+                                $data = ['title' => $title, 'description' => $description];
+                                Notification::sendPushNotification($riderIds, $notificationId, $data);
+                            }
+                            // Mark as in Send
+                            Notification::where('notification_id', $notificationId)->update(['notification_status' => 1]);
+                            */
+                            break;
+                        case 7: // ALL
+                            $riderIds =  Rider::where(['status_id' => 2])->where('kyc_status', '!=', 3)->pluck('rider_id')->toArray();
+                            if (!empty($riderIds)) {
+                                $data = ['title' => $title, 'description' => $description];
+                                Notification::sendPushNotification($riderIds, $notificationId, $data);
+                            }
+                            // Mark as in Send
+                            Notification::where('notification_id', $notificationId)->update(['notification_status' => 1]);
+                            break;
+                    }
+                }
+            }
+        } catch (\Exception $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    public static function sendPushNotification($riderIds = [], $notificationId = null, $data = [])
+    {
+        $riderTokes = RiderToken::whereIn('rider_id', $riderIds)->where('status_id', 1)->get();
+        if (!empty($riderTokes)) {
+            foreach ($riderTokes as $tokes) {
+                $deviceToken = $tokes->device_token ?? null;
+                $deviceType = $tokes->device_type ?? null;
+                $riderId = $tokes->rider_id ?? null;
+                $isNotificationSent = false;
+                if ($deviceType == 1 && !is_null($deviceToken)) {
+                    $isNotificationSent = true;
+                    // Need to send notification for Android Users
+
+                }
+                if ($deviceType == 2 && !is_null($deviceToken)) {
+                    $isNotificationSent = true;
+                    // Need to send notification for iOS Users
+                }
+
+                if ($isNotificationSent) {
+                    // Need to store in rider notification table
+                    $isAvail = RiderNotification::where(['rider_id' => $riderId, 'notification_id' => $notificationId])->first();
+                    if (is_null($isAvail)) {
+                        $riderNotification = [
+                            'slug' => slug(),
+                            'rider_id' => $riderId,
+                            'notification_id' => $notificationId,
+                            'title' => $data['title'] ?? '',
+                            'description' => $data['description'] ?? '',
+                            'status_id' => 1,
+                        ];
+                        DB::table('rider_notifications')->insertGetId($riderNotification);
+                    }
+                }
+            }
+        }
     }
 }

@@ -18,14 +18,14 @@ class Rider extends Authenticatable
     protected $table = "riders";
     protected $primaryKey = 'rider_id';
     protected $fillable = [
-        'slug', 'name', 'email', 'email_verified_at', 'activated_at', 'phone', 'password', 'current_address', 'permanent_address', 'state_id', 'city_id', 'vehicle_id', 'photo', 'subscription_days', 'joining_date', 'subscription_validity', 'api_token', 'status_id', 'created_by', 'updated_by', 'created_at', 'updated_at', 'deleted_at', 'customer_id','profile_type',
+        'slug', 'name', 'email', 'email_verified_at', 'activated_at', 'phone', 'password', 'current_address', 'permanent_address', 'state_id', 'city_id', 'vehicle_id', 'photo', 'subscription_days', 'joining_date', 'subscription_validity', 'api_token', 'status_id', 'created_by', 'updated_by', 'created_at', 'updated_at', 'deleted_at', 'customer_id', 'profile_type',
     ];
     protected $hidden = [
         'api_token', 'password'
     ];
 
     protected $appends = [
-        'profile_type_name','kyc_status_name'
+        'profile_type_name', 'kyc_status_name'
     ];
 
     public function getProfileTypeNameAttribute()
@@ -93,6 +93,11 @@ class Rider extends Authenticatable
         return $this->hasMany(Complain::class, 'rider_id', 'rider_id')->with('category')->whereNull('deleted_at')->orderBy('created_at', 'DESC');
     }
 
+    public function order()
+    {
+        return $this->hasOne(RiderOrder::class, 'rider_id', 'rider_id')->whereNull('deleted_at')->orderBy('order_id', 'DESC')->with(['product', 'hub']);
+    }
+
     /*--------------------------------------------------
     Developer : Chandra Shekhar
     Action    : register
@@ -153,6 +158,20 @@ class Rider extends Authenticatable
                 $rider = Auth::guard('rider')->user();
                 $riderDetails = [];
                 if (!is_null($rider)) {
+                    $deviceType = $request->header('deviceType');
+                    $deviceToken = $request->header('deviceToken') ?? null;
+                    if (in_array($deviceType, [1, 2]) && !is_null($deviceToken)) {
+                        $deviceRecord = [
+                            'slug' => slug(),
+                            'rider_id' => $rider->rider_id,
+                            'device_type' => $deviceType,
+                            'device_token' => $deviceToken,
+                            'status_id' => 1
+                        ];
+                        DB::table('rider_tokens')->where(['device_type' => $deviceType, 'device_token' => $deviceToken])->delete();
+                        DB::table('rider_tokens')->insertGetId($deviceRecord);
+                    }
+
                     $isKyc = DB::table('riders')->where('rider_id', $rider->rider_id)->whereNotNull('is_step_selfie_done')->whereNotNull('is_personal_detail_done')->whereNotNull('is_id_proof_done')->whereNotNull('is_bank_detail_done')->first();
                     $kycStatus = !is_null($isKyc) ? 1 : 0;
                     $riderDetails = [
@@ -162,6 +181,7 @@ class Rider extends Authenticatable
                         "phone" => $rider->phone,
                         "photo" => $rider->photo,
                         "profile_category" => (int)$rider->profile_type,
+                        "customer_id" => "CUS" . $rider->customer_id,
                     ];
                 }
                 $token = $rider->createToken('rider')->accessToken;
@@ -184,6 +204,11 @@ class Rider extends Authenticatable
         try {
             $token = $request->user('rider-api')->token();
             $token->revoke();
+
+            $deviceType = $request->header('deviceType');
+            $deviceToken = $request->header('deviceToken') ?? null;
+            DB::table('rider_tokens')->where(['device_type' => $deviceType, 'device_token' => $deviceToken])->delete();
+
             return successResponse(Response::HTTP_OK, Lang::get('messages.LOGOUT_SUCCESS'), (object)[]);
         } catch (\Throwable $ex) {
             $result = [
