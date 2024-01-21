@@ -23,8 +23,8 @@
                                 <img src="{{ asset('public/assets/images/icons/edit-pen.svg') }}" alt="">
                             </a>
                             <!-- <a href="javascript:void(0);" class="btn btn-link" onclick="showModal('targetModal');">
-                                <img src="{{ asset('public/assets/images/icons/edit-pen.svg') }}" alt="">
-                            </a> -->
+                                                <img src="{{ asset('public/assets/images/icons/edit-pen.svg') }}" alt="">
+                                            </a> -->
                         </div>
                     </div>
                     <div class="card-body">
@@ -36,9 +36,12 @@
                                 <span class="active"></span>
                             </div>
                             <p class="text-center text-dot-new">Profile Type :
-                                <span>{{ $rider->profile_type_name }}</span></p>
+                                <span>{{ $rider->profile_type_name }}</span>
+                            </p>
                             <p class="text-center text-dot-new">KYC Status :
-                                <span class="dot_btn" onclick="showModal('targetModal');">{{ $rider->kyc_status_name }}</span></p>
+                                <span class="dot_btn"
+                                    onclick="showModal('targetModal');">{{ $rider->kyc_status_name }}</span>
+                            </p>
                             <h5 class="mt-4">User Id : <span>{{ $rider->slug }}</span></h5>
                             <h5>Name : <span>{{ $rider->name }}</span></h5>
                             <h5>Email Id : <span>{{ $rider->email }}</span></h5>
@@ -85,20 +88,28 @@
                         <div class="card">
                             <div class="card-header border-bottom">
                                 <h4>Ev Details</h4>
-                                <div class="btn-card-header">
+                                {{-- <div class="btn-card-header">
                                     <a href="#" class="btn btn-link">
                                         <img src="{{ asset('public/assets/images/icons/edit-pen.svg') }}" alt="">
                                     </a>
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="card-body">
                                 <div class="detail_cnt line-bt-16">
-                                    <h5>EV No. : <span>EV007</span></h5>
-                                    <h5>HUB ID : <span>HUB001</span></h5>
-                                    <h5>Plan Type : <span>Monthly</span></h5>
-                                    <h5>Subscription Validity : <span>20/10/2023</span></h5>
-                                    <a href="#" class="btn btn-success waves-effect waves-light">Immobilized
-                                        Now</a>
+                                    <h5>Current EV No. : <span>{{ $riderEv->ev_number }}</span></h5>
+                                    <h5>HUB ID : <span>{{ $riderEv->hubId }}</span></h5>
+                                    <h5>Plan Type : <span>{{ $riderEv->rent_cycle }}</span></h5>
+                                    <h5>Subscription Status : <span>{{ $riderEv->subscriptionStatus }}</span></h5>
+                                    <h5>Last EV Number : <span>{{ $riderEv->last_ev }}</span></h5>
+                                    <button
+                                        onclick="mobilizedEv($riderEv->product_id, $riderEv->gps_emei_number, $riderEv->rider_id, 'm')"
+                                        class="btn btn-success waves-effect waves-light mobilizedEvMap">Mobilized
+                                        Now</button>
+                                    <button
+                                        onclick="imMobilizedEv($riderEv->product_id, $riderEv->gps_emei_number, $riderEv->rider_id, 'im')"
+                                        class=" btn btn-danger waves-effect waves-light imMobilizedEvMap">Immobilized
+                                        Now</button>
+                                    <p class="text-success d-block" id="mobiImmobiMap"></p>
                                 </div>
                             </div><!-- end card-body -->
                         </div><!-- end card -->
@@ -146,11 +157,11 @@
                         <div class="card">
                             <div class="card-header border-bottom">
                                 <h4>Complain and Status</h4>
-                                <div class="btn-card-header">
+                                {{-- <div class="btn-card-header">
                                     <a href="#" class="btn btn-link">
                                         <img src="{{ asset('public/assets/images/icons/edit-pen.svg') }}" alt="">
                                     </a>
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="card-body p-0">
                                 <div class="detail_cnt">
@@ -272,7 +283,7 @@
                             <div class="col-md-12">
                                 <div class="form-group mb-2">
                                     <label for="address serach" class="col-form-label">Status</label>
-{{ Form::select('kyc_status', $kycStatus, $rider->kyc_status, ['class' => 'form-control selectBasic', 'id' => 'kyc_status']) }}
+                                    {{ Form::select('kyc_status', $kycStatus, $rider->kyc_status, ['class' => 'form-control selectBasic', 'id' => 'kyc_status']) }}
                                     <span class="spanColor kyc_status_error"></span>
                                 </div>
                                 <input type="hidden" name="rider_slug" value="{{ $rider->slug }}">

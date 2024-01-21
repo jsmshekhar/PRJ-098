@@ -329,6 +329,7 @@ class ApiModel extends Model
     Action    : get-current-order
     Request   : Object
     Return    : Json
+    Message   : For Mobile App 1-Debit, 2-Credit
     --------------------------------------------------*/
     public static function getTransactions($request)
     {
@@ -341,8 +342,8 @@ class ApiModel extends Model
                     'th.slug',
                     'th.transaction_ammount',
                     'th.created_at',
-                    DB::raw('CASE th.transaction_type WHEN 1 THEN "Credit" WHEN 2 THEN "Debit" ELSE "" END as transaction_type'),
-                    DB::raw('CASE th.transaction_mode WHEN 1 THEN "Card" WHEN 2 THEN "Wallet" WHEN 3 THEN "UPI" END as transaction_mode'),
+                    DB::raw('CASE th.transaction_type WHEN 1 THEN "Debit" WHEN 2 THEN "Credit" ELSE "" END as transaction_type'),
+                    DB::raw('CASE th.transaction_mode WHEN 1 THEN "Card" WHEN 2 THEN "Wallet" WHEN 3 THEN "UPI" WHEN 4 THEN "Net Banking" END as transaction_mode'),
                 )->get();
             if (!is_null($records)) {
                 return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), $records);

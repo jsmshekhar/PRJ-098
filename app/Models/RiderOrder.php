@@ -26,6 +26,16 @@ class RiderOrder extends Model
         return $this->hasOne(Rider::class, 'rider_id', 'rider_id')->whereNull('deleted_at');
     }
 
+    public function product()
+    {
+        return $this->hasOne(Product::class, 'product_id', 'vehicle_id')->whereNull('deleted_at');
+    }
+
+    public function hub()
+    {
+        return $this->hasOne(Hub::class, 'hub_id', 'hub_id')->whereNull('deleted_at');
+    }
+
     protected $appends = [
         'payment_status_display'
     ];
