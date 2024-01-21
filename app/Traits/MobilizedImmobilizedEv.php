@@ -44,13 +44,10 @@ trait MobilizedImmobilizedEv
             if($message == 200 && $success == true){
                 if(!empty($actionType) && $actionType == "m" && !empty($productId)){
                     $ev_status_updated = Product::where('product_id', $productId)->update(['ev_status'=>1]);
-                    $ev_status_updated = Product::where('product_id', $productId)->update(['status_id' => 4]);
-                    $ev_status_updated = Product::where('product_id', $productId)->update(['ev_status' => 1]);
                     $evstatus_updated = RiderOrderPayment::where('rider_id', $riderId)->where('mapped_vehicle_id', $productId)->update(['status_id' => 1]);
                     return response()->json(['msg' => 'm']);
                 }elseif(!empty($actionType) && $actionType == 'im' && !empty($productId)){
                     $ev_status_updated = Product::where('product_id', $productId)->update(['ev_status'=> 2]);
-                    $ev_status_updated = Product::where('product_id', $productId)->update(['status_id' => 2]);
                     $evstatus_updated = RiderOrderPayment::where('rider_id', $riderId)->where('mapped_vehicle_id', $productId)->update(['status_id'=> 2]);
                     return response()->json(['msg' => "im"]);
                 }
