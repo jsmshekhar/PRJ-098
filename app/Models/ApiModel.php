@@ -615,4 +615,311 @@ class ApiModel extends Model
             return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
         }
     }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : get-kyc-documents
+    Request   : Object
+    Return    : Json
+    --------------------------------------------------*/
+    public static function getKycDocuments($request)
+    {
+        try {
+            $riderId = Auth::id();
+            $profileType = Auth::user()->profile_type;
+
+            $documentType = [1, 2, 3, 9, 5, 4, 8];
+            $documents = DB::table('rider_documents')->select(['slug', 'name', 'status_id', 'document_type'])->whereNull('document_type')->where('rider_id', $riderId)->get()->toArray();
+            $docsList = [];
+            $docs = RiderDocument::select(['slug', 'name', 'status_id', 'document_type'])->whereIn('document_type', $documentType)->where('rider_id', $riderId)->get();
+            if (!empty($docs)) {
+                foreach ($docs as $d) {
+                    $docsList[$d->document_type] = [
+                        'slug' => $d->slug,
+                        'name' => $d->name,
+                        'status_id' => $d->status_id,
+                        'document_type' => $d->document_type,
+                    ];
+                }
+            }
+
+            switch ($profileType) {
+                case 1: // Corporate
+                    $documentsStats = [
+                        [
+                            'slug' => !empty($docsList) && isset($docsList[1]) ? $docsList[1]['name'] : "",
+                            'name' => 'Aadhar Card',
+                            'status_id' => !empty($docsList) && isset($docsList[1]) ? 1 : 2,
+                            'document_type' => 1,
+                        ],
+                        [
+                            'slug' => !empty($docsList) && isset($docsList[3]) ? $docsList[3]['name'] : "",
+                            'name' => 'Driving license',
+                            'status_id' => !empty($docsList) && isset($docsList[3]) ? 1 : 2,
+                            'document_type' => 3,
+                        ],
+                        [
+                            'slug' => !empty($docsList) && isset($docsList[9]) ? $docsList[9]['name'] : "",
+                            'name' => 'Employee Id card',
+                            'status_id' => !empty($docsList) && isset($docsList[9]) ? 1 : 2,
+                            'document_type' => 9,
+                        ],
+                        [
+                            'slug' => !empty($docsList) && isset($docsList[5]) ? $docsList[5]['name'] : "",
+                            'name' => 'Pan card',
+                            'status_id' => !empty($docsList) && isset($docsList[5]) ? 1 : 2,
+                            'document_type' => 5,
+                        ],
+                        [
+                            'slug' => !empty($docsList) && isset($docsList[4]) ? $docsList[4]['name'] : "",
+                            'name' => 'Rent agreement/electricity bill',
+                            'status_id' => !empty($docsList) && isset($docsList[4]) ? 1 : 2,
+                            'document_type' => 4,
+                        ],
+                        [
+                            'slug' => !empty($docsList) && isset($docsList[8]) ? $docsList[8]['name'] : "",
+                            'name' => 'Terms and conditions agreement',
+                            'status_id' => !empty($docsList) && isset($docsList[8]) ? 1 : 2,
+                            'document_type' => 8,
+                        ]
+                    ];
+                    break;
+                case 2: //Individual
+                    $documentsStats = [
+                        [
+                            'slug' => !empty($docsList) && isset($docsList[1]) ? $docsList[1]['name'] : "",
+                            'name' => 'Aadhar Card',
+                            'status_id' => !empty($docsList) && isset($docsList[1]) ? 1 : 2,
+                            'document_type' => 1,
+                        ],
+                        [
+                            'slug' => !empty($docsList) && isset($docsList[3]) ? $docsList[3]['name'] : "",
+                            'name' => 'Driving license',
+                            'status_id' => !empty($docsList) && isset($docsList[3]) ? 1 : 2,
+                            'document_type' => 3,
+                        ],
+                        [
+                            'slug' => !empty($docsList) && isset($docsList[5]) ? $docsList[5]['name'] : "",
+                            'name' => 'Pan card',
+                            'status_id' => !empty($docsList) && isset($docsList[5]) ? 1 : 2,
+                            'document_type' => 5,
+                        ],
+                        [
+                            'slug' => !empty($docsList) && isset($docsList[4]) ? $docsList[4]['name'] : "",
+                            'name' => 'Rent agreement/electricity bill',
+                            'status_id' => !empty($docsList) && isset($docsList[4]) ? 1 : 2,
+                            'document_type' => 4,
+                        ],
+                        [
+                            'slug' => !empty($docsList) && isset($docsList[8]) ? $docsList[8]['name'] : "",
+                            'name' => 'Terms and conditions agreement',
+                            'status_id' => !empty($docsList) && isset($docsList[8]) ? 1 : 2,
+                            'document_type' => 8,
+                        ]
+                    ];
+                    break;
+                case 3: //Student
+                    $documentsStats = [
+                        [
+                            'slug' => !empty($docsList) && isset($docsList[1]) ? $docsList[1]['name'] : "",
+                            'name' => 'Aadhar Card',
+                            'status_id' => !empty($docsList) && isset($docsList[1]) ? 1 : 2,
+                            'document_type' => 1,
+                        ],
+                        [
+                            'slug' => !empty($docsList) && isset($docsList[3]) ? $docsList[3]['name'] : "",
+                            'name' => 'Driving license',
+                            'status_id' => !empty($docsList) && isset($docsList[3]) ? 1 : 2,
+                            'document_type' => 3,
+                        ],
+                        [
+                            'slug' => !empty($docsList) && isset($docsList[5]) ? $docsList[5]['name'] : "",
+                            'name' => 'Pan card',
+                            'status_id' => !empty($docsList) && isset($docsList[5]) ? 1 : 2,
+                            'document_type' => 5,
+                        ],
+                        [
+                            'slug' => !empty($docsList) && isset($docsList[4]) ? $docsList[4]['name'] : "",
+                            'name' => 'Rent agreement/electricity bill',
+                            'status_id' => !empty($docsList) && isset($docsList[4]) ? 1 : 2,
+                            'document_type' => 4,
+                        ],
+                        [
+                            'slug' => !empty($docsList) && isset($docsList[9]) ? $docsList[9]['name'] : "",
+                            'name' => 'Student Id card',
+                            'status_id' => !empty($docsList) && isset($docsList[9]) ? 1 : 2,
+                            'document_type' => 9,
+                        ],
+                        [
+                            'slug' => !empty($docsList) && isset($docsList[8]) ? $docsList[8]['name'] : "",
+                            'name' => 'Terms and conditions agreement',
+                            'status_id' => !empty($docsList) && isset($docsList[8]) ? 1 : 2,
+                            'document_type' => 8,
+                        ]
+                    ];
+                    break;
+                case 4: //Vender
+                    $documentsStats = [
+                        [
+                            'slug' => !empty($docsList) && isset($docsList[1]) ? $docsList[1]['name'] : "",
+                            'name' => 'Aadhar Card',
+                            'status_id' => !empty($docsList) && isset($docsList[1]) ? 1 : 2,
+                            'document_type' => 1,
+                        ],
+                        [
+                            'slug' => !empty($docsList) && isset($docsList[2]) ? $docsList[2]['name'] : "",
+                            'name' => 'Credit Score',
+                            'status_id' => !empty($docsList) && isset($docsList[2]) ? 1 : 2,
+                            'document_type' => 2,
+                        ],
+                        [
+                            'slug' => !empty($docsList) && isset($docsList[3]) ? $docsList[3]['name'] : "",
+                            'name' => 'Driving license',
+                            'status_id' => !empty($docsList) && isset($docsList[3]) ? 1 : 2,
+                            'document_type' => 3,
+                        ],
+                        [
+                            'slug' => !empty($docsList) && isset($docsList[5]) ? $docsList[5]['name'] : "",
+                            'name' => 'Pan card',
+                            'status_id' => !empty($docsList) && isset($docsList[5]) ? 1 : 2,
+                            'document_type' => 5,
+                        ],
+                        [
+                            'slug' => !empty($docsList) && isset($docsList[4]) ? $docsList[4]['name'] : "",
+                            'name' => 'Rent agreement/electricity bill',
+                            'status_id' => !empty($docsList) && isset($docsList[4]) ? 1 : 2,
+                            'document_type' => 4,
+                        ],
+                        [
+                            'slug' => !empty($docsList) && isset($docsList[8]) ? $docsList[8]['name'] : "",
+                            'name' => 'Terms and conditions agreement',
+                            'status_id' => !empty($docsList) && isset($docsList[8]) ? 1 : 2,
+                            'document_type' => 8,
+                        ]
+                    ];
+                    break;
+            }
+
+            $finalDocumentList = array_merge($documentsStats, $documents);
+            if (!empty($finalDocumentList)) {
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), $finalDocumentList);
+            }
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : upload-current-order
+    Request   : Object
+    Return    : Json
+    --------------------------------------------------*/
+    public static function uploadKycDocuments($request)
+    {
+        try {
+            $riderId = Auth::id();
+            $record = [
+                'rider_id' => $riderId,
+                'slug' => slug(),
+                'name' => !empty($request->name) ? $request->name : null,
+                'front_pic' => !empty($request->front_image) ? $request->front_image : null,
+                'back_pic' => !empty($request->back_image) ? $request->back_image : null,
+                'document_type' => null,
+            ];
+            $status = RiderDocument::insert($record);
+            if (!empty($status)) {
+                return successResponse(Response::HTTP_OK, Lang::get('messages.INSERT'), (object)[]);
+            }
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.INSERT_ERROR'), (object)[]);
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shekhar
+    Action    : get-your-orders
+    Request   : Object
+    Return    : Json
+    --------------------------------------------------*/
+    public static function getYourOrders($request)
+    {
+        try {
+            $currentOrder = ApiModel::getCurrentOrderDetails();
+            if (!empty($currentOrder)) {
+                $orderCode = $currentOrder['order_code'] ?? null;
+                $vehicleSlug = $currentOrder['vehicle_slug'] ?? null;
+
+                $order = RiderOrder::where('slug', $orderCode)->first();
+                $basePath = asset('public/upload/');
+
+                $vehicleDetail = DB::table('products as p')
+                    ->join('ev_types as et', 'p.ev_type_id', '=', 'et.ev_type_id')
+                    ->where('p.slug', $vehicleSlug)
+                    ->whereNull('p.deleted_at')
+                    ->select(
+                        'p.slug',
+                        'p.title',
+                        'p.description',
+                        'p.speed',
+                        'p.profile_category',
+                        'p.image',
+                        DB::raw("CONCAT('$basePath','/product/', p.image) AS image_path"),
+                        'p.per_day_rent as per_day_rent',
+                        DB::raw('CASE p.bettery_type WHEN 1 THEN "Swappable" WHEN 2 THEN "Fixed" ELSE "" END as battery_type'),
+                        DB::raw('CASE p.ev_category_id WHEN 1 THEN "2 Wheeler" WHEN 2 THEN "3 Wheeler" END as ev_category'),
+                        'p.km_per_charge as km_per_charge',
+                        DB::raw('CASE p.bike_type WHEN 1 THEN "Cargo Bike" WHEN 2 THEN "Normal Bike" ELSE "" END as bike_type'),
+                        'et.ev_type_name'
+                    )
+                    ->first();
+
+                $jsonData = $order->accessories_items;
+                $accessoriesItems = json_decode($jsonData, true);
+                $accessoriesResult = [];
+                foreach ($accessoriesItems as $key => $accessoriesIts) {
+                    $slugItem = $accessoriesIts['slug'];
+                    $accessories = DB::table('accessories as acc')
+                        ->whereNull('acc.deleted_at')
+                        ->where('slug', $slugItem)
+                        ->select(
+                            'acc.slug',
+                            'acc.title',
+                            'acc.price',
+                            'acc.image',
+                            DB::raw("CONCAT('$basePath','/accessories/', acc.image) AS image_path"),
+                        )->first();
+                    $accessoriesResult[$key] = $accessoriesIts;
+                    $accessoriesResult[$key]['image_path'] = $accessories->image_path ?? "";
+                }
+
+                $result = [
+                    'slug' => $orderCode,
+                    'vehicle_detail' => $vehicleDetail,
+                    'accessories_items' => $accessoriesResult
+                ];
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), $result);
+            }
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
+        } catch (\Throwable $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
 }
