@@ -35,7 +35,8 @@
                                     <tr>
                                         <th>Title</th>
                                         <th>Notification</th>
-                                        <th>Notification Type</th>
+                                        <th>Parameter</th>
+                                        <th>Type</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
@@ -43,18 +44,23 @@
                                 <tbody>
                                     @foreach($notifications as $key => $notification)
                                     <tr>
-                                        <td style="width: 25%;">{{$notification->title}}</td>
-                                        <td style="width: 45%;">{{$notification->description}}</td>
+                                        <td style="width: 20%;">{{$notification->title}}</td>
+                                        <td style="width: 40%;">{{$notification->description}}</td>
+                                        <td>{{$notification->notification_parameter}}</td>
                                         <td>{{$notification->notification_type}}</td>
-                                        <td>
-                                            @if($notification->status_id == 1 && $notification->notification_parameter_value !== 3)
+                                        <td>@if($notification->notification_status == 2) <label class="text-danger m-0"> Pending </label>
+                                            @else <label class="text-success m-0"> Sent </label>
+                                            @endif
+                                            {{-- @if($notification->status_id == 1 && $notification->notification_parameter_value !== 3)
                                             <label class="text-success m-0">Active</label>
                                             @elseif($notification->notification_parameter_value == 3 && ($notification->status_id == 3 || $notification->schedule_date < date('Y-m-d'))) <label class="text-danger m-0">Expired</label>
-                                            @elseif($notification->status_id == 1 || $notification->schedule_date >= date('Y-m-d')) <label class="text-success m-0">Active</label>
-                                            @elseif($notification->status_id == 2) <label class="text-warning m-0">Inactive</label>
-                                            @endif
+                                                @elseif($notification->status_id == 1 || $notification->schedule_date >= date('Y-m-d')) <label class="text-success m-0">Active</label>
+                                                @elseif($notification->status_id == 2) <label class="text-warning m-0">Inactive</label>
+                                                @endif--}}
+
                                         </td>
                                         <td>
+                                            @if($notification->notification_status == 2)
                                             <a href="{{ route('edit-notification', [$notification->param, $notification->slug]) }}" class="notificationEditForm" title="Edit Notification" style="cursor: pointer;margin-right: 5px;"><i class="fa fa-edit"></i>
                                             </a> | <form id="delete-form-{{ $notification->slug }}" method="post" action="{{route('notification-delete',$notification->slug)}}" style="display: none;">
                                                 @csrf
@@ -71,6 +77,7 @@
                                                         " title="delete">
                                                 <i class="fa fa-trash" style="color:#d74b4b;"></i>
                                             </a>
+                                            @endif
                                         </td>
                                     </tr>
                                     @endforeach
