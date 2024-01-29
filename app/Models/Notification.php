@@ -28,11 +28,11 @@ class Notification extends Model
                 ->select(
                     '*',
                     'notification_parameter as notification_parameter_value',
-                    DB::raw('CASE 
-                        WHEN notification_parameter = 1 THEN "Subscription Based" 
-                        WHEN notification_parameter = 2 THEN "Distance Limit Based" 
-                        WHEN notification_parameter = 3 THEN "Schedule Notification" 
-                        WHEN notification_parameter = 4 THEN "Instant Notification" 
+                    DB::raw('CASE
+                        WHEN notification_parameter = 1 THEN "Subscription Based"
+                        WHEN notification_parameter = 2 THEN "Distance Limit Based"
+                        WHEN notification_parameter = 3 THEN "Schedule Notification"
+                        WHEN notification_parameter = 4 THEN "Instant Notification"
                     END as notification_parameter'),
                 )
                 ->orWhere('created_by', '!=', $auth->user_id)->whereNull('deleted_at')
@@ -168,6 +168,14 @@ class Notification extends Model
                 foreach ($notifications as $notification) {
                     $notificationUserBase = (int)$notification->notification_user_based;
                     $notificationId = $notification->notification_id;
+                    $notificationStatus = $notification->notification_status;
+
+                    $scheduleDate = dateFormat($notification->schedule_date) ?? null;
+                    $todayDate = dateFormat(date('Y-m-d H:i:s'));
+
+                    // Mark as in Send
+                    Notification::where('notification_id', $notificationId)->update(['notification_status' => 1]);
+
                     $title = $notification->title;
                     $description = $notification->description;
                     // Mark as in Queue
@@ -178,10 +186,18 @@ class Notification extends Model
                                 ->leftJoin('riders', 'riders.rider_id', '=', 'rider_orders.rider_id')
                                 ->where(['rider_orders.status_id' => 1, 'riders.status_id' => 1, 'products.ev_status' => 1])
                                 ->pluck('riders.rider_id')->toArray();
-                            if (!empty($riderIds)) {
-                                $data = ['title' => $title, 'description' => $description];
+                            $data = ['title' => $title, 'description' => $description];
+
+                            if (!empty($riderIds) && is_null($scheduleDate)) {
                                 Notification::sendPushNotification($riderIds, $notificationId, $data);
                             }
+
+                            if (!empty($riderIds) && !is_null($scheduleDate)) {
+                                if ($scheduleDate == $todayDate) {
+                                    Notification::sendPushNotification($riderIds, $notificationId, $data);
+                                }
+                            }
+
                             // Mark as in Send
                             Notification::where('notification_id', $notificationId)->update(['notification_status' => 1]);
                             break;
@@ -190,27 +206,50 @@ class Notification extends Model
                                 ->leftJoin('riders', 'riders.rider_id', '=', 'rider_orders.rider_id')
                                 ->where(['rider_orders.status_id' => 1, 'riders.status_id' => 1, 'products.ev_status' => 2])
                                 ->pluck('riders.rider_id')->toArray();
-                            if (!empty($riderIds)) {
-                                $data = ['title' => $title, 'description' => $description];
+                            $data = ['title' => $title, 'description' => $description];
+
+                            if (!empty($riderIds) && is_null($scheduleDate)) {
                                 Notification::sendPushNotification($riderIds, $notificationId, $data);
                             }
+
+                            if (!empty($riderIds) && !is_null($scheduleDate)) {
+                                if ($scheduleDate == $todayDate) {
+                                    Notification::sendPushNotification($riderIds, $notificationId, $data);
+                                }
+                            }
+
                             // Mark as in Send
                             Notification::where('notification_id', $notificationId)->update(['notification_status' => 1]);
                             break;
                         case 4: // EV_RETURN_REQUEST
                             $riderIds = ReturnExchange::where(['request_for' => 1, 'status_id' => 2])->pluck('rider_id')->toArray();
-                            if (!empty($riderIds)) {
-                                $data = ['title' => $title, 'description' => $description];
+                            $data = ['title' => $title, 'description' => $description];
+
+                            if (!empty($riderIds) && is_null($scheduleDate)) {
                                 Notification::sendPushNotification($riderIds, $notificationId, $data);
                             }
+
+                            if (!empty($riderIds) && !is_null($scheduleDate)) {
+                                if ($scheduleDate == $todayDate) {
+                                    Notification::sendPushNotification($riderIds, $notificationId, $data);
+                                }
+                            }
+
                             // Mark as in Send
                             Notification::where('notification_id', $notificationId)->update(['notification_status' => 1]);
                             break;
                         case 5: // EV_SERVICE_REQUIRED
                             /*$riderIds =  EvServiceRequset::where(['request_for' => 1, 'status_id' => 2])->pluck('rider_id')->toArray();
-                            if (!empty($riderIds)) {
-                                $data = ['title' => $title, 'description' => $description];
+                            $data = ['title' => $title, 'description' => $description];
+
+                            if (!empty($riderIds) && is_null($scheduleDate)) {
                                 Notification::sendPushNotification($riderIds, $notificationId, $data);
+                            }
+
+                            if (!empty($riderIds) && !is_null($scheduleDate)) {
+                                if ($scheduleDate == $todayDate) {
+                                    Notification::sendPushNotification($riderIds, $notificationId, $data);
+                                }
                             }
                             // Mark as in Send
                             Notification::where('notification_id', $notificationId)->update(['notification_status' => 1]);
@@ -218,9 +257,16 @@ class Notification extends Model
                             break;
                         case 7: // ALL
                             $riderIds =  Rider::where(['status_id' => 2])->where('kyc_status', '!=', 3)->pluck('rider_id')->toArray();
-                            if (!empty($riderIds)) {
-                                $data = ['title' => $title, 'description' => $description];
+                            $data = ['title' => $title, 'description' => $description];
+
+                            if (!empty($riderIds) && is_null($scheduleDate)) {
                                 Notification::sendPushNotification($riderIds, $notificationId, $data);
+                            }
+
+                            if (!empty($riderIds) && !is_null($scheduleDate)) {
+                                if ($scheduleDate == $todayDate) {
+                                    Notification::sendPushNotification($riderIds, $notificationId, $data);
+                                }
                             }
                             // Mark as in Send
                             Notification::where('notification_id', $notificationId)->update(['notification_status' => 1]);

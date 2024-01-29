@@ -49,7 +49,7 @@ return [
         'MOBILIZED' => 2,
         'IMMOBILIZED' => 3,
         'EV_RETURN_REQUEST' => 4,
-        'EV_SERVICE_REQUIRED' => 5,
+        // 'EV_SERVICE_REQUIRED' => 5,
         // 'DUE_PAYMENT' => 6,
         'ALL' => 7,
     ],
