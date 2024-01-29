@@ -20,6 +20,7 @@ use App\Http\Controllers\WalletMgmtController;
 use App\Http\Controllers\AccessoriesController;
 use App\Http\Controllers\CronController;
 use App\Http\Controllers\HubPartAccessoriesController;
+use App\Http\Controllers\PaymentCallbackController;
 use App\Http\Controllers\SiteConfigurationController;
 use App\Http\Controllers\UserController;
 
@@ -41,6 +42,7 @@ Route::get('/', function () {
 // Auth::routes();
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
 
 Route::group(['prefix' => 'admin'], function () {
     Auth::routes(['register' => false, 'login' => true, 'vefify' => false]);
@@ -129,6 +131,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('password/set/{token}', [PasswordSetController::class, 'showSetPasswordForm'])->name('show-set-password-form');
     Route::post('password/set', [PasswordSetController::class, 'setPassword'])->name('set-password');
 
+    Route::any('/phonepe-response', [PaymentCallbackController::class, 'phonepeResponse'])->name('response');
     //Crom API
     Route::get('/immobilized-vehicles', [CronController::class, 'immobilizedVehicles'])->name('immobilized-vehicles');
     Route::get('/mobilized-vehicles', [CronController::class, 'mobilizedVehicles'])->name('mobilized-vehicles');

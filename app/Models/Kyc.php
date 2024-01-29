@@ -514,6 +514,7 @@ class Kyc extends Model
 
                         'status_id' => $paymentStatus,
                         'payment_status' => $paymentStatus,
+                        'merchant_transaction_id' => $request->merchant_transaction_id ?? null,
                         'transaction_id' => $request->transaction_id ?? null,
                         'transaction_payload' => $request->transaction_payload ?? null,
                         'transaction_notes' => 'Status update from Mobile APP',

@@ -550,6 +550,7 @@ class ApiModel extends Model
 
                     'status_id' => $paymentStatus,
                     'payment_status' => $paymentStatus,
+                    'merchant_transaction_id' => $request->merchant_transaction_id ?? null,
                     'transaction_id' => $request->transaction_id ?? null,
                     'transaction_payload' => $request->transaction_payload ?? null,
                     'transaction_notes' => 'Pay upcommig bill from app',
@@ -857,61 +858,74 @@ class ApiModel extends Model
     public static function getYourOrders($request)
     {
         try {
-            $currentOrder = ApiModel::getCurrentOrderDetails();
-            if (!empty($currentOrder)) {
-                $orderCode = $currentOrder['order_code'] ?? null;
-                $vehicleSlug = $currentOrder['vehicle_slug'] ?? null;
+            $riderId = Auth::id();
+            $result = [];
+            $orders = DB::table('rider_orders')
+                ->join('products', 'products.product_id', '=', 'rider_orders.vehicle_id')
+                ->select(
+                    DB::raw('rider_orders.slug AS order_code'),
+                    DB::raw('rider_orders.accessories_items AS accessories_items'),
+                    DB::raw('products.slug AS vehicle_slug')
+                )
+                ->where('rider_id', $riderId)
+                ->orderBy('rider_orders.order_id', 'DESC')
+                ->get();
+            if (!empty($orders)) {
+                foreach ($orders as $order) {
+                    $orderCode = $order->order_code ?? null;
+                    $vehicleSlug = $order->vehicle_slug ?? null;
+                    $basePath = asset('public/upload/');
 
-                $order = RiderOrder::where('slug', $orderCode)->first();
-                $basePath = asset('public/upload/');
-
-                $vehicleDetail = DB::table('products as p')
-                    ->join('ev_types as et', 'p.ev_type_id', '=', 'et.ev_type_id')
-                    ->where('p.slug', $vehicleSlug)
-                    ->whereNull('p.deleted_at')
-                    ->select(
-                        'p.slug',
-                        'p.title',
-                        'p.description',
-                        'p.speed',
-                        'p.profile_category',
-                        'p.image',
-                        DB::raw("CONCAT('$basePath','/product/', p.image) AS image_path"),
-                        'p.per_day_rent as per_day_rent',
-                        DB::raw('CASE p.bettery_type WHEN 1 THEN "Swappable" WHEN 2 THEN "Fixed" ELSE "" END as battery_type'),
-                        DB::raw('CASE p.ev_category_id WHEN 1 THEN "2 Wheeler" WHEN 2 THEN "3 Wheeler" END as ev_category'),
-                        'p.km_per_charge as km_per_charge',
-                        DB::raw('CASE p.bike_type WHEN 1 THEN "Cargo Bike" WHEN 2 THEN "Normal Bike" ELSE "" END as bike_type'),
-                        'et.ev_type_name'
-                    )
-                    ->first();
-
-                $jsonData = $order->accessories_items;
-                $accessoriesItems = json_decode($jsonData, true);
-                $accessoriesResult = [];
-                foreach ($accessoriesItems as $key => $accessoriesIts) {
-                    $slugItem = $accessoriesIts['slug'];
-                    $accessories = DB::table('accessories as acc')
-                        ->whereNull('acc.deleted_at')
-                        ->where('slug', $slugItem)
+                    $vehicleDetail = DB::table('products as p')
+                        ->join('ev_types as et', 'p.ev_type_id', '=', 'et.ev_type_id')
+                        ->where('p.slug', $vehicleSlug)
+                        ->whereNull('p.deleted_at')
                         ->select(
-                            'acc.slug',
-                            'acc.title',
-                            'acc.price',
-                            'acc.image',
-                            DB::raw("CONCAT('$basePath','/accessories/', acc.image) AS image_path"),
-                        )->first();
-                    $accessoriesResult[$key] = $accessoriesIts;
-                    $accessoriesResult[$key]['image_path'] = $accessories->image_path ?? "";
-                }
+                            'p.slug',
+                            'p.title',
+                            'p.description',
+                            'p.speed',
+                            'p.profile_category',
+                            'p.image',
+                            DB::raw("CONCAT('$basePath','/product/', p.image) AS image_path"),
+                            'p.per_day_rent as per_day_rent',
+                            DB::raw('CASE p.bettery_type WHEN 1 THEN "Swappable" WHEN 2 THEN "Fixed" ELSE "" END as battery_type'),
+                            DB::raw('CASE p.ev_category_id WHEN 1 THEN "2 Wheeler" WHEN 2 THEN "3 Wheeler" END as ev_category'),
+                            'p.km_per_charge as km_per_charge',
+                            DB::raw('CASE p.bike_type WHEN 1 THEN "Cargo Bike" WHEN 2 THEN "Normal Bike" ELSE "" END as bike_type'),
+                            'et.ev_type_name'
+                        )
+                        ->first();
 
-                $result = [
-                    'slug' => $orderCode,
-                    'vehicle_detail' => $vehicleDetail,
-                    'accessories_items' => $accessoriesResult
-                ];
-                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), $result);
+                    $jsonData = $order->accessories_items;
+                    $accessoriesItems = json_decode($jsonData, true);
+                    $accessoriesResult = [];
+                    foreach ($accessoriesItems as $key => $accessoriesIts) {
+                        $slugItem = $accessoriesIts['slug'];
+                        $accessories = DB::table('accessories as acc')
+                            ->whereNull('acc.deleted_at')
+                            ->where('slug', $slugItem)
+                            ->select(
+                                'acc.slug',
+                                'acc.title',
+                                'acc.price',
+                                'acc.image',
+                                DB::raw("CONCAT('$basePath','/accessories/', acc.image) AS image_path"),
+                            )->first();
+                        $accessoriesResult[$key] = $accessoriesIts;
+                        $accessoriesResult[$key]['image_path'] = $accessories->image_path ?? "";
+                    }
+
+                    $result[] = [
+                        'slug' => $orderCode,
+                        'vehicle_detail' => $vehicleDetail,
+                        'accessories_items' => $accessoriesResult
+                    ];
+                }
             }
+
+            return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), $result);
+
             return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
         } catch (\Throwable $ex) {
             $result = [
