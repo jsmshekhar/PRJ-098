@@ -18,6 +18,7 @@ use App\Http\Controllers\RefundMgmtController;
 use App\Http\Controllers\TransactionMgmtController;
 use App\Http\Controllers\WalletMgmtController;
 use App\Http\Controllers\AccessoriesController;
+use App\Http\Controllers\CronController;
 use App\Http\Controllers\HubPartAccessoriesController;
 use App\Http\Controllers\SiteConfigurationController;
 use App\Http\Controllers\UserController;
@@ -127,4 +128,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/data-export', [DataExportController::class, 'dataExport'])->name('data-export');
     Route::get('password/set/{token}', [PasswordSetController::class, 'showSetPasswordForm'])->name('show-set-password-form');
     Route::post('password/set', [PasswordSetController::class, 'setPassword'])->name('set-password');
+
+    //Crom API
+    Route::get('/immobilized-vehicles', [CronController::class, 'immobilizedVehicles'])->name('immobilized-vehicles');
+    Route::get('/mobilized-vehicles', [CronController::class, 'mobilizedVehicles'])->name('mobilized-vehicles');
 });
