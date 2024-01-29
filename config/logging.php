@@ -107,6 +107,14 @@ return [
             'permission' => 0777,
 
         ],
+        'mobi_immobilized' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/mobiimmobievs/mobi_immobilize_evs.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 0,
+            'permission' => 0777,
+
+        ],
     ],
 
 ];
