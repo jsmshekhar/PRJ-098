@@ -24,35 +24,48 @@ class Notification extends Model
     {
         try {
             $auth = Auth::user();
-            $notifications = Notification::where('created_by', $auth->user_id)->orWhere('created_by', '!=', $auth->user_id)->whereNull('deleted_at')->orderBy('created_at', 'DESC')->paginate(25);
+            $notifications = Notification::where('created_by', $auth->user_id)
+                ->select(
+                    '*',
+                    'notification_parameter as notification_parameter_value',
+                    DB::raw('CASE 
+                        WHEN notification_parameter = 1 THEN "Subscription Based" 
+                        WHEN notification_parameter = 2 THEN "Distance Limit Based" 
+                        WHEN notification_parameter = 3 THEN "Schedule Notification" 
+                        WHEN notification_parameter = 4 THEN "Instant Notification" 
+                    END as notification_parameter'),
+                )
+                ->orWhere('created_by', '!=', $auth->user_id)->whereNull('deleted_at')
+                ->orderBy('created_at', 'DESC')
+                ->paginate(25);
             foreach ($notifications as $key => $notification) {
                 $notification->param = strtolower($notification->notification_type);
             }
-            $np = config('constants.NOTIFICATION_PARAMETER');
-            $drtn = config('constants.DISTANCE_REMAINING_TO_NOTIFY');
-            $dayrtn = config('constants.DAYS_REMAINING_TO_NOTIFY');
-            $dayrtn = config('constants.DAYS_REMAINING_TO_NOTIFY');
-            foreach ($notifications as $key => $value) {
-                foreach ($np as $key => $nps) { // notification_parameter
-                    if ($value->notification_parameter == $nps) {
-                        $value->notification_parameter = str_replace("_", " ", $key);
-                        $value->notification_parameter_value = $nps;
-                        break;
-                    }
-                }
-                foreach ($drtn as $key => $drt) { // distance_remaining
-                    if ($value->distance_remaining == $drt && $value->distance_remaining != null) {
-                        $value->distance_remaining = str_replace("_", " ", $key);
-                        break;
-                    }
-                }
-                foreach ($dayrtn as $key => $dayrem) { // days_remaining
-                    if ($value->days_remaining == $dayrem && $value->days_remaining != null) {
-                        $value->days_remaining = str_replace("_", " ", $key);
-                        break;
-                    }
-                }
-            }
+            // $np = config('constants.NOTIFICATION_PARAMETER');
+            // $drtn = config('constants.DISTANCE_REMAINING_TO_NOTIFY');
+            // $dayrtn = config('constants.DAYS_REMAINING_TO_NOTIFY');
+            // $dayrtn = config('constants.DAYS_REMAINING_TO_NOTIFY');
+            // foreach ($notifications as $key => $value) {
+            //     foreach ($np as $key => $nps) { // notification_parameter
+            //         if ($value->notification_parameter == $nps) {
+            //             $value->notification_parameter = str_replace("_", " ", $key);
+            //             $value->notification_parameter_value = $nps;
+            //             break;
+            //         }
+            //     }
+            //     foreach ($drtn as $key => $drt) { // distance_remaining
+            //         if ($value->distance_remaining == $drt && $value->distance_remaining != null) {
+            //             $value->distance_remaining = str_replace("_", " ", $key);
+            //             break;
+            //         }
+            //     }
+            //     foreach ($dayrtn as $key => $dayrem) { // days_remaining
+            //         if ($value->days_remaining == $dayrem && $value->days_remaining != null) {
+            //             $value->days_remaining = str_replace("_", " ", $key);
+            //             break;
+            //         }
+            //     }
+            // }
             if (count($notifications) > 0) {
                 return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['notifications' => $notifications]);
             } else {
