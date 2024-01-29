@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\AdminAppController;
+use App\Models\PhonePay;
 use App\Models\ReturnExchange;
 use App\Models\User;
 use Carbon\Carbon;
@@ -24,8 +25,9 @@ class RefundMgmtController extends AdminAppController
 
     public function index(Request $request)
     {
-        
+
         try {
+            // $res = PhonePay::refundAmmount();
             $permission = User::getPermissions();
             if (Gate::allows('view_inventry', $permission)) {
                 $auth = Auth::user();
@@ -42,10 +44,10 @@ class RefundMgmtController extends AdminAppController
                         'hubs.hubId',
                         'users.phone as mng_phone',
                         DB::raw("CONCAT(users.first_name, ' ', users.last_name) as mng_name"),
-                        DB::raw('CASE 
-                            WHEN return_exchanges.status_id = 1 THEN "Resolved" 
-                            WHEN return_exchanges.status_id = 2 THEN "Pending" 
-                            ELSE "" 
+                        DB::raw('CASE
+                            WHEN return_exchanges.status_id = 1 THEN "Resolved"
+                            WHEN return_exchanges.status_id = 2 THEN "Pending"
+                            ELSE ""
                         END as status'),
                     );
 
@@ -68,7 +70,7 @@ class RefundMgmtController extends AdminAppController
                     if (isset($request->status) && !empty($request->status)) {
                         $refunds = $refunds->where('return_exchanges.status_id', $request->status);
                     }
-                    
+
                 }
                 $refunds = $refunds->where(function ($query) {
                     $query->where(DB::raw("DATEDIFF(return_exchanges.return_date, return_exchanges.assigned_date) / 30"), '>=', 3);
@@ -91,5 +93,5 @@ class RefundMgmtController extends AdminAppController
             return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
         }
     }
-    
+
 }

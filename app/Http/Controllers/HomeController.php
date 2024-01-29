@@ -42,11 +42,11 @@ class HomeController extends AdminAppController
         $ridersData = Rider::where('status_id', 1)->whereNull('deleted_at')
         ->select(
             DB::raw('YEAR(created_at) as year'),
-            DB::raw('CASE 
-                WHEN profile_type = 1 THEN "Corporate" 
-                WHEN profile_type = 2 THEN "Individual" 
-                WHEN profile_type = 3 THEN "Student" 
-                WHEN profile_type = 4 THEN "Vendor" 
+            DB::raw('CASE
+                WHEN profile_type = 1 THEN "Corporate"
+                WHEN profile_type = 2 THEN "Individual"
+                WHEN profile_type = 3 THEN "Student"
+                WHEN profile_type = 4 THEN "Vendor"
             END as profile_type'),
             DB::raw('count(*) as count')
         )
@@ -76,7 +76,7 @@ class HomeController extends AdminAppController
         $sumOfcredit = RiderTransactionHistory::where('transaction_type',1)->sum('transaction_ammount');
         $sumOfdebit = RiderTransactionHistory::where('transaction_type', 2)->sum('transaction_ammount');
         $totalRevenue =  $sumOfcredit - $sumOfdebit;
-       
+
         $startDate = Carbon::now()->startOfMonth();
         $endDate = Carbon::now()->endOfMonth();
 
@@ -92,8 +92,8 @@ class HomeController extends AdminAppController
 
         // // CO Emission Savings=(CO2 emissions from traditional vehicle − CO2 emissions from electric vehicle)×Distance traveled by EV  ex. tradistion
         $evDistance = Product::sum('ev_running_distance');
-        $co2Saving =  number_format((0.100 / $evDistance),2);
-        //$co2Saving = number_format($co2Saving, 2);
+        // $co2Saving =  number_format((0.100 / $evDistance),2);
+        $co2Saving = 0;
         return view($this->viewPath . '/dashboard', compact('permission', 'evstatus2W', 'evCount2W', 'evstatus3W', 'evCount3W', 'ridersArray', 'totalRevenue', 'thisMonthTotal', 'co2Saving', 'evDistance', 'upcommingPayment'));
     }
 }
