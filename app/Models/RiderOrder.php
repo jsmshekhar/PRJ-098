@@ -90,6 +90,7 @@ class RiderOrder extends Model
                         'mapped_vehicle_id' => $product->product_id,
                         'mapped_product_price' => $product->per_day_rent,
                         'mapped_product_name' => $product->title,
+                        'mapped_ev_range' => $product->total_range,
                         'cluster_manager' => $request->cluster_manager ?? null,
                         'tl_name' => $request->tl_name ?? null,
                         'client_name' => $request->client_name ?? null,

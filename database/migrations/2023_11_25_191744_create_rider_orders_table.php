@@ -25,6 +25,7 @@ class CreateRiderOrdersTable extends Migration
             $table->unsignedBigInteger('mapped_vehicle_id')->nullable()->comment('Product Primary Key');
             $table->string('mapped_product_price')->nullable();
             $table->string('mapped_product_name')->nullable();
+            $table->string('mapped_ev_range')->nullable();
 
             $table->string('cluster_manager')->nullable()->comment('Incase of customer is vendor');
             $table->string('tl_name')->nullable()->comment('Incase of customer is vendor');
@@ -43,6 +44,8 @@ class CreateRiderOrdersTable extends Migration
             $table->string('ordered_ammount')->nullable();
             $table->string('security_ammount')->nullable();
             $table->text('requested_payload')->nullable();
+
+            $table->string('monthely_running_distance')->nullable();
 
             $table->bigInteger('hub_id')->nullable()->comment('Hub Id');
             $table->tinyInteger('status_id')->default(2)->comment('1 => Assigned, 2 => Pending, 3 => Rejected, 4 => Returned');
