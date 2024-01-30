@@ -21,8 +21,8 @@ class CreateNotificationsTable extends Migration
             $table->integer('notification_parameter')->nullable();
             $table->string('notification_type')->nullable();
             $table->integer('notification_user_based')->nullable();
-            $table->integer('distance_remaining')->nullable();
-            $table->integer('days_remaining')->nullable();
+            $table->string('distance_remaining')->nullable();
+            $table->string('days_remaining')->nullable();
             $table->integer('penalty_charge')->nullable();
             $table->string('penalty_charge_text')->nullable();
             $table->tinyInteger('is_send_charge')->default(1)->comment('1 => Yes, 2 => No');

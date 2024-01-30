@@ -158,7 +158,7 @@ class Rider extends Authenticatable
                 $rider = Auth::guard('rider')->user();
                 $riderDetails = [];
                 if (!is_null($rider)) {
-                    $deviceType = $request->header('deviceType');
+                    $deviceType = $request->header('deviceType') ?? 1;
                     $deviceToken = $request->header('deviceToken') ?? null;
                     if (in_array($deviceType, [1, 2]) && !is_null($deviceToken)) {
                         $deviceRecord = [
