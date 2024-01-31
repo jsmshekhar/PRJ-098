@@ -100,28 +100,30 @@ class RiderController extends AdminAppController
                     ->where('ro.rider_id', $riderId)
                     ->orderByDesc('ro.order_id')
                     ->first();
-                $riderEv->last_ev = null;
+                if (!is_null($riderEv)) {
+                    $riderEv->last_ev = null;
 
-                $lastRec = DB::table('rider_orders AS ro')
-                    ->leftJoin('products', 'products.product_id', '=', 'ro.mapped_vehicle_id')
-                    ->leftJoin('hubs', 'hubs.hub_id', '=', 'products.hub_id')
-                    ->orderBy('ro.order_id', 'desc')->skip(1)->first();
-                if (!empty(($lastRec))) {
-                    $riderEv->last_ev = $lastRec->ev_number;
+                    $lastRec = DB::table('rider_orders AS ro')
+                        ->leftJoin('products', 'products.product_id', '=', 'ro.mapped_vehicle_id')
+                        ->leftJoin('hubs', 'hubs.hub_id', '=', 'products.hub_id')
+                        ->orderBy('ro.order_id', 'desc')->skip(1)->first();
+                    if (!empty(($lastRec))) {
+                        $riderEv->last_ev = $lastRec->ev_number;
+                    }
+
+                    $subscriptionStatus = "Inactive";
+                    $subscription = DB::table('rider_order_payments')
+                        ->where('to_date', '>', now())
+                        ->where('rider_id', $riderId)
+                        ->orderByDesc('rider_order_payment_id')
+                        ->first();
+                    if (!empty($subscription)) {
+                        $subscriptionStatus = "Active";
+                    }
+                    $riderEv->subscriptionStatus = $subscriptionStatus;
                 }
-
-                $subscriptionStatus = "Inactive";
-                $subscription = DB::table('rider_order_payments')
-                    ->where('to_date', '>', now())
-                    ->where('rider_id', $riderId)
-                    ->orderByDesc('rider_order_payment_id')
-                    ->first();
-                if (!empty($subscription)) {
-                    $subscriptionStatus = "Active";
-                }
-                $riderEv->subscriptionStatus = $subscriptionStatus;
-
-                return view($this->viewPath . '/rider_view', compact('rider', 'walletBalence', 'permission', 'kycStatus', 'riderEv'));
+                $transactions = $rider->transactions()->paginate(15);
+                return view($this->viewPath . '/rider_view', compact('rider', 'walletBalence', 'permission', 'kycStatus', 'riderEv', 'transactions'));
             }
         } catch (\Throwable $ex) {
             $result = [
