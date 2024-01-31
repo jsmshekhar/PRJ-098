@@ -79,6 +79,17 @@
                                             id="damage_desription">
                                     </div>
 
+                                    <div class="col-md-4 mb-3">
+                                        <label for="title" class="form-label">Extra Distance</label>
+                                        <input class="form-control" type="text"
+                                            value="{{ $records->extra_distance }}" readonly>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="title" class="form-label">Extra Distance Cost <small>(₹2/km)</small></label>
+                                        <input class="form-control" type="text"
+                                            value="{{ $records->extra_distance_cost }}" readonly>
+                                    </div>
+
                                 </div>
                                 <div class="col-md-12 mb-2 mt-3 uploadImg">
                                     <label for="title" class="form-label">New Images</label>
@@ -99,7 +110,7 @@
                                         <div class="col-md-12 mb-3">
                                             <label for="Image" class="form-label">Old Images</label><br />
                                             @foreach ($images as $image)
-                                                <img src="{{ $image['path'] }}" height="200" width="200">
+                                                <img src="{{ $image['path'] }}" height="150" width="150">
                                             @endforeach
                                         </div>
                                     @endif

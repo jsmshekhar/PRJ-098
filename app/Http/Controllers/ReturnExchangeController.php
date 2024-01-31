@@ -112,6 +112,14 @@ class ReturnExchangeController extends AdminAppController
             $records = ReturnExchange::with(['rider', 'order'])->where('slug', $slug)->where('status_id', 2)->whereNull('deleted_at')->first();
             if (!empty($records)) {
                 $orderId = $records->order_id;
+                $monthelyRunningDistance = ($records->order && $records->order->monthely_running_distance) ? $records->order->monthely_running_distance : 0;
+                $mappedEvRange = ($records->order && $records->order->mapped_ev_range) ? $records->order->mapped_ev_range : 0;
+
+                $extraDistance = $monthelyRunningDistance - $mappedEvRange;
+                $extraDistance = $extraDistance > 0 ? $extraDistance : 0;
+                $records->extra_distance = $extraDistance;
+                $records->extra_distance_cost = $extraDistance * 2;
+
                 $imagesData = MediaFile::where(['ref_id' => $orderId, 'ref_table_id' => config('table.REF_TABLE.RIDER_ORDER')])->get();
                 $images = [];
                 if (!empty($imagesData)) {
@@ -178,6 +186,14 @@ class ReturnExchangeController extends AdminAppController
                 $hubId = $records->order->hub_id;
 
                 $evList = Product::where(['status_id' => 1, 'hub_id' => $hubId])->where('product_id', '!=', $mappedEvId)->whereNull('deleted_at')->pluck('ev_number', 'slug')->toArray();
+
+                $monthelyRunningDistance = ($records->order && $records->order->monthely_running_distance) ? $records->order->monthely_running_distance : 0;
+                $mappedEvRange = ($records->order && $records->order->mapped_ev_range) ? $records->order->mapped_ev_range : 0;
+
+                $extraDistance = $monthelyRunningDistance - $mappedEvRange;
+                $extraDistance = $extraDistance > 0 ? $extraDistance : 0;
+                $records->extra_distance = $extraDistance;
+                $records->extra_distance_cost = $extraDistance * 2;
 
                 $orderId = $records->order_id;
                 $imagesData = MediaFile::where(['ref_id' => $orderId, 'ref_table_id' => config('table.REF_TABLE.RIDER_ORDER')])->get();
