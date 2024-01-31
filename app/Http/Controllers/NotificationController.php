@@ -58,7 +58,7 @@ class NotificationController extends AdminAppController
             $distance = $notification['result']['distance'];
             $days = $notification['result']['days'];
             $user_base = $notification['result']['user_base'];
-            
+
             return view('admin.notification.create', compact('parameters', 'distance', 'days', 'user_base', 'permission'));
         } catch (\Throwable $ex) {
             $result = [

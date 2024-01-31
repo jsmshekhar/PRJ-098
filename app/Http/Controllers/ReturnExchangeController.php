@@ -258,6 +258,7 @@ class ReturnExchangeController extends AdminAppController
                     'mapped_vehicle_id' => $mappedVehicleId,
                     'mapped_product_price' => $newEvDetails->per_day_rent,
                     'mapped_product_name' => $newEvDetails->title,
+                    'mapped_ev_range' => $newEvDetails->total_range,
                     'cluster_manager' => $oldOrder->cluster_manager ?? null,
                     'tl_name' => $oldOrder->tl_name ?? null,
                     'client_name' => $oldOrder->client_name ?? null,

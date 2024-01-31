@@ -163,7 +163,7 @@ class Notification extends Model
     public static function sendInstantNotification()
     {
         try {
-            $notifications = Notification::where('notification_type', 'Manual')->where(['status_id' => 1, 'notification_parameter' => 4, 'notification_status' => 2])->get();
+            $notifications = Notification::where('notification_type', 'Manual')->where(['status_id' => 1, 'notification_status' => 2])->whereIn('notification_parameter', [3, 4])->get();
             if (!empty($notifications)) {
                 foreach ($notifications as $notification) {
                     $notificationUserBase = (int)$notification->notification_user_based;
@@ -172,9 +172,6 @@ class Notification extends Model
 
                     $scheduleDate = dateFormat($notification->schedule_date) ?? null;
                     $todayDate = dateFormat(date('Y-m-d H:i:s'));
-
-                    // Mark as in Send
-                    Notification::where('notification_id', $notificationId)->update(['notification_status' => 1]);
 
                     $title = $notification->title;
                     $description = $notification->description;
@@ -199,7 +196,7 @@ class Notification extends Model
                             }
 
                             // Mark as in Send
-                            Notification::where('notification_id', $notificationId)->update(['notification_status' => 1]);
+                            Notification::where('notification_id', $notificationId)->update(['notification_status' => 2]);
                             break;
                         case 3: // IMMOBILIZED
                             $riderIds = RiderOrder::leftJoin('products', 'products.product_id', '=', 'rider_orders.mapped_vehicle_id')
@@ -219,7 +216,7 @@ class Notification extends Model
                             }
 
                             // Mark as in Send
-                            Notification::where('notification_id', $notificationId)->update(['notification_status' => 1]);
+                            Notification::where('notification_id', $notificationId)->update(['notification_status' => 2]);
                             break;
                         case 4: // EV_RETURN_REQUEST
                             $riderIds = ReturnExchange::where(['request_for' => 1, 'status_id' => 2])->pluck('rider_id')->toArray();
@@ -236,7 +233,7 @@ class Notification extends Model
                             }
 
                             // Mark as in Send
-                            Notification::where('notification_id', $notificationId)->update(['notification_status' => 1]);
+                            Notification::where('notification_id', $notificationId)->update(['notification_status' => 2]);
                             break;
                         case 5: // EV_SERVICE_REQUIRED
                             /*$riderIds =  EvServiceRequset::where(['request_for' => 1, 'status_id' => 2])->pluck('rider_id')->toArray();
@@ -252,7 +249,7 @@ class Notification extends Model
                                 }
                             }
                             // Mark as in Send
-                            Notification::where('notification_id', $notificationId)->update(['notification_status' => 1]);
+                            Notification::where('notification_id', $notificationId)->update(['notification_status' => 2]);
                             */
                             break;
                         case 7: // ALL
@@ -269,7 +266,7 @@ class Notification extends Model
                                 }
                             }
                             // Mark as in Send
-                            Notification::where('notification_id', $notificationId)->update(['notification_status' => 1]);
+                            Notification::where('notification_id', $notificationId)->update(['notification_status' => 2]);
                             break;
                     }
                 }
@@ -319,6 +316,114 @@ class Notification extends Model
                     }
                 }
             }
+        }
+    }
+
+    /*--------------------------------------------------
+    Developer : Raj Kumar
+    Action    : Schedule Notification
+    --------------------------------------------------*/
+    public static function sendAutomaticNotification()
+    {
+        try {
+            $notifications = Notification::where('notification_type', 'Manual')->where(['status_id' => 1, 'notification_status' => 2])->whereIn('notification_parameter', [1, 2])->get();
+            if (!empty($notifications)) {
+                foreach ($notifications as $notification) {
+                    $notificationParameter = (int)$notification->notification_parameter;
+                    $notificationId = $notification->notification_id;
+
+                    $daysRemaining = $notification->days_remaining ?? null;
+
+                    $distanceRemaining = $notification->distance_remaining ?? null;
+
+                    $todayDate = new \DateTime(date('Y-m-d'));
+
+                    $title = $notification->title;
+                    $description = $notification->description;
+
+                    // Mark as in Queue
+                    Notification::where('notification_id', $notificationId)->update(['notification_status' => 3]);
+
+                    $riderIds = [];
+                    $data = ['title' => $title, 'description' => $description];
+
+                    switch ($notificationParameter) {
+                        case 1: // Subscription_Based (Days)
+                            if (!is_null($daysRemaining)) {
+                                $records = DB::table('rider_order_payments as rop')
+                                    ->join('rider_orders', function ($join) {
+                                        $join->on('rider_orders.order_id', '=', 'rop.order_id')
+                                            ->where('rider_orders.status_id', '=', 1);
+                                    })
+                                    ->select(
+                                        'rop.slug',
+                                        'rop.rider_id',
+                                        'rop.order_id',
+                                        DB::raw("DATE_FORMAT(rop.from_date, '%Y-%m-%d') AS from_date"),
+                                        DB::raw("DATE_FORMAT(rop.to_date, '%Y-%m-%d') AS to_date")
+                                    )
+                                    ->groupBy('rop.rider_id')
+                                    ->orderByDesc('rop.rider_order_payment_id')
+                                    ->get();
+                                foreach ($records as $key => $record) {
+                                    $toDateStr = $record->to_date;
+                                    $toDate = new \DateTime($toDateStr);
+
+                                    $interval = $todayDate->diff($toDate);
+                                    $intervalDays = $interval->format('%R%a');
+                                    if ($intervalDays == $daysRemaining) {
+                                        $riderIds[] = $record->rider_id;
+                                    }
+                                }
+                            }
+                            if (!empty($riderIds)) {
+                                Notification::sendPushNotification($riderIds, $notificationId, $data);
+                            }
+                            // Mark as in Pending
+                            Notification::where('notification_id', $notificationId)->update(['notification_status' => 2]);
+                            break;
+                        case 2: // Distance_Limit_Based
+                            if (!is_null($distanceRemaining)) {
+                                $records = DB::table('rider_orders')
+                                    ->select(
+                                        'slug',
+                                        'rider_id',
+                                        'mapped_vehicle_id',
+                                        'mapped_ev_range',
+                                        'monthly_running_distance',
+                                        'status_id'
+                                    )
+                                    ->where('status_id', '=', 1)
+                                    ->get();
+
+                                foreach ($records as $key => $record) {
+                                    $realDistance = $record->mapped_ev_range;
+                                    $runningDistance = $record->monthly_running_distance;
+
+                                    $remainingDistance  = $realDistance - $runningDistance;
+
+                                    if ($remainingDistance == $distanceRemaining) {
+                                        $riderIds[] = $record->rider_id;
+                                    }
+                                }
+                            }
+                            if (!empty($riderIds)) {
+                                Notification::sendPushNotification($riderIds, $notificationId, $data);
+                            }
+
+                            // Mark as in Send
+                            Notification::where('notification_id', $notificationId)->update(['notification_status' => 2]);
+                            break;
+                    }
+                }
+            }
+        } catch (\Exception $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
         }
     }
 }
