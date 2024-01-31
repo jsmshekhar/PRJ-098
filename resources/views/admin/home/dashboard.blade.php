@@ -141,7 +141,7 @@
                             <div class="col-md-6">
                                 <div class="data_dash_grp">
                                     <div class="dash_grp_head">
-                                        <h4>Three Wheelers</h4>
+                                        <h4>Three Wheelers <span style="font-size: 11px;;" class="Dummy3Data"></span></h4>
                                     </div>
                                     <div class="dash_body_grp">
                                         <div id="donutChart3W" class="position-relative"></div>
@@ -251,6 +251,7 @@
             if (evCount3W > 0) {
                 var datas = data;
             } else {
+                $('.Dummy3Data').text('Dummy Data')
                 var datas = data1;
             }
             var pieChart = new google.visualization.PieChart(document.getElementById('donutChart3W'));
