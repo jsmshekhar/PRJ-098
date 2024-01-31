@@ -51,34 +51,30 @@ if (auth()->user()->photo) {
                     </span>
                 </a>
                 <div class="cmp_name"><b>{{ $companyName }}</b></div>
-                
-            </div>
-            
 
-            <button type="button" class="btn btn-sm px-3 font-size-16 header-item mob-insvisble"
-                id="vertical-menu-btn">
+            </div>
+
+
+            <button type="button" class="btn btn-sm px-3 font-size-16 header-item mob-insvisble" id="vertical-menu-btn">
                 <i class="fa fa-fw fa-bars"></i>
             </button>
 
-            
+
         </div>
 
         <div class="d-flex">
-            
+            @if (Auth::user()->role_id == 0)
             <div class="dropdown d-inline-block">
-                <button type="button" class="btn header-item noti-icon position-relative"
-                    id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn header-item noti-icon position-relative" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <img src="{{ asset('public/assets/images/icons/setting-icon.svg') }}" alt="">
                 </button>
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end admin_profilt_pop">
                     <div data-simplebar>
                         <div class="w-100 text-end">
-                            <a href="#" class="btn btn-link-cust" data-bs-toggle="modal"
-                                data-bs-target="#Editcompany"> Edit </a>
+                            <a href="#" class="btn btn-link-cust" data-bs-toggle="modal" data-bs-target="#Editcompany"> Edit </a>
                         </div>
                         <div class="profil_img">
-                            <img class="img-thumbnail border-0 p-0 avatar-xl" alt="200x200" src="{{ $companyLogo }}"
-                                data-holder-rendered="true">
+                            <img class="img-thumbnail border-0 p-0 avatar-xl" alt="200x200" src="{{ $companyLogo }}" data-holder-rendered="true">
                         </div>
                         <ul>
                             <li>Company name : <span>{{ $companyName }}</span></li>
@@ -88,14 +84,13 @@ if (auth()->user()->photo) {
 
                 </div>
             </div>
+            @endif
             <div class="dropdown d-inline-block">
                 @include('admin.common.request_notification')
             </div>
             <div class="dropdown d-inline-block">
-                <button type="button" class="btn header-item" id="page-header-user-dropdown" data-bs-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
-                    <img class="rounded-circle header-profile-user" src="{{ $userImage }}"
-                        alt="{{ Auth::user()->first_name }}">
+                <button type="button" class="btn header-item" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img class="rounded-circle header-profile-user" src="{{ $userImage }}" alt="{{ Auth::user()->first_name }}">
                     <span class="active"></span>
                     <span class="d-none d-xl-inline-block fw-medium d-none-xs">{{ Auth::user()->first_name }}
                         {{ Auth::user()->last_name }}</span>
@@ -105,12 +100,10 @@ if (auth()->user()->photo) {
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end admin_profilt_pop">
                     <div data-simplebar>
                         <div class="w-100 text-end">
-                            <a href="#" class="btn btn-link-cust" data-bs-toggle="modal" data-bs-toggle="modal"
-                                data-bs-target="#Editprofile"> Edit </a>
+                            <a href="#" class="btn btn-link-cust" data-bs-toggle="modal" data-bs-toggle="modal" data-bs-target="#Editprofile"> Edit </a>
                         </div>
                         <div class="profil_img">
-                            <img class="img-thumbnail rounded-circle avatar-xl" alt="200x200"
-                                src="{{ $userImage }}" data-holder-rendered="true">
+                            <img class="img-thumbnail rounded-circle avatar-xl" alt="200x200" src="{{ $userImage }}" data-holder-rendered="true">
                             <span class="active"></span>
                         </div>
                         <div class="d-cust-mob">
@@ -123,10 +116,8 @@ if (auth()->user()->photo) {
                             <li> Designation : <span> {{ $role }}</span></li>
                         </ul>
                         <div class="d-flex">
-                            <a href="#" class="btn btn-theme-drop mr-2" data-bs-toggle="modal"
-                                data-bs-target="#ChangePassword"> Change Password </a>
-                            <a class="btn btn-theme-drop" href="{{ route('logout') }}"
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                            <a href="#" class="btn btn-theme-drop mr-2" data-bs-toggle="modal" data-bs-target="#ChangePassword"> Change Password </a>
+                            <a class="btn btn-theme-drop" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
                         </div>
                     </div>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -139,8 +130,7 @@ if (auth()->user()->photo) {
 
 </header>
 
-<div id="Editprofile" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
-    data-bs-scroll="true">
+<div id="Editprofile" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" data-bs-scroll="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -153,28 +143,20 @@ if (auth()->user()->photo) {
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group mb-2">
-                                <label for="userFname" class="col-form-label">First Name <sup
-                                        class="compulsayField">*</sup> <span
-                                        class="spanColor user_fname_error"></span></label>
-                                <input type="text" name="user_fname" class="form-control" id="userFname"
-                                    value="{{ Auth::user()->first_name }}">
+                                <label for="userFname" class="col-form-label">First Name <sup class="compulsayField">*</sup> <span class="spanColor user_fname_error"></span></label>
+                                <input type="text" name="user_fname" class="form-control" id="userFname" value="{{ Auth::user()->first_name }}">
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group mb-2">
-                                <label for="userLname" class="col-form-label">Last Name <sup
-                                        class="compulsayField">*</sup> <span
-                                        class="spanColor user_lname_error"></span></label>
-                                <input type="text" name="user_lname" class="form-control" id="userLname"
-                                    value="{{ Auth::user()->last_name }}">
+                                <label for="userLname" class="col-form-label">Last Name <sup class="compulsayField">*</sup> <span class="spanColor user_lname_error"></span></label>
+                                <input type="text" name="user_lname" class="form-control" id="userLname" value="{{ Auth::user()->last_name }}">
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group mb-2">
-                                <label for="user_phone" class="col-form-label ">Phone Number<span class="spanColor"
-                                        id="user_phone"></span></label>
-                                <input type="text" name="user_phone" class="form-control" id="user_phone"
-                                    value="{{ Auth::user()->phone }}">
+                                <label for="user_phone" class="col-form-label ">Phone Number<span class="spanColor" id="user_phone"></span></label>
+                                <input type="text" name="user_phone" class="form-control" id="user_phone" value="{{ Auth::user()->phone }}">
                             </div>
                         </div>
                         <div class="col-12">
@@ -182,11 +164,9 @@ if (auth()->user()->photo) {
                                 <label for="title" class="form-label">Profile Image</label>
                                 <div class="">
                                     <label for="userImage" class="selectImageRemove">
-                                        <img class="upload_des_preview clickable selectedImage "
-                                            src="{{ $userImage }}" alt="Logo Image" />
+                                        <img class="upload_des_preview clickable selectedImage " src="{{ $userImage }}" alt="Logo Image" />
                                     </label>
-                                    <input type="file" class="form-control d-none customFile" name="user_image"
-                                        id="userImage" />
+                                    <input type="file" class="form-control d-none customFile" name="user_image" id="userImage" />
                                 </div>
                             </div>
                         </div>
@@ -195,8 +175,7 @@ if (auth()->user()->photo) {
             </div>
             <div class="modal-footer d-flex justify-content-between">
                 <span class=" text-success d-block" id="messageEvType" style="margin-right: 10px"></span>
-                <button type="button" id="submitUserProfileForm"
-                    class="btn btn-success waves-effect waves-light">Save
+                <button type="button" id="submitUserProfileForm" class="btn btn-success waves-effect waves-light">Save
                 </button>
                 <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
             </div>
@@ -205,8 +184,7 @@ if (auth()->user()->photo) {
 </div><!-- /.modal -->
 
 
-<div id="Editcompany" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
-    data-bs-scroll="true">
+<div id="Editcompany" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" data-bs-scroll="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -219,19 +197,14 @@ if (auth()->user()->photo) {
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group mb-2">
-                                <label for="company_name" class="col-form-label">Company Name <sup
-                                        class="compulsayField">*</sup> <span
-                                        class="spanColor company_name_error"></span></label>
-                                <input type="text" name="company_name" class="form-control" id="company_name"
-                                    value="{{ $companyName }}">
+                                <label for="company_name" class="col-form-label">Company Name <sup class="compulsayField">*</sup> <span class="spanColor company_name_error"></span></label>
+                                <input type="text" name="company_name" class="form-control" id="company_name" value="{{ $companyName }}">
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group mb-2">
-                                <label for="company_address" class="col-form-label ">Company Address &nbsp;<span
-                                        class="spanColor" id="company_address_errors"></span></label>
-                                <input type="text" name="company_address" class="form-control"
-                                    id="company_address" value="{{ $companyAddress }}">
+                                <label for="company_address" class="col-form-label ">Company Address &nbsp;<span class="spanColor" id="company_address_errors"></span></label>
+                                <input type="text" name="company_address" class="form-control" id="company_address" value="{{ $companyAddress }}">
                             </div>
                         </div>
 
@@ -240,11 +213,9 @@ if (auth()->user()->photo) {
                                 <label for="title" class="form-label">Change Logo</label>
                                 <div class="">
                                     <label for="logoImage" class="selectImageRemove">
-                                        <img class="upload_des_preview clickable selectedImage "
-                                            src="{{ $companyLogo }}" alt="Logo Image" />
+                                        <img class="upload_des_preview clickable selectedImage " src="{{ $companyLogo }}" alt="Logo Image" />
                                     </label>
-                                    <input type="file" class="form-control d-none customFile" name="company_logo"
-                                        id="logoImage" />
+                                    <input type="file" class="form-control d-none customFile" name="company_logo" id="logoImage" />
                                 </div>
                             </div>
                         </div>
@@ -261,8 +232,7 @@ if (auth()->user()->photo) {
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<div id="ChangePassword" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
-    data-bs-scroll="true">
+<div id="ChangePassword" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" data-bs-scroll="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -275,25 +245,21 @@ if (auth()->user()->photo) {
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group mb-2">
-                                <label for="company_name" class="col-form-label"> Old Password <span
-                                        class="spanColor old_password_error"></span></label>
+                                <label for="company_name" class="col-form-label"> Old Password <span class="spanColor old_password_error"></span></label>
                                 <input type="password" name="old_password" class="form-control" id="old_password">
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group mb-2">
-                                <label class="col-form-label ">New Password <span
-                                        class="spanColor new_password_error"></span></label>
+                                <label class="col-form-label ">New Password <span class="spanColor new_password_error"></span></label>
                                 <input type="password" name="password" class="form-control" id="new_password">
                             </div>
                         </div>
 
                         <div class="col-12">
                             <div class="form-group mb-2">
-                                <label class="col-form-label ">Confirm Password &nbsp;<span
-                                        class="spanColor confirm_password_error"></span></label>
-                                <input type="password" name="confirm_password" class="form-control"
-                                    id="confirm_password">
+                                <label class="col-form-label ">Confirm Password &nbsp;<span class="spanColor confirm_password_error"></span></label>
+                                <input type="password" name="confirm_password" class="form-control" id="confirm_password">
                             </div>
                         </div>
                     </div>
