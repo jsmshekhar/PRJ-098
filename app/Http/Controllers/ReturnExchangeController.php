@@ -43,8 +43,50 @@ class ReturnExchangeController extends AdminAppController
                 $perPage = env('PER_PAGE');
                 $permission = User::getPermissions();
                 $records = $this->model::with(['rider', 'product', 'hub', 'order'])->whereNull('deleted_at');
+
+                if (isset($request->is_search) && $request->is_search == 1) {
+                    $records->when(isset($request->hub_id) && !empty($request->hub_id), function ($query) use ($request) {
+                        $query->whereHas('hub', function ($subQuery) use ($request) {
+                            $subQuery->where('hubId', 'LIKE', "%{$request->hub_id}%");
+                        });
+                    });
+
+                    $records->when(isset($request->cust_id) && !empty($request->cust_id), function ($query) use ($request) {
+                        $query->whereHas('rider', function ($subQuery) use ($request) {
+                            $subQuery->where('customer_id', 'LIKE', $request->cust_id);
+                        });
+                    });
+
+                    $records->when(isset($request->ev_no) && !empty($request->ev_no), function ($query) use ($request) {
+                        $query->whereHas('product', function ($subQuery) use ($request) {
+                            $subQuery->where('ev_number', 'LIKE', $request->ev_no);
+                        });
+                    });
+
+                    $records->when(isset($request->ch_no) && !empty($request->ch_no), function ($query) use ($request) {
+                        $query->whereHas('product', function ($subQuery) use ($request) {
+                            $subQuery->where('chassis_number', 'LIKE', $request->ch_no);
+                        });
+                    });
+
+                    $records->when(isset($request->phone) && !empty($request->phone), function ($query) use ($request) {
+                        $query->whereHas('rider', function ($subQuery) use ($request) {
+                            $subQuery->where('phone', $request->phone);
+                        });
+                    });
+                    $records->when(isset($request->ur) && !empty($request->ur), function ($query) use ($request) {
+                        $query->where('return_exchanges.request_for', $request->ur);
+                    });
+                    $records->when(isset($request->status) && !empty($request->status), function ($query) use ($request) {
+                        $query->where('return_exchanges.status_id', $request->status);
+                    });
+                }
+
                 $records = $records->orderBy('created_at', 'DESC')->paginate($perPage);
-                return view($this->viewPath . '/return-exchange', compact('records', 'permission'));
+
+                $userRequest = ['1' => 'Return', '2' => 'Exchange'];
+                $status = ['1' => 'Resolved', '2' => 'Pending'];
+                return view($this->viewPath . '/return-exchange', compact('records', 'permission', 'userRequest', 'status'));
             } else {
                 return view('admin.401.401');
             }
