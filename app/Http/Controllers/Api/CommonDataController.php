@@ -354,6 +354,7 @@ class CommonDataController extends ApiController
             $requiredFields = [
                 'name' => "required",
                 'front_image' => "required",
+                'document_type' => "required",
             ];
             $messages = [];
             if (!$this->checkValidation($request, $requiredFields, $messages)) {

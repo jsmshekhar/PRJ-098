@@ -220,11 +220,21 @@ class KycApiController extends ApiController
             }
 
             if ($step == $stepThree) {
-                $requiredFields['pan_card.front_image'] = 'required';
-                $requiredFields['aadhar_card.front_image'] = 'required';
-                $requiredFields['driving_licence.front_image'] = 'required';
-                $requiredFields['electicity_bill.front_image'] = 'required';
-                $requiredFields['credit_score.front_image'] = 'required';
+
+                /*if ($profileType == 1) { //Corporate
+                    $requiredFields['pan_card.front_image'] = 'required';
+                    $requiredFields['aadhar_card.front_image'] = 'required';
+                } elseif ($profileType == 2) { //Individual
+                    $requiredFields['pan_card.front_image'] = 'required';
+                    $requiredFields['aadhar_card.front_image'] = 'required';
+                    $requiredFields['electicity_bill.front_image'] = 'required';
+                } elseif ($profileType == 3) { //Student
+                    $requiredFields['pan_card.front_image'] = 'required';
+                    $requiredFields['aadhar_card.front_image'] = 'required';
+                } elseif ($profileType == 4) { //Vender
+                    $requiredFields['pan_card.front_image'] = 'required';
+                    $requiredFields['aadhar_card.front_image'] = 'required';
+                }
 
                 $messages = [
                     'pan_card.front_image.required' => 'The pan card front image is required.',
@@ -233,6 +243,8 @@ class KycApiController extends ApiController
                     'electicity_bill.front_image.required' => 'The electicity bill is required.',
                     'credit_score.front_image.required' => 'The credit score image is required.',
                 ];
+                */
+                $requiredFields['documents'] = 'required';
             }
 
             if ($step == $stepFour) {

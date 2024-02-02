@@ -364,54 +364,27 @@ class Kyc extends Model
                         Rider::where('rider_id', $riderId)->update(['is_personal_detail_done' => NOW()]);
                     }
                 } elseif ($requestedStep == $stepThree && is_null($rider->is_id_proof_done)) {
-                    // 1 => Aadhar Card, 2 => Credit Score, 3 => Driving License, 4 => Electicity Bill, 5 => Pan Card, 6 => Passpost, 7 => Voter Id
-                    $record = [
-                        [
-                            'rider_id' => $riderId,
-                            'slug' => slug(),
-                            'name' => 'Aadhar Card',
-                            'front_pic' => !empty($request->aadhar_card) && $request->aadhar_card['front_image'] ? $request->aadhar_card['front_image'] : null,
-                            'back_pic' => !empty($request->aadhar_card) && $request->aadhar_card['back_image'] ? $request->aadhar_card['back_image'] : null,
-                            'document_type' => 1,
-                        ],
-                        [
-                            'rider_id' => $riderId,
-                            'slug' => slug(),
-                            'name' => 'Credit Score',
-                            'front_pic' => !empty($request->credit_score) && $request->credit_score['front_image'] ? $request->credit_score['front_image'] : null,
-                            'back_pic' => !empty($request->credit_score) && $request->credit_score['back_image'] ? $request->credit_score['back_image'] : null,
-                            'document_type' => 2,
-                        ],
-                        [
-                            'rider_id' => $riderId,
-                            'slug' => slug(),
-                            'name' => 'Driving License',
-                            'front_pic' => !empty($request->driving_licence) && $request->driving_licence['front_image'] ? $request->driving_licence['front_image'] : null,
-                            'back_pic' => !empty($request->driving_licence) && $request->driving_licence['back_image'] ? $request->driving_licence['back_image'] : null,
-                            'document_type' => 3,
-                        ],
-                        [
-                            'rider_id' => $riderId,
-                            'slug' => slug(),
-                            'name' => 'Electicity Bill',
-                            'front_pic' => !empty($request->electicity_bill) && $request->electicity_bill['front_image'] ? $request->electicity_bill['front_image'] : null,
-                            'back_pic' => !empty($request->electicity_bill) && $request->electicity_bill['back_image'] ? $request->electicity_bill['back_image'] : null,
-                            'document_type' => 4,
-                        ],
-                        [
-                            'rider_id' => $riderId,
-                            'slug' => slug(),
-                            'name' => 'Pan Card',
-                            'front_pic' => !empty($request->pan_card) && $request->pan_card['front_image'] ? $request->pan_card['front_image'] : null,
-                            'back_pic' => !empty($request->pan_card) && $request->pan_card['back_image'] ? $request->pan_card['back_image'] : null,
-                            'document_type' => 5,
-                        ],
-
-                    ];
-                    DB::table('rider_documents')->where('rider_id', $riderId)->delete();
-                    $status = RiderDocument::insert($record);
-                    if ($status) {
-                        Rider::where('rider_id', $riderId)->update(['is_id_proof_done' => NOW(), 'kyc_step' => $requestedStep]);
+                    // 1 => Aadhar Card, 2 => Credit Score, 3 => Driving License, 4 => Electicity Bill/Rent Agreement, 5 => Pan Card, 6 => Passpost, 7 => Voter Id, 8 => T&C, 9 => Id card, 10 => Others
+                    $records = [];
+                    $documents = $request->documents ?? [];
+                    if (!empty($documents)) {
+                        foreach ($documents as $document) {
+                            $records[] = [
+                                'rider_id' => $riderId,
+                                'slug' => slug(),
+                                'name' => $document->name ?? "",
+                                'front_pic' => $document->front_pic ?? "",
+                                'back_pic' => $document->back_pic ?? "",
+                                'document_type' => $document->document_type ?? 0,
+                            ];
+                        }
+                    }
+                    if (!empty($records)) {
+                        DB::table('rider_documents')->where('rider_id', $riderId)->delete();
+                        $status = RiderDocument::insert($records);
+                        if ($status) {
+                            Rider::where('rider_id', $riderId)->update(['is_id_proof_done' => NOW(), 'kyc_step' => $requestedStep]);
+                        }
                     }
                 } elseif ($requestedStep == $stepFour && is_null($rider->is_bank_detail_done)) {
                     $record = [
