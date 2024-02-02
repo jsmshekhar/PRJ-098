@@ -832,7 +832,7 @@ class ApiModel extends Model
                 'name' => !empty($request->name) ? $request->name : null,
                 'front_pic' => !empty($request->front_image) ? $request->front_image : null,
                 'back_pic' => !empty($request->back_image) ? $request->back_image : null,
-                'document_type' => null,
+                'document_type' => $request->document_type ?? 0,
             ];
             $status = RiderDocument::insert($record);
             if (!empty($status)) {
