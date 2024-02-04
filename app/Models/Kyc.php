@@ -372,10 +372,10 @@ class Kyc extends Model
                             $records[] = [
                                 'rider_id' => $riderId,
                                 'slug' => slug(),
-                                'name' => $document->name ?? "",
-                                'front_pic' => $document->front_pic ?? "",
-                                'back_pic' => $document->back_pic ?? "",
-                                'document_type' => $document->document_type ?? 0,
+                                'name' => $document['name'] ?? "",
+                                'front_pic' => $document['front_pic'] ?? "",
+                                'back_pic' => $document['back_pic'] ?? "",
+                                'document_type' => $document['document_type'] ?? 0,
                             ];
                         }
                     }
