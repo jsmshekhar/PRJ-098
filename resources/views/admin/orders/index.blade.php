@@ -230,20 +230,6 @@
                                     <span class="spanColor mapped_ev_error"></span>
                                 </div>
                             </div>
-                            <div class="col-md-12">
-                                <?php
-                                $currentDate = date('Y-m-d');
-                                $date = date('Y-m-d', strtotime($currentDate . ' +15 days'));
-                                ?>
-                                <div class="form-group mb-2">
-                                    <label for="subscription_validity" class="col-form-label">Subscription
-                                        Validity</label>
-                                    <input name="subscription_validity" type="date"
-                                        class="floating-input form-control" autocomplete="off" id="subscription_validity"
-                                        min="<?php echo $date; ?>">
-                                    <span class="spanColor subscription_validity_error"></span>
-                                </div>
-                            </div>
                             <div class="isVendor">
                                 <div class="col-md-12">
                                     <div class="form-group mb-2">
@@ -378,12 +364,6 @@
                     if (mappedEv == "") {
                         $(".mapped_ev_error").html('This field is required!');
                         $("input#mapped_ev").focus();
-                        return false;
-                    }
-                    var subscriptionValidity = $('#subscription_validity').val();
-                    if (subscriptionValidity == "") {
-                        $(".subscription_validity_error").html('This field is required!');
-                        $("input#subscription_validity").focus();
                         return false;
                     }
                     $('#submitAssignEvForm').prop('disabled', true);
