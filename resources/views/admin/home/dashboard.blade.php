@@ -34,7 +34,7 @@
                     <div class="col-12">
                         <span class="text-muted mb-3 lh-1 d-block text-truncate totally_info">This Month Revenue</span>
                         <h4 class="">
-                            ₹{{$upcommingPayment}}
+                            ₹{{$upcommingPayment ? $upcommingPayment : 0}}
                         </h4>
                     </div>
                 </div>
