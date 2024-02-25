@@ -131,8 +131,9 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('password/set/{token}', [PasswordSetController::class, 'showSetPasswordForm'])->name('show-set-password-form');
     Route::post('password/set', [PasswordSetController::class, 'setPassword'])->name('set-password');
 
-    Route::any('/phonepe-response', [PaymentCallbackController::class, 'phonepeResponse'])->name('response');
+
     //Crom API
     Route::get('/immobilized-vehicles', [CronController::class, 'immobilizedVehicles'])->name('immobilized-vehicles');
     Route::get('/mobilized-vehicles', [CronController::class, 'mobilizedVehicles'])->name('mobilized-vehicles');
 });
+Route::any('/phonepe-response', [PaymentCallbackController::class, 'phonepeResponse'])->name('response');

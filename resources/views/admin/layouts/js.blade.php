@@ -28,9 +28,9 @@
  <script src="{{ asset('public/assets/libs/apexcharts/apexcharts.min.js') }}"></script>
 
  <!-- apexcharts init -->
- <script src="{{ asset('public/assets/js/pages/apexcharts.init.js') }}"></script>
+ {{-- <script src="{{ asset('public/assets/js/pages/apexcharts.init.js') }}"></script> --}}
 
- <script src="assets/js/pages/apexcharts.init.js"></script>
+ {{-- <script src="assets/js/pages/apexcharts.init.js"></script> --}}
 
 
  <script>

@@ -113,7 +113,20 @@ return [
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => 0,
             'permission' => 0777,
-
+        ],
+        'riderkyc' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/riderkyc/riderkyc.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 0,
+            'permission' => 0777,
+        ],
+        'phonepe' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/phonepe/phonepe.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 0,
+            'permission' => 0777,
         ],
     ],
 
