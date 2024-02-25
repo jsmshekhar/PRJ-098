@@ -106,6 +106,7 @@ class RiderController extends AdminAppController
                     $lastRec = DB::table('rider_orders AS ro')
                         ->leftJoin('products', 'products.product_id', '=', 'ro.mapped_vehicle_id')
                         ->leftJoin('hubs', 'hubs.hub_id', '=', 'products.hub_id')
+                        ->where('ro.rider_id', $riderId)
                         ->orderBy('ro.order_id', 'desc')->skip(1)->first();
                     if (!empty(($lastRec))) {
                         $riderEv->last_ev = $lastRec->ev_number;

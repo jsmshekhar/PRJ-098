@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Database\Eloquent\Model;
@@ -368,6 +369,8 @@ class Kyc extends Model
                     $records = [];
                     $documents = $request->documents ?? [];
                     if (!empty($documents)) {
+                        Log::channel('phonepe')->debug(__LINE__ . " Rider Id : " . json_encode($riderId));
+                        Log::channel('phonepe')->debug(__LINE__ . " Sending documents from Mob : " . json_encode($documents));
                         foreach ($documents as $document) {
                             $records[] = [
                                 'rider_id' => $riderId,
