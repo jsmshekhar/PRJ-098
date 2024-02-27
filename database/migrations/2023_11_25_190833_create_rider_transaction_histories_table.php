@@ -18,6 +18,7 @@ class CreateRiderTransactionHistoriesTable extends Migration
             $table->unsignedBigInteger('rider_id')->nullable();
             $table->unsignedBigInteger('order_id')->nullable();
             $table->string('slug', 12)->nullable();
+            $table->string('order_slug', 50)->nullable();
             $table->string('transaction_id', 151)->nullable();
             $table->string('merchant_transaction_id', 151)->nullable();
             $table->string('transaction_ammount', 50)->nullable();
