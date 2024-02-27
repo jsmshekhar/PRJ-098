@@ -70,7 +70,7 @@
                 </div>
                 @if (count($products) > 0)
                 <div class="cat_list cat_sub">
-                 
+
                     <ul>
                         @foreach($products as $key => $product)
                         <li class="">
@@ -99,15 +99,15 @@
                                         <i class="fa fa-trash"></i>
                                     </a>
                                     @endcan
-                                    {{--<a href="#">
-                                        <i class="fa fa-info-circle"></i>
-                                    </a>--}}
+                                    @if($product->is_display_on_app == 1)
+                                        <i class="fa fa-mobile text-secondry"></i>
+                                    @endif
                                 </div>
                             </div>
                         </li>
                         @endforeach
                     </ul>
-                    
+
                 </div>
                 {{ $products->withQueryString()->links('pagination::bootstrap-4') }}
                     @else
