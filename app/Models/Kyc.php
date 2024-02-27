@@ -243,6 +243,7 @@ class Kyc extends Model
                                     }
                                 }
                                 $orderCode = slug();
+                                $orderSlug = $orderCode."#".slug();
                                 $orderDetails = [
                                     "rider_id" => $riderId,
                                     "slug" => $orderCode,
@@ -266,7 +267,7 @@ class Kyc extends Model
                                 ];
                                 $orderId = DB::table('rider_orders')->insertGetId($orderDetails);
                                 if ($orderId) {
-                                    $result = ['order_code' => $orderCode];
+                                    $result = ['order_code' => $orderSlug];
                                     /*$orderTransaction = [
                                         "rider_id" => $riderId,
                                         "order_id" => $orderId,
@@ -471,7 +472,9 @@ class Kyc extends Model
     {
         try {
             $riderId = Auth::id();
-            $orderCode = $request->order_code;
+            $orderSlug = $orderCode = $request->order_code;
+            $orderCodeArr = explode("#", $orderCode);
+            $orderCode = $orderCodeArr[0] ?? "";
             $order = RiderOrder::where('rider_id', $riderId)->where('slug', $orderCode)->whereNull('deleted_at')->first();
             $status = false;
             if ($riderId && !is_null($order)) {
@@ -484,6 +487,7 @@ class Kyc extends Model
                         "rider_id" => $riderId,
                         "order_id" => $orderId,
                         "slug" => slug(),
+                        "order_slug" => $orderSlug,
                         "transaction_ammount" => $order->product_price,
                         "transaction_type" => 1, //Credited
                         'transaction_mode' => $transactionMode,
