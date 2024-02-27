@@ -30,7 +30,7 @@ class Product extends Model
         try {
             $auth = Auth::user();
             $products = Product::select(
-                    'title','slug','image',
+                    'title','slug','image', 'is_display_on_app',
                     DB::raw('CASE WHEN bike_type = 1 THEN "Cargo Bike" WHEN bike_type = 2 THEN "Normal Bike" END AS bike_type'),
                     DB::raw('CASE WHEN profile_category = 1 THEN "corporate" WHEN profile_category = 2 THEN "individual" WHEN profile_category = 3 THEN "student" WHEN profile_category = 4 THEN "vendor" END AS profile_category'),
                     DB::raw('CASE WHEN status_id = 1 THEN "In Stock" WHEN status_id = 2 THEN "Inacticve" WHEN status_id = 3 THEN "NF" WHEN status_id = 4 THEN "Assigned" WHEN status_id = 5 THEN "Delete" END AS status_id')
@@ -121,9 +121,9 @@ class Product extends Model
                 $folder = '/upload/product/';
                 $product_image = $this->uploadImage($image, $folder);
             }
-            
+
             $auth = Auth::user();
-            
+
             $slug = slug();
             $product = Product::insertGetId([
                 "slug" => $slug,
@@ -227,7 +227,7 @@ class Product extends Model
             $status_id = !empty($request->status_id) ? $request->status_id : 1;
             $bike_type = !empty($request->bike_type) ? $request->bike_type : 2;
             $total_range = !empty($request->total_range) ? $request->total_range : null;
-           
+
             $product_image = '';
             if ($request->image) {
                 $image = $request->file('image');
@@ -285,7 +285,7 @@ class Product extends Model
                     "status_id" => $status_id,
                 ]);
             }
-           
+
             $profileCategory = $profile_category == 1 ? 'corporate' : ($profile_category == 2 ? 'individual' : ($profile_category == 3 ? 'student' : 'vendor'));
             if ($product) {
                 $status = [
@@ -361,18 +361,18 @@ class Product extends Model
                     'riders.customer_id',
                     'riders.slug',
                     'products.ev_status',
-                    DB::raw('CASE 
-                        WHEN products.ev_category_id = 1 THEN "Two Wheeler" 
-                        WHEN products.ev_category_id = 2 THEN "Three Wheeler" 
+                    DB::raw('CASE
+                        WHEN products.ev_category_id = 1 THEN "Two Wheeler"
+                        WHEN products.ev_category_id = 2 THEN "Three Wheeler"
                         ELSE ""
                     END as ev_category_name'),
-                    
-                    DB::raw('CASE 
-                        WHEN riders.profile_type = 1 THEN "Corporate" 
-                        WHEN riders.profile_type = 2 THEN "Individual" 
-                        WHEN riders.profile_type = 3 THEN "Student" 
-                        WHEN riders.profile_type = 4 THEN "Vendor" 
-                        ELSE "" 
+
+                    DB::raw('CASE
+                        WHEN riders.profile_type = 1 THEN "Corporate"
+                        WHEN riders.profile_type = 2 THEN "Individual"
+                        WHEN riders.profile_type = 3 THEN "Student"
+                        WHEN riders.profile_type = 4 THEN "Vendor"
+                        ELSE ""
                     END as profile_category_name'),
                     'hubs.hubid'
                 );
@@ -423,5 +423,5 @@ class Product extends Model
             return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
         }
     }
-    
+
 }
