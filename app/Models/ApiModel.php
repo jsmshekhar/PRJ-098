@@ -2,16 +2,16 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
-use App\Models\Faqs;
-use Illuminate\Http\Response;
 use App\Models\ComplainCategory;
-use Illuminate\Support\Facades\DB;
+use App\Models\Faqs;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ApiModel extends Model
 {
@@ -147,7 +147,7 @@ class ApiModel extends Model
             $complainNumber = 101;
             $complain = Complain::whereNull('deleted_at')->orderBy('complain_id', 'DESC')->first();
             if (!is_null($complain)) {
-                $complainNumber = (int)$complain->complain_number;
+                $complainNumber = (int) $complain->complain_number;
                 $complainNumber = $complainNumber + 1;
             }
 
@@ -166,7 +166,7 @@ class ApiModel extends Model
                 ];
                 $status = Complain::insert($complaint);
                 if ($status) {
-                    return successResponse(Response::HTTP_OK, Lang::get('messages.INSERT'), (object)[]);
+                    return successResponse(Response::HTTP_OK, Lang::get('messages.INSERT'), (object) []);
                 }
             }
             return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), []);
@@ -191,7 +191,7 @@ class ApiModel extends Model
             $serviceNumber = 101;
             $complain = EvServiceRequset::whereNull('deleted_at')->orderBy('requset_id', 'DESC')->first();
             if (!is_null($complain)) {
-                $serviceNumber = (int)$complain->service_number;
+                $serviceNumber = (int) $complain->service_number;
                 $serviceNumber = $serviceNumber + 1;
             }
 
@@ -207,7 +207,7 @@ class ApiModel extends Model
                 ];
                 $status = EvServiceRequset::insert($serviceRequest);
                 if ($status) {
-                    return successResponse(Response::HTTP_OK, Lang::get('messages.INSERT'), (object)[]);
+                    return successResponse(Response::HTTP_OK, Lang::get('messages.INSERT'), (object) []);
                 }
             }
             return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), []);
@@ -230,7 +230,7 @@ class ApiModel extends Model
         try {
             $riderId = Auth::id();
             $vehicleSlug = $request->vehicle_slug ?? null;
-            $requestFor = (int)$request->request_for ?? null;
+            $requestFor = (int) $request->request_for ?? null;
             $vehicle = DB::table('products')->where('slug', $vehicleSlug)->whereNull('deleted_at')->first();
             if (!is_null($vehicle)) {
                 $vehicleId = $vehicle->product_id;
@@ -255,7 +255,7 @@ class ApiModel extends Model
                         ];
                         $status = ReturnExchange::insert($requestData);
                         if ($status) {
-                            return successResponse(Response::HTTP_OK, Lang::get('messages.INSERT'), (object)[]);
+                            return successResponse(Response::HTTP_OK, Lang::get('messages.INSERT'), (object) []);
                         }
                     }
                 }
@@ -283,9 +283,13 @@ class ApiModel extends Model
             $riderId = Auth::id();
             $currentOrder = ApiModel::getCurrentOrderDetails();
             if (!empty($currentOrder)) {
+                $orderCode = $currentOrder['order_code'];
+                $vehicleSlug = $currentOrder['vehicle_slug'];
+                $orderSlug = $orderCode . "#" . slug();
+                $result = ['order_code' => $orderSlug, 'vehicle_slug' => $vehicleSlug];
                 return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), $currentOrder);
             }
-            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object) []);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -307,7 +311,7 @@ class ApiModel extends Model
                 ->where('ro.status_id', '=', config('constants.ORDER_STATUS.ASSIGNED'))
                 ->where('ro.payment_status', '=', config('constants.PAYMENT_STATUS.SUCCESS'))
                 ->orderBy('ro.order_id', 'DESC')
-                // ->whereDate('ro.subscription_validity', '>=', NOW())
+            // ->whereDate('ro.subscription_validity', '>=', NOW())
                 ->first();
             $result = [];
             if (!is_null($currentOrder)) {
@@ -348,7 +352,7 @@ class ApiModel extends Model
             if (!is_null($records)) {
                 return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), $records);
             }
-            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object) []);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -398,7 +402,6 @@ class ApiModel extends Model
                         'hubs.hubId AS hub_id',
                     )->first();
 
-
                 if ($details) {
                     $vehicleId = $details->product_id;
                     $orderDetails = DB::table('rider_orders')->select([
@@ -421,7 +424,7 @@ class ApiModel extends Model
                     return successResponse(Response::HTTP_OK, Lang::get('messages.HTTP_FOUND'), $details, $orderDetails);
                 }
             }
-            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object) []);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -465,7 +468,7 @@ class ApiModel extends Model
             if (!is_null($records)) {
                 return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), $records);
             }
-            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object) []);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -499,10 +502,11 @@ class ApiModel extends Model
                     $lastDate = !is_null(($payments)) ? dateTimeFormat($payments->to_date) : '';
 
                     $rentCycle = $orderDetail->subscription_days;
+                    $orderSlug = $orderCode . "#" . slug();
                     $records = [
-                        'order_code' => $orderCode,
+                        'order_code' => $orderSlug,
                         'basic_rent' => $orderDetail->product_price,
-                        'payble_rent' => (string)($rentCycle * $orderDetail->product_price),
+                        'payble_rent' => (string) ($rentCycle * $orderDetail->product_price),
                         'last_date' => $lastDate,
                         'rent_cycle' => $rentCycle,
                         'extra_distance_charge' => 0,
@@ -511,7 +515,7 @@ class ApiModel extends Model
                     return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), $records);
                 }
             }
-            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object) []);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -532,18 +536,21 @@ class ApiModel extends Model
     {
         try {
             $riderId = Auth::id();
-            $orderCode = $request->order_code;
+            $orderSlug = $orderCode = $request->order_code;
+            $orderCodeArr = explode("#", $orderCode);
+            $orderCode = $orderCodeArr[0] ?? "";
             $order = RiderOrder::where('rider_id', $riderId)->where('slug', $orderCode)->whereNull('deleted_at')->first();
             $status = false;
             if ($riderId && !is_null($order)) {
-                $paymentStatus = (int)$request->payment_status;
-                $transactionMode = (int)$request->transaction_mode;
-                $orderId = (int)$order->order_id;
+                $paymentStatus = (int) $request->payment_status;
+                $transactionMode = (int) $request->transaction_mode;
+                $orderId = (int) $order->order_id;
 
                 $orderTransaction = [
                     "rider_id" => $riderId,
                     "order_id" => $orderId,
                     "slug" => slug(),
+                    "order_slug" => $orderSlug,
                     "transaction_ammount" => $request->gross_ammount,
                     "transaction_type" => 1, //Credited
                     'transaction_mode' => $transactionMode,
@@ -560,7 +567,7 @@ class ApiModel extends Model
                 $status = DB::table('rider_transaction_histories')->insertGetId($orderTransaction);
                 if ($status) {
                     $mappedVehicleId = $order->mapped_vehicle_id;
-                    $rentCycle = (int)$order->subscription_days;
+                    $rentCycle = (int) $order->subscription_days;
 
                     $payments = RiderOrderPayment::selectRaw('*')->where(['rider_id' => $riderId, 'order_id' => $orderId])->orderBy('rider_order_payment_id', 'DESC')->first();
 
@@ -581,7 +588,7 @@ class ApiModel extends Model
                     return successResponse(Response::HTTP_OK, Lang::get('messages.INSERT'), $result);
                 }
             }
-            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object) []);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -606,7 +613,7 @@ class ApiModel extends Model
             if (!empty($notifications)) {
                 return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), $notifications);
             }
-            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object) []);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -682,7 +689,7 @@ class ApiModel extends Model
                             'name' => 'Terms and conditions agreement',
                             'status_id' => !empty($docsList) && isset($docsList[8]) ? 1 : 2,
                             'document_type' => 8,
-                        ]
+                        ],
                     ];
                     break;
                 case 2: //Individual
@@ -716,7 +723,7 @@ class ApiModel extends Model
                             'name' => 'Terms and conditions agreement',
                             'status_id' => !empty($docsList) && isset($docsList[8]) ? 1 : 2,
                             'document_type' => 8,
-                        ]
+                        ],
                     ];
                     break;
                 case 3: //Student
@@ -756,7 +763,7 @@ class ApiModel extends Model
                             'name' => 'Terms and conditions agreement',
                             'status_id' => !empty($docsList) && isset($docsList[8]) ? 1 : 2,
                             'document_type' => 8,
-                        ]
+                        ],
                     ];
                     break;
                 case 4: //Vender
@@ -796,7 +803,7 @@ class ApiModel extends Model
                             'name' => 'Terms and conditions agreement',
                             'status_id' => !empty($docsList) && isset($docsList[8]) ? 1 : 2,
                             'document_type' => 8,
-                        ]
+                        ],
                     ];
                     break;
             }
@@ -805,7 +812,7 @@ class ApiModel extends Model
             if (!empty($finalDocumentList)) {
                 return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), $finalDocumentList);
             }
-            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object) []);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -836,9 +843,9 @@ class ApiModel extends Model
             ];
             $status = RiderDocument::insert($record);
             if (!empty($status)) {
-                return successResponse(Response::HTTP_OK, Lang::get('messages.INSERT'), (object)[]);
+                return successResponse(Response::HTTP_OK, Lang::get('messages.INSERT'), (object) []);
             }
-            return errorResponse(Response::HTTP_OK, Lang::get('messages.INSERT_ERROR'), (object)[]);
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.INSERT_ERROR'), (object) []);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -919,14 +926,14 @@ class ApiModel extends Model
                     $result[] = [
                         'slug' => $orderCode,
                         'vehicle_detail' => $vehicleDetail,
-                        'accessories_items' => $accessoriesResult
+                        'accessories_items' => $accessoriesResult,
                     ];
                 }
             }
 
             return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), $result);
 
-            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object) []);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),

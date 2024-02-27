@@ -33,7 +33,7 @@ class PhonePay extends Model
             $encode = base64_encode(json_encode($payload));
 
             Log::channel('phonepe')->debug(__LINE__ . " Refund payload : " . json_encode($payload));
-            // Log::channel('phonepe')->debug(__LINE__ . " Refund base64Encode : " . $encode);
+            Log::channel('phonepe')->debug(__LINE__ . " Refund base64Encode : " . $encode);
             Log::channel('phonepe')->debug(__LINE__ . " Original Transaction Id : " . $originalTransactionId);
 
             $string = $encode . '/pg/v1/refund' . $saltKey;
