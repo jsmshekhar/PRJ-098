@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Lang;
 class Accessories extends Model
 {
     use HasFactory;
+    use SoftDeletes;
     protected $table = "accessories";
     protected $primaryKey = 'accessories_id';
 
@@ -33,10 +34,10 @@ class Accessories extends Model
                 DB::raw('CASE WHEN accessories_category_id = 1 THEN "Helmet" WHEN accessories_category_id = 2 THEN "T-Shirt" WHEN accessories_category_id = 3 THEN "Mobile Holder" END AS accessories_category')
             )
             ->where('created_by', $auth->user_id)->orderBy('created_at', 'DESC')->get();
-            
+
             $accessories_categories = config('constants.ACCESSORIES_CATEGORY');
             return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['accessories' => $accessories, 'accessories_categories' => $accessories_categories]);
-           
+
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),

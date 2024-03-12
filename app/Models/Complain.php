@@ -4,16 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Complain extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $table = "complains";
     protected $primaryKey = 'complain_id';
 
     protected $appends = [
-        'display_status'
+        'display_status',
     ];
 
     //1 => Resolved, 2 => Pending, 3 => Discard

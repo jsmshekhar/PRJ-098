@@ -4,15 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ReturnExchange extends Model
 {
     use HasFactory;
+    use SoftDeletes;
     protected $table = "return_exchanges";
     protected $primaryKey = 'return_exchange_id';
 
     protected $appends = [
-        'status_display', 'request_for_name'
+        'status_display', 'request_for_name',
     ];
 
     public function getStatusDisplayAttribute()
