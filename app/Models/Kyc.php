@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Log;
 
 class Kyc extends Model
 {
@@ -28,22 +28,22 @@ class Kyc extends Model
                 [
                     "icon" => asset('public/images/mobile-icon/individual.png'),
                     "name" => "Individual",
-                    "profile_category" => config('constants.PROFILE_CATEGORIES.INDIVIDUAL')
+                    "profile_category" => config('constants.PROFILE_CATEGORIES.INDIVIDUAL'),
                 ],
                 [
                     "icon" => asset('public/images/mobile-icon/student.png'),
                     "name" => "Vendor",
-                    "profile_category" => config('constants.PROFILE_CATEGORIES.VENDER')
+                    "profile_category" => config('constants.PROFILE_CATEGORIES.VENDER'),
                 ],
                 [
                     "icon" => asset('public/images/mobile-icon/student.png'),
                     "name" => "Student",
-                    "profile_category" => config('constants.PROFILE_CATEGORIES.STUDENT')
+                    "profile_category" => config('constants.PROFILE_CATEGORIES.STUDENT'),
                 ],
                 [
                     "icon" => asset('public/images/mobile-icon/corporate.png'),
                     "name" => "Corporate Employee",
-                    "profile_category" => config('constants.PROFILE_CATEGORIES.CORPORATE')
+                    "profile_category" => config('constants.PROFILE_CATEGORIES.CORPORATE'),
                 ],
             ];
             return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), $profileTypes);
@@ -114,13 +114,13 @@ class Kyc extends Model
                     "icon" => asset('public/images/mobile-icon/two-wheeler.png'),
                     "name" => "Two Wheeler",
                     "category_id" => config('constants.EV_CATEGORIES.TWO_WHEELER'),
-                    "ev_list" => $twoWheelers
+                    "ev_list" => $twoWheelers,
                 ],
                 [
                     "icon" => asset('public/images/mobile-icon/three-wheeler.png'),
                     "name" => "Three Wheeler",
                     "category_id" => config('constants.EV_CATEGORIES.THREE_WHEELER'),
-                    "ev_list" => $threeWheelers
+                    "ev_list" => $threeWheelers,
                 ],
             ];
             return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), $vehiclePrepf);
@@ -185,7 +185,7 @@ class Kyc extends Model
             if ($details) {
                 return successResponse(Response::HTTP_OK, Lang::get('messages.HTTP_FOUND'), $result);
             }
-            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object) []);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -214,61 +214,62 @@ class Kyc extends Model
                     $vehicleSlug = $request->vehicle_slug ?? null;
                     $vehicle = DB::table('products')->where('slug', $vehicleSlug)->whereNull('deleted_at')->first();
 
-                    $pendingOrder = DB::table('rider_orders')
-                        ->where('rider_id', '=', $riderId)
-                        ->whereNull('deleted_at')
-                        ->where(function ($query) {
-                            $query->where('status_id', '=', config('constants.ORDER_STATUS.PENDING'))
-                                ->orWhere('payment_status', '=', config('constants.PAYMENT_STATUS.PENDING'));
-                        })->first();
-
-                    if (is_null($pendingOrder)) {
-                        $currentOrder = DB::table('rider_orders')
-                            ->where('rider_id', $riderId)
-                            ->where('status_id', config('constants.ORDER_STATUS.ASSIGNED'))
-                            ->where('payment_status', config('constants.PAYMENT_STATUS.SUCCESS'))
-                            // ->whereRaw('DATE(subscription_validity) >= DATE(NOW())')
+                    if (!empty($vehicle)) {
+                        $pendingOrder = DB::table('rider_orders')
+                            ->where('rider_id', '=', $riderId)
                             ->whereNull('deleted_at')
-                            ->first();
-                        if (is_null($currentOrder)) {
-                            if (!is_null($vehicle)) {
-                                if (isset($request->accessories) && !empty($request->accessories)) {
-                                    $accessories = $request->accessories;
-                                    $accessoriesSlug = $accessoriesIds = [];
-                                    foreach ($accessories as $accessory) {
-                                        $accessoriesSlug[] = $accessory['slug'] ?? null;
+                            ->where(function ($query) {
+                                $query->where('status_id', '=', config('constants.ORDER_STATUS.PENDING'))
+                                    ->orWhere('payment_status', '=', config('constants.PAYMENT_STATUS.PENDING'));
+                            })->first();
+
+                        if (is_null($pendingOrder)) {
+                            $currentOrder = DB::table('rider_orders')
+                                ->where('rider_id', $riderId)
+                                ->where('status_id', config('constants.ORDER_STATUS.ASSIGNED'))
+                                ->where('payment_status', config('constants.PAYMENT_STATUS.SUCCESS'))
+                            // ->whereRaw('DATE(subscription_validity) >= DATE(NOW())')
+                                ->whereNull('deleted_at')
+                                ->first();
+                            if (is_null($currentOrder)) {
+                                if (!is_null($vehicle)) {
+                                    if (isset($request->accessories) && !empty($request->accessories)) {
+                                        $accessories = $request->accessories;
+                                        $accessoriesSlug = $accessoriesIds = [];
+                                        foreach ($accessories as $accessory) {
+                                            $accessoriesSlug[] = $accessory['slug'] ?? null;
+                                        }
+                                        if (!empty($accessoriesSlug)) {
+                                            $accessoriesIds = DB::table('accessories')->whereIn('slug', $accessoriesSlug)->whereNull('deleted_at')->pluck('accessories_id')->toArray();
+                                        }
                                     }
-                                    if (!empty($accessoriesSlug)) {
-                                        $accessoriesIds = DB::table('accessories')->whereIn('slug', $accessoriesSlug)->whereNull('deleted_at')->pluck('accessories_id')->toArray();
-                                    }
-                                }
-                                $orderCode = slug();
-                                $orderSlug = $orderCode."#".slug();
-                                $orderDetails = [
-                                    "rider_id" => $riderId,
-                                    "slug" => $orderCode,
+                                    $orderCode = slug();
+                                    $orderSlug = $orderCode . "#" . slug();
+                                    $orderDetails = [
+                                        "rider_id" => $riderId,
+                                        "slug" => $orderCode,
 
-                                    "vehicle_id" => $vehicle->product_id,
-                                    "product_price" => $vehicle->per_day_rent,
-                                    "product_name" => $vehicle->title,
+                                        "vehicle_id" => $vehicle->product_id,
+                                        "product_price" => $vehicle->per_day_rent,
+                                        "product_name" => $vehicle->title,
 
-                                    "accessories_id" => implode(',', $accessoriesIds),
-                                    "accessories_items" => json_encode($accessories),
+                                        "accessories_id" => implode(',', $accessoriesIds),
+                                        "accessories_items" => json_encode($accessories),
 
-                                    "subscription_days" => $request->rent_cycle,
-                                    "order_date" => NOW(),
-                                    "ordered_ammount" => $request->gross_ammount ?? null,
-                                    "security_ammount" => $request->security_ammount ?? null,
-                                    "payment_status" => config('constants.PAYMENT_STATUS.PENDING'),
-                                    "status_id" => config('constants.ORDER_STATUS.PENDING'),
-                                    "requested_payload" => json_encode($request->all()),
-                                    "created_by" => $riderId,
-                                    "created_at" => NOW(),
-                                ];
-                                $orderId = DB::table('rider_orders')->insertGetId($orderDetails);
-                                if ($orderId) {
-                                    $result = ['order_code' => $orderSlug];
-                                    /*$orderTransaction = [
+                                        "subscription_days" => $request->rent_cycle,
+                                        "order_date" => NOW(),
+                                        "ordered_ammount" => $request->gross_ammount ?? null,
+                                        "security_ammount" => $request->security_ammount ?? null,
+                                        "payment_status" => config('constants.PAYMENT_STATUS.PENDING'),
+                                        "status_id" => config('constants.ORDER_STATUS.PENDING'),
+                                        "requested_payload" => json_encode($request->all()),
+                                        "created_by" => $riderId,
+                                        "created_at" => NOW(),
+                                    ];
+                                    $orderId = DB::table('rider_orders')->insertGetId($orderDetails);
+                                    if ($orderId) {
+                                        $result = ['order_code' => $orderSlug];
+                                        /*$orderTransaction = [
                                         "rider_id" => $riderId,
                                         "order_id" => $orderId,
                                         "transaction_type" => 1,
@@ -278,35 +279,37 @@ class Kyc extends Model
                                         "rider_id" => $riderId,
                                         "created_by" => $riderId,
                                         "created_at" => NOW(),
-                                    ];
-                                    DB::table('rider_transaction_histories')->insertGetId($orderTransaction);
-                                    */
-                                    return successResponse(Response::HTTP_OK, Lang::get('messages.ORDER_CREATED'), $result);
+                                        ];
+                                        DB::table('rider_transaction_histories')->insertGetId($orderTransaction);
+                                         */
+                                        return successResponse(Response::HTTP_OK, Lang::get('messages.ORDER_CREATED'), $result);
+                                    }
+                                    return errorResponse(Response::HTTP_OK, Lang::get('messages.ORDER_ERROR'), (object) []);
                                 }
-                                return errorResponse(Response::HTTP_OK, Lang::get('messages.ORDER_ERROR'), (object)[]);
+                            }
+                            return errorResponse(Response::HTTP_OK, Lang::get('messages.ORDER_ONGOING'), (object) []);
+                        } else {
+                            $orderCode = $pendingOrder->slug;
+                            $orderSlug = $orderCode . "#" . slug();
+                            $orderedAmmount = $pendingOrder->ordered_ammount;
+                            $paymentStatus = $pendingOrder->payment_status;
+                            if ($paymentStatus == config('constants.PAYMENT_STATUS.PENDING')) {
+                                $result = ['order_code' => $orderSlug, 'ammount' => $orderedAmmount, 'payment_status' => $paymentStatus];
+                                return successResponse(Response::HTTP_OK, Lang::get('messages.ORDER_PENDING'), $result);
+                            } else {
+                                $result = ['order_code' => $orderSlug];
+                                return successResponse(Response::HTTP_OK, Lang::get('messages.ORDER_SUPPORT'), $result);
                             }
                         }
-                        return errorResponse(Response::HTTP_OK, Lang::get('messages.ORDER_ONGOING'), (object)[]);
-                    } else {
-                        $orderCode = $pendingOrder->slug;
-                        $orderedAmmount = $pendingOrder->ordered_ammount;
-                        $paymentStatus = $pendingOrder->payment_status;
-                        if ($paymentStatus == config('constants.PAYMENT_STATUS.PENDING')) {
-                            $result = ['order_code' => $orderCode, 'ammount' => $orderedAmmount, 'payment_status' => $paymentStatus];
-                            return successResponse(Response::HTTP_OK, Lang::get('messages.ORDER_PENDING'), $result);
-                        } else {
-                            $result = ['order_code' => $orderCode];
-                            return successResponse(Response::HTTP_OK, Lang::get('messages.ORDER_SUPPORT'), $result);
-                        }
                     }
-                    return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
+                    return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object) []);
                 } elseif ($kycStatus == 2) {
-                    return errorResponse(Response::HTTP_OK, Lang::get('messages.KYC_PENDING'), (object)[]);
+                    return errorResponse(Response::HTTP_OK, Lang::get('messages.KYC_PENDING'), (object) []);
                 } else {
-                    return errorResponse(Response::HTTP_OK, Lang::get('messages.KYC_RED_ALERT'), (object)[]);
+                    return errorResponse(Response::HTTP_OK, Lang::get('messages.KYC_RED_ALERT'), (object) []);
                 }
             }
-            return errorResponse(Response::HTTP_OK, Lang::get('messages.KYC_ALERT'), (object)[]);
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.KYC_ALERT'), (object) []);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -328,7 +331,7 @@ class Kyc extends Model
         try {
             $profileType = Auth::user()->profile_type;
             $riderId = Auth::id();
-            $requestedStep = (int)$request->step;
+            $requestedStep = (int) $request->step;
 
             $stepOne = 1;
             $stepTwo = 2;
@@ -420,7 +423,7 @@ class Kyc extends Model
                     return successResponse(Response::HTTP_OK, Lang::get('messages.UPDATE'), $result);
                 }
             }
-            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object) []);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -451,7 +454,7 @@ class Kyc extends Model
                 ];
                 return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), $result);
             }
-            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object) []);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -478,9 +481,9 @@ class Kyc extends Model
             $order = RiderOrder::where('rider_id', $riderId)->where('slug', $orderCode)->whereNull('deleted_at')->first();
             $status = false;
             if ($riderId && !is_null($order)) {
-                $paymentStatus = (int)$request->payment_status;
-                $transactionMode = (int)$request->transaction_mode;
-                $orderId = (int)$order->order_id;
+                $paymentStatus = (int) $request->payment_status;
+                $transactionMode = (int) $request->transaction_mode;
+                $orderId = (int) $order->order_id;
                 $status = RiderOrder::where('rider_id', $riderId)->where('slug', $orderCode)->update(['payment_status' => $paymentStatus]);
                 if ($status) {
                     $orderTransaction = [
@@ -489,7 +492,7 @@ class Kyc extends Model
                         "slug" => slug(),
                         "order_slug" => $orderSlug,
                         "transaction_ammount" => $order->product_price,
-                        "transaction_type" => 1, //Credited
+                        "transaction_type" => 1, //Credited to our portal
                         'transaction_mode' => $transactionMode,
 
                         'status_id' => $paymentStatus,
@@ -502,11 +505,11 @@ class Kyc extends Model
                         "created_at" => NOW(),
                     ];
                     DB::table('rider_transaction_histories')->insertGetId($orderTransaction);
-                    $result = ['order_code' => $orderCode];
+                    $result = ['order_code' => $orderSlug];
                     return successResponse(Response::HTTP_OK, Lang::get('messages.UPDATE'), $result);
                 }
             }
-            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.HTTP_NOT_FOUND'), (object) []);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
