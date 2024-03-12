@@ -4,15 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Response;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Lang;
 
 class HubPartAccessories extends Model
 {
     use HasFactory;
+    use SoftDeletes;
     protected $table = "hub_part_accessories";
     protected $primaryKey = 'hub_part_accessories_id';
 
@@ -47,14 +44,14 @@ class HubPartAccessories extends Model
         //         'hubs.city',
         //         'accessories.accessories_category_id',
         //         DB::raw('CONCAT(users.first_name, " ", users.last_name) AS name'),
-        //         DB::raw('CASE 
-        //                 WHEN accessories.accessories_category_id = 1 THEN "Helmet" 
-        //                 WHEN accessories.accessories_category_id = 2 THEN "T-Shirt" 
-        //                 WHEN accessories.accessories_category_id = 3 THEN "Mobile Holder"  
+        //         DB::raw('CASE
+        //                 WHEN accessories.accessories_category_id = 1 THEN "Helmet"
+        //                 WHEN accessories.accessories_category_id = 2 THEN "T-Shirt"
+        //                 WHEN accessories.accessories_category_id = 3 THEN "Mobile Holder"
         //             END as accessories')
         //     )
         //     ->orderBy('hub_part_accessories.created_at', 'DESC')->paginate($perPage);
-            
+
         //     if (count($hub_parts) > 0) {
         //         if (count($hub_parts) > 0) {
         //             if ($auth->hub_id == null || $auth->hub_id == "") {

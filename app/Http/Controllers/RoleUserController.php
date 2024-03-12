@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\AdminAppController;
 use App\Models\Role;
 use App\Models\User;
-use Illuminate\Support\Str;
+use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
-use App\Http\Controllers\AdminAppController;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class RoleUserController extends AdminAppController
 {
@@ -220,7 +221,7 @@ class RoleUserController extends AdminAppController
             $last_empId = User::latest()->select('emp_id')->where('users.role_id', '!=', 0)->first();
             $auth = Auth::user();
             if (!empty($request->slug)) {
-                if($password){
+                if ($password) {
                     $userId = User::where('slug', $slug)->update([
                         "first_name" => $first_name,
                         "last_name" => $last_name,
@@ -230,7 +231,7 @@ class RoleUserController extends AdminAppController
                         "hub_id" => $hub_id,
                         "password" => Hash::make($password),
                     ]);
-                }else{
+                } else {
                     $userId = User::where('slug', $slug)->update([
                         "first_name" => $first_name,
                         "last_name" => $last_name,
@@ -240,7 +241,7 @@ class RoleUserController extends AdminAppController
                         "hub_id" => $hub_id,
                     ]);
                 }
-                
+
             } else {
                 $slug = slug();
                 $token = Str::random(60); // generate a random token
@@ -259,6 +260,20 @@ class RoleUserController extends AdminAppController
                     "created_by" => $auth->user_id,
                 ]);
                 $user = User::where('user_id', $userId)->first();
+
+                $fullName = $first_name . " " . $last_name;
+                $blade = "emails.newUserEmail";
+                $details = [
+                    'name' => $fullName,
+                    'email' => $email,
+                    'password' => $password,
+                ];
+                $toEmail = $email;
+                Mail::send($blade, ['details' => $details], function ($message) use ($toEmail) {
+                    $message->to($toEmail);
+                    $message->subject("Your Login details");
+                    $message->from(env('MAIL_FROM_ADDRESS'), env('APP_NAME'));
+                });
                 // $user->notify(new SetPasswordNotification($token));
             }
             if ($userId) {
@@ -363,7 +378,7 @@ class RoleUserController extends AdminAppController
             for ($i = 0; $i < sizeof($permission); $i++) {
                 $data = array();
                 $data['permission_id'] = $permission[$i];
-                $data['role_id']   = $role_id;
+                $data['role_id'] = $role_id;
                 $query_insert = DB::table('permission_roles')->insert($data);
             }
 

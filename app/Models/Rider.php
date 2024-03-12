@@ -2,18 +2,20 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
-use Laravel\Passport\HasApiTokens;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Passport\HasApiTokens;
 
 class Rider extends Authenticatable
 {
     use HasFactory, HasApiTokens;
+    use SoftDeletes;
 
     protected $table = "riders";
     protected $primaryKey = 'rider_id';
@@ -21,11 +23,11 @@ class Rider extends Authenticatable
         'slug', 'name', 'email', 'email_verified_at', 'activated_at', 'phone', 'password', 'current_address', 'permanent_address', 'state_id', 'city_id', 'vehicle_id', 'photo', 'subscription_days', 'joining_date', 'subscription_validity', 'api_token', 'status_id', 'created_by', 'updated_by', 'created_at', 'updated_at', 'deleted_at', 'customer_id', 'profile_type',
     ];
     protected $hidden = [
-        'api_token', 'password'
+        'api_token', 'password',
     ];
 
     protected $appends = [
-        'profile_type_name', 'kyc_status_name'
+        'profile_type_name', 'kyc_status_name',
     ];
 
     public function getProfileTypeNameAttribute()
@@ -110,7 +112,7 @@ class Rider extends Authenticatable
             $customerId = 101;
             $riderDetail = Rider::whereNull('deleted_at')->orderBy('rider_id', 'DESC')->first();
             if (!is_null($riderDetail)) {
-                $customerId = (int)$riderDetail->customer_id;
+                $customerId = (int) $riderDetail->customer_id;
                 $customerId = $customerId + 1;
             }
             $rider = Rider::create([
@@ -125,10 +127,10 @@ class Rider extends Authenticatable
             if ($rider) {
                 $rider = new Rider();
                 $result = $rider->login($request);
-                $result = !empty($result) && isset($result['result']) ? $result['result'] :  (object)[];
+                $result = !empty($result) && isset($result['result']) ? $result['result'] : (object) [];
                 return successResponse(Response::HTTP_OK, Lang::get('messages.INSERT'), $result);
             }
-            return errorResponse(Response::HTTP_OK, Lang::get('messages.INSERT_ERROR'), (object)[]);
+            return errorResponse(Response::HTTP_OK, Lang::get('messages.INSERT_ERROR'), (object) []);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -166,7 +168,7 @@ class Rider extends Authenticatable
                             'rider_id' => $rider->rider_id,
                             'device_type' => $deviceType,
                             'device_token' => $deviceToken,
-                            'status_id' => 1
+                            'status_id' => 1,
                         ];
                         DB::table('rider_tokens')->where(['device_type' => $deviceType, 'device_token' => $deviceToken])->delete();
                         DB::table('rider_tokens')->insertGetId($deviceRecord);
@@ -180,7 +182,7 @@ class Rider extends Authenticatable
                         "email" => $rider->email,
                         "phone" => $rider->phone,
                         "photo" => $rider->photo,
-                        "profile_category" => (int)$rider->profile_type,
+                        "profile_category" => (int) $rider->profile_type,
                         "customer_id" => "CUS" . $rider->customer_id,
                     ];
                 }
@@ -188,7 +190,7 @@ class Rider extends Authenticatable
                 $result = ['headerToken' => $token, 'isKycCompleted' => $kycStatus, 'rider' => $riderDetails];
                 return successResponse(Response::HTTP_OK, Lang::get('messages.LOGIN_SUCCESS'), $result);
             }
-            return errorResponse(Response::HTTP_UNAUTHORIZED, Lang::get('messages.UNAUTHORIZED'), (object)[]);
+            return errorResponse(Response::HTTP_UNAUTHORIZED, Lang::get('messages.UNAUTHORIZED'), (object) []);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -209,7 +211,7 @@ class Rider extends Authenticatable
             $deviceToken = $request->header('deviceToken') ?? null;
             DB::table('rider_tokens')->where(['device_type' => $deviceType, 'device_token' => $deviceToken])->delete();
 
-            return successResponse(Response::HTTP_OK, Lang::get('messages.LOGOUT_SUCCESS'), (object)[]);
+            return successResponse(Response::HTTP_OK, Lang::get('messages.LOGOUT_SUCCESS'), (object) []);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -234,7 +236,7 @@ class Rider extends Authenticatable
                 $result = DB::table('riders')->select(['slug', 'name', 'email', 'phone'])->where('rider_id', $authId)->whereNull('deleted_at')->first();
                 return successResponse(Response::HTTP_OK, Lang::get('messages.HTTP_FOUND'), $result);
             }
-            return errorResponse(Response::HTTP_NOT_FOUND, Lang::get('messages.HTTP_NOT_FOUND'), (object)[]);
+            return errorResponse(Response::HTTP_NOT_FOUND, Lang::get('messages.HTTP_NOT_FOUND'), (object) []);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -259,7 +261,7 @@ class Rider extends Authenticatable
             if (!is_null($rider) && $rider) {
                 return successResponse(Response::HTTP_OK, Lang::get('messages.HTTP_FOUND'), $rider);
             }
-            return errorResponse(Response::HTTP_NOT_FOUND, Lang::get('messages.INVALID_PHONE'), (object)[]);
+            return errorResponse(Response::HTTP_NOT_FOUND, Lang::get('messages.INVALID_PHONE'), (object) []);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -283,9 +285,9 @@ class Rider extends Authenticatable
         if (!is_null($rider) && $rider) {
             $status = $rider->update(['password' => Hash::make($request->password)]);
             if ($status) {
-                return successResponse(Response::HTTP_OK, Lang::get('messages.PASSWORD_UPDATE'), (object)[]);
+                return successResponse(Response::HTTP_OK, Lang::get('messages.PASSWORD_UPDATE'), (object) []);
             }
         }
-        return errorResponse(Response::HTTP_NOT_FOUND, Lang::get('messages.INVALID_PHONE'), (object)[]);
+        return errorResponse(Response::HTTP_NOT_FOUND, Lang::get('messages.INVALID_PHONE'), (object) []);
     }
 }

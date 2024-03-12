@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Http\Response;
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
@@ -13,11 +13,12 @@ use Illuminate\Support\Facades\Lang;
 class RiderTransactionHistory extends Model
 {
     use HasFactory;
+    use SoftDeletes;
     protected $table = "rider_transaction_histories";
     protected $primaryKey = 'rider_transaction_id';
 
     protected $appends = [
-        'transaction_type_name', 'transaction_mode_name', 'payment_status_display'
+        'transaction_type_name', 'transaction_mode_name', 'payment_status_display',
     ];
 
     //1 => Credited, 2 => Debited
@@ -90,35 +91,35 @@ class RiderTransactionHistory extends Model
     {
         try {
             $auth = Auth::user();
-            $transactions = RiderTransactionHistory::leftJoin('riders', 'rider_transaction_histories.rider_id','riders.rider_id')
-            ->select(
-                'rider_transaction_histories.transaction_id',
-                'rider_transaction_histories.transaction_ammount',
-                'rider_transaction_histories.created_at',
-                'riders.customer_id',
-                'riders.name',
-                'rider_transaction_histories.transaction_type',
-                'rider_transaction_histories.transaction_notes',
-                DB::raw('CASE 
-                            WHEN rider_transaction_histories.transaction_mode = 1 THEN "Card" 
-                            WHEN rider_transaction_histories.transaction_mode = 2 THEN "Wallet" 
-                            WHEN rider_transaction_histories.transaction_mode = 3 THEN "UPI" 
-                            WHEN rider_transaction_histories.transaction_mode = 4 THEN "Net Banking" 
-                            ELSE "" 
+            $transactions = RiderTransactionHistory::leftJoin('riders', 'rider_transaction_histories.rider_id', 'riders.rider_id')
+                ->select(
+                    'rider_transaction_histories.transaction_id',
+                    'rider_transaction_histories.transaction_ammount',
+                    'rider_transaction_histories.created_at',
+                    'riders.customer_id',
+                    'riders.name',
+                    'rider_transaction_histories.transaction_type',
+                    'rider_transaction_histories.transaction_notes',
+                    DB::raw('CASE
+                            WHEN rider_transaction_histories.transaction_mode = 1 THEN "Card"
+                            WHEN rider_transaction_histories.transaction_mode = 2 THEN "Wallet"
+                            WHEN rider_transaction_histories.transaction_mode = 3 THEN "UPI"
+                            WHEN rider_transaction_histories.transaction_mode = 4 THEN "Net Banking"
+                            ELSE ""
                         END as transaction_mode'),
-                DB::raw('CASE 
-                            WHEN rider_transaction_histories.payment_status = 1 THEN "Success" 
-                            WHEN rider_transaction_histories.payment_status = 2 THEN "Pending" 
-                            WHEN rider_transaction_histories.payment_status = 3 THEN "Failed" 
-                            WHEN rider_transaction_histories.payment_status = 4 THEN "Rejected" 
-                            ELSE "" 
+                    DB::raw('CASE
+                            WHEN rider_transaction_histories.payment_status = 1 THEN "Success"
+                            WHEN rider_transaction_histories.payment_status = 2 THEN "Pending"
+                            WHEN rider_transaction_histories.payment_status = 3 THEN "Failed"
+                            WHEN rider_transaction_histories.payment_status = 4 THEN "Rejected"
+                            ELSE ""
                         END as payment_status')
-            );
+                );
 
             if (isset($request->is_search) && $request->is_search == 1) {
                 if (isset($request->tr_id) && !empty($request->tr_id)) {
                     $transactions = $transactions->where('rider_transaction_histories.transaction_id', 'LIKE', "%{$request->tr_id}%");
-                }               
+                }
                 if (isset($request->cu_id) && !empty($request->cu_id)) {
                     $transactions = $transactions->where('riders.customer_id', 'LIKE', $request->cu_id);
                 }
@@ -138,7 +139,7 @@ class RiderTransactionHistory extends Model
             $transactions = $transactions->orderBy('created_at', 'DESC')->paginate(20);
 
             $count = RiderTransactionHistory::leftJoin('riders', 'rider_transaction_histories.rider_id', 'riders.rider_id')
-              ->get();
+                ->get();
             $count = count($count);
             $payStatus = ['1' => 'Success', '2' => 'Pending', '3' => 'Failed', '4' => 'Reject'];
             $payModes = ['1' => 'Card', '2' => 'Wallet', '3' => 'UPI', '4' => 'Net Banking'];

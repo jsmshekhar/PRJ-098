@@ -2,21 +2,23 @@
 
 namespace App\Models;
 
+use App\Models\EvType;
+use App\Models\Hub;
+use App\Traits\UploadsImageTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Response;
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
-use App\Models\Hub;
-use App\Traits\UploadsImageTrait;
-use App\Models\EvType;
 use Nette\Utils\Image;
+
 class Product extends Model
 {
     use HasFactory, UploadsImageTrait;
+    use SoftDeletes;
 
     protected $table = "products";
     protected $primaryKey = 'product_id';
@@ -30,10 +32,10 @@ class Product extends Model
         try {
             $auth = Auth::user();
             $products = Product::select(
-                    'title','slug','image', 'is_display_on_app',
-                    DB::raw('CASE WHEN bike_type = 1 THEN "Cargo Bike" WHEN bike_type = 2 THEN "Normal Bike" END AS bike_type'),
-                    DB::raw('CASE WHEN profile_category = 1 THEN "corporate" WHEN profile_category = 2 THEN "individual" WHEN profile_category = 3 THEN "student" WHEN profile_category = 4 THEN "vendor" END AS profile_category'),
-                    DB::raw('CASE WHEN status_id = 1 THEN "In Stock" WHEN status_id = 2 THEN "Inacticve" WHEN status_id = 3 THEN "NF" WHEN status_id = 4 THEN "Assigned" WHEN status_id = 5 THEN "Delete" END AS status_id')
+                'title', 'slug', 'image', 'is_display_on_app',
+                DB::raw('CASE WHEN bike_type = 1 THEN "Cargo Bike" WHEN bike_type = 2 THEN "Normal Bike" END AS bike_type'),
+                DB::raw('CASE WHEN profile_category = 1 THEN "corporate" WHEN profile_category = 2 THEN "individual" WHEN profile_category = 3 THEN "student" WHEN profile_category = 4 THEN "vendor" END AS profile_category'),
+                DB::raw('CASE WHEN status_id = 1 THEN "In Stock" WHEN status_id = 2 THEN "Inacticve" WHEN status_id = 3 THEN "NF" WHEN status_id = 4 THEN "Assigned" WHEN status_id = 5 THEN "Delete" END AS status_id')
             )->where('hub_id', $auth->hub_id)->orWhere('hub_id', '!=', $auth->hub_id);
 
             if ($param == 'corporate') {
@@ -48,8 +50,8 @@ class Product extends Model
             if ($param == 'vendor') {
                 $products = $products->where('profile_category', 4);
             }
-             $products = $products->orderBy('created_at', 'DESC')->paginate(20);
-            if (count($products)>0) {
+            $products = $products->orderBy('created_at', 'DESC')->paginate(20);
+            if (count($products) > 0) {
                 return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['products' => $products]);
             } else {
                 return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['products' => []]);
@@ -192,7 +194,7 @@ class Product extends Model
             $battery_types = config('constants.BATTERY_TYPE');
             $evStatus = config('constants.EV_STATUS');
             $bike_types = config('constants.BIKE_TYPE');
-            return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['product'=> $product, 'rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'hubs' => $hubs, 'battery_types' => $battery_types, 'evStatus' => $evStatus, 'bike_types' => $bike_types]);
+            return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['product' => $product, 'rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'hubs' => $hubs, 'battery_types' => $battery_types, 'evStatus' => $evStatus, 'bike_types' => $bike_types]);
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -235,7 +237,7 @@ class Product extends Model
                 $product_image = $this->uploadImage($image, $folder);
             }
             $auth = Auth::user();
-            if( $product_image){
+            if ($product_image) {
                 $product = Product::where('slug', $slug)->update([
                     "title" => $title,
                     "ev_number" => $ev_number,
@@ -260,7 +262,7 @@ class Product extends Model
                     "updated_by" => $auth->user_id,
                     "status_id" => $status_id,
                 ]);
-            }else{
+            } else {
                 $product = Product::where('slug', $slug)->update([
                     "title" => $title,
                     "ev_number" => $ev_number,
@@ -405,14 +407,14 @@ class Product extends Model
                 ->join('hubs', 'hubs.hub_id', '=', 'products.hub_id')
                 ->where(['rider_orders.status_id' => 1, 'riders.status_id' => 1, 'products.status_id' => 4])->count();
 
-            $hubs = DB::table('hubs')->whereNull('deleted_at')->where('status_id', 1)->select('hub_id', 'city','hubid')->get();
+            $hubs = DB::table('hubs')->whereNull('deleted_at')->where('status_id', 1)->select('hub_id', 'city', 'hubid')->get();
             $payment_status = config('constants.PAYMENT_STATUS');
             $vehicle_status = config('constants.VEHICLE_STATUS');
             $ev_category = config('constants.EV_CATEGORIES');
             if (count($vehicles) > 0) {
                 return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['vehicles' => $vehicles, 'count' => $count, 'hubs' => $hubs, 'payment_status' => $payment_status, 'vehicle_status' => $vehicle_status, 'ev_category' => $ev_category]);
             } else {
-                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['vehicles' => [], 'count' => "",'hubs' => $hubs, 'payment_status' => $payment_status, 'vehicle_status' => $vehicle_status, 'ev_category' => $ev_category]);
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['vehicles' => [], 'count' => "", 'hubs' => $hubs, 'payment_status' => $payment_status, 'vehicle_status' => $vehicle_status, 'ev_category' => $ev_category]);
             }
         } catch (\Throwable $ex) {
             $result = [
