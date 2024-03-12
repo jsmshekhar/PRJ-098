@@ -3,16 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\AdminAppController;
-use App\Models\PhonePay;
 use App\Models\ReturnExchange;
 use App\Models\User;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Lang;
 
 class RefundMgmtController extends AdminAppController
 {
@@ -22,12 +19,9 @@ class RefundMgmtController extends AdminAppController
         $this->viewPath = "admin/refund";
     }
 
-
     public function index(Request $request)
     {
-
         try {
-            // $res = PhonePay::refundAmmount();
             $permission = User::getPermissions();
             if (Gate::allows('view_inventry', $permission)) {
                 $auth = Auth::user();
@@ -81,7 +75,7 @@ class RefundMgmtController extends AdminAppController
                 $count = count($count);
                 $refundStatus = ['1' => 'Resolved', '2' => 'Pending'];
                 return view($this->viewPath . '/index', compact('refunds', 'count', 'refundStatus', 'permission'));
-            }else {
+            } else {
                 return view('admin.401.401');
             }
         } catch (\Throwable $ex) {

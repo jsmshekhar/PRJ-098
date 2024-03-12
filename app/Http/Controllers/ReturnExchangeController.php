@@ -2,24 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use App\Models\User;
-use App\Models\Rider;
-use App\Models\Product;
-use App\Models\PhonePay;
+use App\Http\Controllers\AdminAppController;
 use App\Models\MediaFile;
+use App\Models\PhonePay;
+use App\Models\Product;
+use App\Models\ReturnExchange;
 use App\Models\RiderOrder;
+use App\Models\RiderOrderPayment;
+use App\Models\User;
+use App\Traits\UploadsImageTrait;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Ixudra\Curl\Facades\Curl;
-use App\Models\ReturnExchange;
-use App\Models\RiderOrderPayment;
-use App\Traits\UploadsImageTrait;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Lang;
-use App\Http\Controllers\AdminAppController;
 
 class ReturnExchangeController extends AdminAppController
 {
@@ -149,13 +146,17 @@ class ReturnExchangeController extends AdminAppController
             'damage' => 'required',
         ]);
 
+        // $res = PhonePay::refundAmmount('MD3QVX4I9NWB#M6K9C28FJ5VQ', 10, 2);
+        // print_r($res);
+        // die;
         $result = ReturnExchange::where('slug', $slug)->whereNull('deleted_at')->first();
         if (!empty($result)) {
             $returnExchangeId = $result->return_exchange_id;
             $orderId = $result->order_id;
             $productId = $result->mapped_vehicle_id;
+            $refundAmount = $request->refund_amount ?? 0;
             $data = [
-                'refund_ammount' => $request->refund_amount,
+                'refund_ammount' => $refundAmount,
                 'note' => $request->description,
                 'damage_cost' => $request->damage_cost,
                 'damage_type' => $request->damage,
@@ -167,6 +168,20 @@ class ReturnExchangeController extends AdminAppController
             if ($status) {
                 Product::where('product_id', $productId)->update(['status_id' => 1, 'ev_status' => 3]);
                 RiderOrder::where('order_id', $orderId)->update(['status_id' => 4]);
+
+                if ($refundAmount > 0) {
+                    $lastPayment = DB::table('rider_transaction_histories')
+                        ->where('order_id', $orderId)
+                        ->where('payment_status', 1)
+                        ->where('transaction_type', 1)
+                        ->orderBy('rider_transaction_id', 'DESC')
+                        ->first();
+                    if (!empty($lastPayment)) {
+                        $lastTransactionId = $lastPayment->rider_transaction_id;
+                        $originalTransactionId = $lastPayment->merchant_transaction_id;
+                        PhonePay::refundAmmount($originalTransactionId, $refundAmount, $lastTransactionId);
+                    }
+                }
             }
             return redirect()->route('return-exchange')->with('success', 'Data Updated Successfully !');
         }
@@ -228,7 +243,6 @@ class ReturnExchangeController extends AdminAppController
 
         $evSlug = $request->new_ev;
 
-
         $result = ReturnExchange::where('slug', $slug)->whereNull('deleted_at')->first();
         $newEvDetails = Product::where('slug', $evSlug)->whereNull('deleted_at')->first();
 
@@ -267,8 +281,8 @@ class ReturnExchangeController extends AdminAppController
                     "ordered_ammount" => $oldOrder->ordered_ammount ?? null,
                     "security_ammount" => $oldOrder->security_ammount ?? null,
 
-                    "payment_status" =>  $oldOrder->payment_status ?? null,
-                    "status_id" =>  1,
+                    "payment_status" => $oldOrder->payment_status ?? null,
+                    "status_id" => 1,
                     "requested_payload" => $oldOrder->requested_payload,
                     "created_by" => $oldOrder->created_by,
                     "created_at" => NOW(),
@@ -291,7 +305,7 @@ class ReturnExchangeController extends AdminAppController
                     RiderOrder::where('order_id', $oldorderId)->update(['status_id' => 4]);
                     Product::where('product_id', $mappedVehicleId)->update(['status_id' => 4, 'ev_status' => 1]);
 
-                    $rentCycle = (int)$oldOrder->subscription_days;
+                    $rentCycle = (int) $oldOrder->subscription_days;
 
                     $lastPayment = RiderOrderPayment::selectRaw('*')->where(['rider_id' => $riderId, 'order_id' => $oldorderId])->orderBy('rider_order_payment_id', 'DESC')->first();
                     if (!empty($lastPayment)) {
