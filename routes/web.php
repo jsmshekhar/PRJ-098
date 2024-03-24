@@ -1,28 +1,28 @@
 
 <?php
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HubController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\RiderController;
-use App\Http\Controllers\ComplainController;
-use App\Http\Controllers\RoleUserController;
-use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\AccessoriesController;
 use App\Http\Controllers\Auth\PasswordSetController;
+use App\Http\Controllers\ComplainController;
+use App\Http\Controllers\CronController;
 use App\Http\Controllers\DataExportController;
-use App\Http\Controllers\LiveTrackingController;
 use App\Http\Controllers\EvTypeController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\HubController;
+use App\Http\Controllers\HubPartAccessoriesController;
+use App\Http\Controllers\LiveTrackingController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PaymentCallbackController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RefundMgmtController;
-use App\Http\Controllers\TransactionMgmtController;
-use App\Http\Controllers\WalletMgmtController;
-use App\Http\Controllers\AccessoriesController;
-use App\Http\Controllers\CronController;
-use App\Http\Controllers\HubPartAccessoriesController;
-use App\Http\Controllers\PaymentCallbackController;
+use App\Http\Controllers\RiderController;
+use App\Http\Controllers\RoleUserController;
 use App\Http\Controllers\SiteConfigurationController;
+use App\Http\Controllers\TransactionMgmtController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WalletMgmtController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,7 +42,6 @@ Route::get('/', function () {
 // Auth::routes();
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 
 Route::group(['prefix' => 'admin'], function () {
     Auth::routes(['register' => false, 'login' => true, 'vefify' => false]);
@@ -124,13 +123,12 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/mobilized-immobilized-ev', [LiveTrackingController::class, 'evMobilizedImmobilized'])->name('mobilized-immobilized-ev');
 
         /* Shekhar's - Route */
-        @include('admin.php');
+        @include ('admin.php');
     });
 
     Route::get('/data-export', [DataExportController::class, 'dataExport'])->name('data-export');
     Route::get('password/set/{token}', [PasswordSetController::class, 'showSetPasswordForm'])->name('show-set-password-form');
     Route::post('password/set', [PasswordSetController::class, 'setPassword'])->name('set-password');
-
 
     //Crom API
     Route::get('/immobilized-vehicles', [CronController::class, 'immobilizedVehicles'])->name('immobilized-vehicles');
