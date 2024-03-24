@@ -31,7 +31,7 @@ class TransactionMgmtController extends AdminAppController
                 $payStatus = $transaction['result']['payStatus'];
                 $payModes = $transaction['result']['payModes'];
                 $payTypes = $transaction['result']['payTypes'];
-                return view($this->viewPath . '/index', compact('permission', 'transactions','count', 'payTypes', 'payModes', 'payStatus'));
+                return view($this->viewPath . '/index', compact('permission', 'transactions', 'count', 'payTypes', 'payModes', 'payStatus'));
             } else {
                 return view('admin.401.401');
             }
@@ -43,6 +43,6 @@ class TransactionMgmtController extends AdminAppController
             ];
             return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
         }
-       
+
     }
 }

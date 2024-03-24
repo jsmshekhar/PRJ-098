@@ -71,7 +71,7 @@
             $("#searchForm").submit();
         }
 
-        function exportData(refTableId) {
+        function exportData(refTableId, hubSlug = "") {
             var formData = $('#searchForm').serializeArray();
             formData.push({
                 name: 'is_export',
@@ -80,6 +80,10 @@
             formData.push({
                 name: 'ref_table_id',
                 value: refTableId
+            });
+            formData.push({
+                name: 'hub_slug',
+                value: hubSlug
             });
             window.open("{{ route('data-export') }}?" + $.param(formData), '_blank');
         }

@@ -15,7 +15,8 @@
  <!-- Plugins js-->
  <script src="{{ asset('public/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js') }}">
  </script>
- <script src="{{ asset('public/assets/libs/admin-resources/jquery.vectormap/maps/jquery-jvectormap-world-mill-en.js') }}">
+ <script
+     src="{{ asset('public/assets/libs/admin-resources/jquery.vectormap/maps/jquery-jvectormap-world-mill-en.js') }}">
  </script>
  <!-- dashboard init -->
  {{-- <script src="{{ asset('public/assets/js/pages/dashboard.init.js') }}"></script> --}}
@@ -218,7 +219,11 @@
 
                      var reader = new FileReader();
                      reader.onload = function(e) {
-                         var html = "<div class='uploadImgBox'><div style='background-image: url(" + e.target.result + ")' data-number='" + $(".uploadImgClose").length + "' data-file='" + f.name + "' class='img-bg'><div class='uploadImgClose'></div></div></div>";
+                         var html =
+                             "<div class='uploadImgBox'><div style='background-image: url(" +
+                             e.target.result + ")' data-number='" + $(".uploadImgClose")
+                             .length + "' data-file='" + f.name +
+                             "' class='img-bg'><div class='uploadImgClose'></div></div></div>";
                          imgWrap.append(html);
                          iterator++;
 
@@ -264,7 +269,7 @@
          var token = $("meta[name='csrf-token']").attr("content");
          $.ajax({
              type: 'get',
-             url: '{{ route("mobilized-immobilized-ev") }}',
+             url: '{{ route('mobilized-immobilized-ev') }}',
              data: {
                  productId: productId,
                  terminalId: terminalId,
@@ -293,7 +298,7 @@
          var token = $("meta[name='csrf-token']").attr("content");
          $.ajax({
              type: 'get',
-             url: '{{ route("mobilized-immobilized-ev") }}',
+             url: '{{ route('mobilized-immobilized-ev') }}',
              data: {
                  productId: productId,
                  terminalId: terminalId,

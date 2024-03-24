@@ -350,8 +350,7 @@ class Product extends Model
     {
         try {
             $auth = Auth::user();
-            $vehicles =
-            RiderOrder::leftJoin('products', 'products.product_id', '=', 'rider_orders.mapped_vehicle_id')
+            $vehicles = RiderOrder::leftJoin('products', 'products.product_id', '=', 'rider_orders.mapped_vehicle_id')
                 ->leftJoin('riders', 'riders.rider_id', '=', 'rider_orders.rider_id')
                 ->join('hubs', 'hubs.hub_id', '=', 'products.hub_id')
                 ->where(['rider_orders.status_id' => 1, 'riders.status_id' => 1, 'products.status_id' => 4])

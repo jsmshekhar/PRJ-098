@@ -1,4 +1,5 @@
-<div class="modal fade" id="hubModelForm" role="dialog" aria-labelledby="modalLabel" data-keyboard="false" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade" id="hubModelForm" role="dialog" aria-labelledby="modalLabel" data-keyboard="false"
+    data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modelWidth">
         <div class="modal-content">
             <div class="modal-header">
@@ -14,20 +15,24 @@
                             <input type="hidden" class="form-control" name="latitude" id="latitude">
                             <input type="hidden" class="form-control" name="longitude" id="longitude">
                             <div class="form-group mb-2">
-                                <label for="hubid" class="col-form-label">Hub Id <sup class="compulsayField">*</sup> <span class="spanColor hubid_error"></span></label>
-                                <input type="text" name="hubId" class="form-control" id="hubId" value="{{ $hubId }}">
+                                <label for="hubid" class="col-form-label">Hub Id <sup class="compulsayField">*</sup>
+                                    <span class="spanColor hubid_error"></span></label>
+                                <input type="text" name="hubId" class="form-control" id="hubId"
+                                    value="{{ $hubId }}">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group mb-2">
-                                <label for="hublimit" class="col-form-label">HUB Capacity &nbsp;<span class="spanColor onlyDigit_error" id="hub_errors"></span></label>
+                                <label for="hublimit" class="col-form-label">HUB Capacity &nbsp;<span
+                                        class="spanColor onlyDigit_error" id="hub_errors"></span></label>
                                 <input type="text" name="hub_limit" class="form-control onlyDigit" id="hub_limit">
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group mb-2">
                                 <label for="address serach" class="col-form-label">Search Address</label>
-                                <input id="autocomplete" name="full_address" placeholder="Enter your address" type="text" class="floating-input form-control" autocomplete="off">
+                                <input id="autocomplete" name="full_address" placeholder="Enter your address"
+                                    type="text" class="floating-input form-control" autocomplete="off">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -155,7 +160,9 @@
     });
 </script>
 <!-- // Place search -->
-<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLR_PLACE_KEY') }}&libraries=places&language=en&callback=initialize" type="text/javascript"></script>
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLR_PLACE_KEY') }}&libraries=places&language=en&callback=initialize"
+    type="text/javascript"></script>
 
 <script>
     $(document).ready(function() {
