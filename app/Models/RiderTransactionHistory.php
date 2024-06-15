@@ -56,6 +56,9 @@ class RiderTransactionHistory extends Model
                 case 3:
                     return 'UPI';
                     break;
+                case 4:
+                    return 'COD';
+                    break;
                 default:
                     return "";
             }
@@ -81,6 +84,9 @@ class RiderTransactionHistory extends Model
                 case 4:
                     return 'Rejected';
                     break;
+                case 5:
+                    return 'Success';
+                    break;
                 default:
                     return "Pending";
             }
@@ -90,6 +96,7 @@ class RiderTransactionHistory extends Model
     public function getTransactionHistory($request)
     {
         try {
+            $userSlug = $request->user_slug ?? null;
             $auth = Auth::user();
             $transactions = RiderTransactionHistory::leftJoin('riders', 'rider_transaction_histories.rider_id', 'riders.rider_id')
                 ->select(
@@ -104,7 +111,7 @@ class RiderTransactionHistory extends Model
                             WHEN rider_transaction_histories.transaction_mode = 1 THEN "Card"
                             WHEN rider_transaction_histories.transaction_mode = 2 THEN "Wallet"
                             WHEN rider_transaction_histories.transaction_mode = 3 THEN "UPI"
-                            WHEN rider_transaction_histories.transaction_mode = 4 THEN "Net Banking"
+                            WHEN rider_transaction_histories.transaction_mode = 4 THEN "COD"
                             ELSE ""
                         END as transaction_mode'),
                     DB::raw('CASE
@@ -112,10 +119,16 @@ class RiderTransactionHistory extends Model
                             WHEN rider_transaction_histories.payment_status = 2 THEN "Pending"
                             WHEN rider_transaction_histories.payment_status = 3 THEN "Failed"
                             WHEN rider_transaction_histories.payment_status = 4 THEN "Rejected"
+                            WHEN rider_transaction_histories.payment_status = 5 THEN "Success"
                             ELSE ""
                         END as payment_status')
                 );
 
+            if (!empty($userSlug)) {
+                $userId = User::where('slug', $userSlug)->whereNull('deleted_at')->value('user_id');
+                $transactions = $transactions->join('transaction_collected_ammounts AS tca', 'tca.transaction_id', 'rider_transaction_histories.rider_transaction_id');
+                $transactions = $transactions->where('tca.user_id', $userId);
+            }
             if (isset($request->is_search) && $request->is_search == 1) {
                 if (isset($request->tr_id) && !empty($request->tr_id)) {
                     $transactions = $transactions->where('rider_transaction_histories.transaction_id', 'LIKE', "%{$request->tr_id}%");

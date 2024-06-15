@@ -2,24 +2,22 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use App\Models\Rider;
-use Illuminate\Http\Response;
 use App\Traits\UploadsImageTrait;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Lang;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
 
 class RiderOrder extends Model
 {
     use HasFactory, SoftDeletes, UploadsImageTrait;
     protected $table = "rider_orders";
     protected $primaryKey = 'order_id';
-
-
 
     public function rider()
     {
@@ -37,9 +35,8 @@ class RiderOrder extends Model
     }
 
     protected $appends = [
-        'payment_status_display'
+        'payment_status_display',
     ];
-
 
     public function getPaymentStatusDisplayAttribute()
     {
@@ -59,27 +56,30 @@ class RiderOrder extends Model
                 case 4:
                     return 'Rejected';
                     break;
+                case 5:
+                    return 'COD';
+                    break;
                 default:
                     return "Pending";
             }
         }
     }
 
-
     public function assignEv($request)
     {
         try {
             $orderSlug = $request->order_slug ?? null;
             $subscriptionValidity = $request->subscription_validity ?? null;
-            $orderDetails = RiderOrder::where(['slug' => $orderSlug, 'status_id' => config('constants.ORDER_STATUS.PENDING'), 'payment_status' => config('constants.PAYMENT_STATUS.SUCCESS')])->whereNull('deleted_at')->first();
+            $orderDetails = RiderOrder::where(['slug' => $orderSlug, 'status_id' => config('constants.ORDER_STATUS.PENDING')])->whereNull('deleted_at')->first();
             if (!is_null($orderDetails)) {
                 $riderId = $orderDetails->rider_id ?? null;
                 $orderId = $orderDetails->order_id ?? null;
                 $evSlug = $request->mapped_ev ?? null;
+                $transactionMode = $orderDetails->transaction_mode ?? null;
                 $rider = Rider::where(['rider_id' => $riderId])->whereNull('deleted_at')->first();
                 $product = Product::where(['slug' => $evSlug])->where('status_id', config('constants.ACTIVE_STATUS'))->whereNull('deleted_at')->first();
                 if (!is_null($rider) && !is_null($product)) {
-                    $rentCycle = (int)$orderDetails->subscription_days;
+                    $rentCycle = (int) $orderDetails->subscription_days;
                     $assignDate = NOW();
                     $currentDate = Carbon::now();
                     $toDate = $currentDate->addDays($rentCycle);
@@ -136,6 +136,41 @@ class RiderOrder extends Model
                         ];
                         RiderOrderPayment::insert($riderOrderPayments);
                         Product::where('slug', $evSlug)->update(['status_id' => config('constants.EV_STATUS.ASSIGNED'), 'ev_status' => 1]);
+
+                        if ($transactionMode == 4) {
+                            $orderTransaction = [
+                                "rider_id" => $riderId,
+                                "order_id" => $orderId,
+                                "slug" => slug(),
+                                "order_slug" => $orderSlug,
+                                "transaction_ammount" => $request->paying_ammount ?? 0,
+                                "transaction_type" => 1, //Credited to our portal
+                                'transaction_mode' => $transactionMode,
+
+                                'status_id' => 5, // COD
+                                'payment_status' => 5, // COD
+                                'merchant_transaction_id' => null,
+                                'transaction_id' => "COD_" . slug(),
+                                'transaction_payload' => null,
+                                'transaction_notes' => 'Cash on delivery',
+                                "created_by" => $riderId,
+                                "created_at" => NOW(),
+                            ];
+                            $transactionHistoryId = DB::table('rider_transaction_histories')->insertGetId($orderTransaction);
+
+                            $collectedAmmountDetails = [
+                                "slug" => slug(),
+                                "rider_id" => $riderId,
+                                "order_id" => $orderId,
+                                "transaction_id" => $transactionHistoryId,
+                                "user_id" => Auth::id(),
+                                "ammount" => $request->paying_ammount ?? 0,
+                                'status_id' => 1,
+                                "created_by" => Auth::id(),
+                                "created_at" => NOW(),
+                            ];
+                            DB::table('transaction_collected_ammounts')->insertGetId($collectedAmmountDetails);
+                        }
                         $response = [
                             'status' => Response::HTTP_OK,
                             'message' => Lang::get('messages.EV_ASSIGNED'),

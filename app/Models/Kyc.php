@@ -484,27 +484,29 @@ class Kyc extends Model
                 $paymentStatus = (int) $request->payment_status;
                 $transactionMode = (int) $request->transaction_mode;
                 $orderId = (int) $order->order_id;
-                $status = RiderOrder::where('rider_id', $riderId)->where('slug', $orderCode)->update(['payment_status' => $paymentStatus]);
+                $status = RiderOrder::where('rider_id', $riderId)->where('slug', $orderCode)->update(['payment_status' => $paymentStatus, 'transaction_mode' => $transactionMode]);
                 if ($status) {
-                    $orderTransaction = [
-                        "rider_id" => $riderId,
-                        "order_id" => $orderId,
-                        "slug" => slug(),
-                        "order_slug" => $orderSlug,
-                        "transaction_ammount" => $order->product_price,
-                        "transaction_type" => 1, //Credited to our portal
-                        'transaction_mode' => $transactionMode,
+                    if ($transactionMode != 4) {
+                        $orderTransaction = [
+                            "rider_id" => $riderId,
+                            "order_id" => $orderId,
+                            "slug" => slug(),
+                            "order_slug" => $orderSlug,
+                            "transaction_ammount" => $order->product_price,
+                            "transaction_type" => 1, //Credited to our portal
+                            'transaction_mode' => $transactionMode,
 
-                        'status_id' => $paymentStatus,
-                        'payment_status' => $paymentStatus,
-                        'merchant_transaction_id' => $request->merchant_transaction_id ?? null,
-                        'transaction_id' => $request->transaction_id ?? null,
-                        'transaction_payload' => $request->transaction_payload ?? null,
-                        'transaction_notes' => 'Status update from Mobile APP',
-                        "created_by" => $riderId,
-                        "created_at" => NOW(),
-                    ];
-                    DB::table('rider_transaction_histories')->insertGetId($orderTransaction);
+                            'status_id' => $paymentStatus,
+                            'payment_status' => $paymentStatus,
+                            'merchant_transaction_id' => $request->merchant_transaction_id ?? null,
+                            'transaction_id' => $request->transaction_id ?? null,
+                            'transaction_payload' => $request->transaction_payload ?? null,
+                            'transaction_notes' => 'Status update from Mobile APP',
+                            "created_by" => $riderId,
+                            "created_at" => NOW(),
+                        ];
+                        DB::table('rider_transaction_histories')->insertGetId($orderTransaction);
+                    }
                     $result = ['order_code' => $orderSlug];
                     return successResponse(Response::HTTP_OK, Lang::get('messages.UPDATE'), $result);
                 }

@@ -16,6 +16,7 @@ class CreateRiderOrdersTable extends Migration
         Schema::create('rider_orders', function (Blueprint $table) {
             $table->bigIncrements('order_id');
             $table->bigInteger('rider_id')->nullable()->comment('Customer Id');
+            $table->tinyInteger('transaction_mode')->default(0)->comment('1 => Card, 2 => Wallet, 3 => UPI, 4 => COD');
             $table->string('slug', 20)->nullable();
 
             $table->unsignedBigInteger('vehicle_id')->nullable()->comment('Product Primary Key');

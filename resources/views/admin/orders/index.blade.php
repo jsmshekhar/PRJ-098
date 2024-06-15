@@ -120,6 +120,7 @@
                                                 <th>Order Quantity</th>
                                                 <th>Order Amount</th>
                                                 <th>Payment Status</th>
+                                                <th>Payment Mode</th>
                                                 <th>Assign Ev</th>
                                             </tr>
                                         </thead>
@@ -133,7 +134,8 @@
                                                     @php
                                                         $qty = 0;
                                                         foreach (json_decode($order->accessories_items) as $items) {
-                                                            $accessoriesItems[] = $items->quantity . '-' . ucwords($items->title);
+                                                            $accessoriesItems[] =
+                                                                $items->quantity . '-' . ucwords($items->title);
                                                             $qty = $qty + $items->quantity;
                                                         }
                                                         sort($accessoriesItems);
@@ -167,8 +169,12 @@
                                                         @if (!is_null($order->accessories_items))
                                                             @php
                                                                 $qty = 0;
-                                                                foreach (json_decode($order->accessories_items) as $items) {
-                                                                    $accessoriesItems[] = $items->quantity . '-' . ucwords($items->title);
+                                                                foreach (
+                                                                    json_decode($order->accessories_items)
+                                                                    as $items
+                                                                ) {
+                                                                    $accessoriesItems[] =
+                                                                        $items->quantity . '-' . ucwords($items->title);
                                                                     $qty = $qty + $items->quantity;
                                                                 }
                                                                 sort($accessoriesItems);
@@ -179,11 +185,12 @@
                                                     <td>{{ $qty + 1 }}</td>
                                                     <td>{{ $order->ordered_ammount }}</td>
                                                     <td>{{ $order->payment_status_display }}</td>
+                                                    <td>{{ $order->transaction_mode == 4 ? "COD" : "" }}</td>
                                                     <td>
-                                                        @if ($order->payment_status == 1)
+                                                        @if ($order->payment_status == 1 || $order->payment_status == 5)
                                                             <a href="javascript:void(0)"
                                                                 class="btn btn-success waves-effect waves-light"
-                                                                onclick="showModal('{{ $order->rider->customer_id }}', '{{ $order->rider->profile_type }}', '{{ $order->slug }}');">Assign</a>
+                                                                onclick="showModal('{{ $order->rider->customer_id }}', '{{ $order->rider->profile_type }}', '{{ $order->slug }}', '{{ $order->transaction_mode }}', '{{ $order->ordered_ammount }}');">Assign</a>
                                                         @else
                                                             <a href="javascript:void(0)"
                                                                 class="btn btn-secondary disabled waves-effect waves-light">Assign</a>
@@ -228,6 +235,25 @@
                                     <label for="mapped_ev" class="col-form-label">Map EV</label>
                                     {{ Form::select('mapped_ev', $evList, null, ['class' => 'form-control selectBasic', 'placeholder' => 'Select Ev', 'id' => 'mapped_ev']) }}
                                     <span class="spanColor mapped_ev_error"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group mb-2">
+                                    <label for="order_ammount" class="col-form-label">Ordered Ammout</label>
+                                    <input name="order_ammount" type="number" class="floating-input form-control"
+                                        autocomplete="off" id="order_ammount" readonly>
+                                    <span class="spanColor order_ammount_error"></span>
+                                </div>
+                            </div>
+                            <div class="isCod">
+                                <div class="col-md-12">
+                                    <div class="form-group mb-2">
+                                        <label for="paying_ammount" class="col-form-label">Paying Ammount</label>
+                                        <input name="paying_ammount" type="number" class="floating-input form-control"
+                                            autocomplete="off" id="paying_ammount">
+                                        <span class="spanColor paying_ammount_error"></span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="isVendor">
@@ -277,13 +303,14 @@
                             </div>
                         </div>
                         <input type="hidden" name="order_slug" id="orderSlug">
+                        <input type="hidden" name="transaction_mode" id="transactionMode">
                     </form>
                 </div>
                 <div class="modal-footer d-flex justify-content-between">
                     <button type="button" class="btn btn-outline-danger waves-effect waves-light"
                         data-bs-dismiss="modal">Close</button>
                     <span class=" text-success d-block" id="message"></span>
-                    <button type="button" id="submitAssignEvForm" class="btn btn-success waves-effect waves-light">Save
+                    <button type="button" id="submitAssignEvForm" class="btn btn-success waves-effect waves-light">Assign
                     </button>
 
                 </div>
@@ -304,7 +331,6 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Customer Id</label>
-                                <input type="hidden" class="form-control" name="orderSlug" id="orderSlug">
                                 <input class="form-control readOnlyClass" type="text" id="customerIds" readonly>
                             </div>
                             <div class="col-md-6 mb-3">
@@ -346,11 +372,19 @@
 
     @section('js')
         <script type="text/javascript">
-            $('.isVendor').hide();
+            // $('.isVendor').hide();
 
-            function showModal(customerId = "", customerType = "", slug = "") {
-                if (customerType == 1) {
+            function showModal(customerId = "", customerType = "", slug = "", transactionMode = 0, orderedAmmount = 0) {
+                $('.isVendor').hide();
+                $('.isCod').hide();
+                $('#transactionMode').val(0);
+                if (customerType == 4) {
                     $('.isVendor').show();
+                }
+                $('#order_ammount').val(orderedAmmount);
+                if (transactionMode == 4) {
+                    $('.isCod').show();
+                    $('#transactionMode').val(4);
                 }
                 $('#customerSlug').text("Customer Id - CUS" + customerId);
                 $('#orderSlug').val(slug);
@@ -361,11 +395,37 @@
                 $('#submitAssignEvForm').click(function(e) {
                     e.preventDefault();
                     var mappedEv = $('#mapped_ev').val();
+                    var transactionMode = $('#transactionMode').val();
                     if (mappedEv == "") {
                         $(".mapped_ev_error").html('This field is required!');
                         $("input#mapped_ev").focus();
                         return false;
+                    } else {
+                        $(".mapped_ev_error").html('');
                     }
+
+                    if (transactionMode == 4) {
+                        var payingAmmount = parseInt($('#paying_ammount').val());
+                        var payAmmount = $('#paying_ammount').val();
+                        var orderAmmount = parseInt($('#order_ammount').val());
+
+                        if (payAmmount == 0 || payAmmount == "" || payAmmount == "NaN") {
+                            $(".paying_ammount_error").html('This field is required!');
+                            $("input#paying_ammount").focus();
+                            return false;
+                        } else {
+                            $(".paying_ammount_error").html();
+                        }
+                        if (payingAmmount > orderAmmount) {
+                            $(".paying_ammount_error").html(
+                                'Paying amount should be less than or equal to ordered amount!');
+                            $("input#paying_ammount").focus();
+                            return false;
+                        } else {
+                            $(".paying_ammount_error").html();
+                        }
+                    }
+
                     $('#submitAssignEvForm').prop('disabled', true);
                     $('#submitAssignEvForm').html('Please wait...')
                     var formDatas = new FormData(document.getElementById('assignEvsForm'));
