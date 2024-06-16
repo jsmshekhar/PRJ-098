@@ -309,7 +309,7 @@ class ApiModel extends Model
                 ->select('ro.slug as order_code', 'p.slug as vehicle_slug')
                 ->where('ro.rider_id', '=', $riderId)
                 ->where('ro.status_id', '=', config('constants.ORDER_STATUS.ASSIGNED'))
-                ->where('ro.payment_status', '=', config('constants.PAYMENT_STATUS.SUCCESS'))
+                ->whereIn('ro.payment_status', [config('constants.PAYMENT_STATUS.SUCCESS'), config('constants.PAYMENT_STATUS.COD')])
                 ->orderBy('ro.order_id', 'DESC')
             // ->whereDate('ro.subscription_validity', '>=', NOW())
                 ->first();
@@ -347,7 +347,7 @@ class ApiModel extends Model
                     'th.transaction_ammount',
                     'th.created_at',
                     DB::raw('CASE th.transaction_type WHEN 1 THEN "Debit" WHEN 2 THEN "Credit" ELSE "" END as transaction_type'),
-                    DB::raw('CASE th.transaction_mode WHEN 1 THEN "Card" WHEN 2 THEN "Wallet" WHEN 3 THEN "UPI" WHEN 4 THEN "Net Banking" END as transaction_mode'),
+                    DB::raw('CASE th.transaction_mode WHEN 1 THEN "Card" WHEN 2 THEN "Wallet" WHEN 3 THEN "UPI" WHEN 4 THEN "COD" END as transaction_mode'),
                 )->get();
             if (!is_null($records)) {
                 return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), $records);

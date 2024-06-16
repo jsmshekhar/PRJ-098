@@ -19,7 +19,7 @@ class OrderPolicy
         //
     }
 
-    public function view_cviewomplaint()
+    public function view()
     {
         $permission = User::getPermissions();
         if (in_array('view', $permission)) {
