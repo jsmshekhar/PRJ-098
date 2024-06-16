@@ -111,8 +111,8 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('assiegn_request', 'App\Policies\HubPartAccessoriesPolicy@assiegn_request');
 
         //Order Policies
-        Gate::define('view', 'App\Policies\HubPartAccessoriesPolicy@view');
-        Gate::define('assign_ev', 'App\Policies\HubPartAccessoriesPolicy@assign_ev');
+        Gate::define('view', 'App\Policies\OrderPolicy@view');
+        Gate::define('assign_ev', 'App\Policies\OrderPolicy@assign_ev');
 
         //Transaction Policies
         Gate::define('view', 'App\Policies\TransactionPolicy@view');

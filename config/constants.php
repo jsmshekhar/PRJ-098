@@ -104,6 +104,7 @@ return [
         'PENDING' => 2,
         'FAILED' => 3,
         'REJECTED' => 4,
+        'COD' => 5,
     ],
 
     'VEHICLE_STATUS' => [
