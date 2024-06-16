@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\ApiModel;
 use App\Models\Kyc;
 use App\Models\Rider;
-use App\Models\ApiModel;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Validation\Rule;
 
 class KycApiController extends ApiController
 {
@@ -54,20 +54,20 @@ class KycApiController extends ApiController
             $result = $this->keyModel->vehiclePreferences($request);
             return finalResponse($result);
             /*$requiredFields = [
-                'profile_category' => [
-                    'required',
-                    Rule::in([config('constants.PROFILE_CATEGORIES.INDIVIDUAL'), config('constants.PROFILE_CATEGORIES.VENDER'),  config('constants.PROFILE_CATEGORIES.STUDENT'), config('constants.PROFILE_CATEGORIES.CORPORATE')]),
-                ],
-            ];
-            $messages = [
-                'phone.profile_category' => 'The profile type is required.',
-            ];
-            if (!$this->checkValidation($request, $requiredFields, $messages)) {
-                return validationResponse(Response::HTTP_UNPROCESSABLE_ENTITY, Lang::get('messages.VALIDATION_ERROR'), $this->errorMessage);
-            } else {
-                $result = $this->keyModel->vehiclePreferences($request);
-                return finalResponse($result);
-            }*/
+        'profile_category' => [
+        'required',
+        Rule::in([config('constants.PROFILE_CATEGORIES.INDIVIDUAL'), config('constants.PROFILE_CATEGORIES.VENDER'),  config('constants.PROFILE_CATEGORIES.STUDENT'), config('constants.PROFILE_CATEGORIES.CORPORATE')]),
+        ],
+        ];
+        $messages = [
+        'phone.profile_category' => 'The profile type is required.',
+        ];
+        if (!$this->checkValidation($request, $requiredFields, $messages)) {
+        return validationResponse(Response::HTTP_UNPROCESSABLE_ENTITY, Lang::get('messages.VALIDATION_ERROR'), $this->errorMessage);
+        } else {
+        $result = $this->keyModel->vehiclePreferences($request);
+        return finalResponse($result);
+        }*/
         } catch (\Throwable $ex) {
             $result = [
                 'line' => $ex->getLine(),
@@ -189,7 +189,7 @@ class KycApiController extends ApiController
             4 - Bank Details
 
             AccountType - 1-Saving 2-Current
-            */
+             */
             $stepOne = 1;
             $stepTwo = 2;
             $stepThree = 3;
@@ -204,7 +204,7 @@ class KycApiController extends ApiController
                 ],
             ];
 
-            $step = (int)$request->step;
+            $step = (int) $request->step;
             if ($step == $stepOne) {
                 $requiredFields['profile_image'] = 'required';
             }
@@ -222,33 +222,33 @@ class KycApiController extends ApiController
             if ($step == $stepThree) {
 
                 /*if ($profileType == 1) { //Corporate
-                    $requiredFields['pan_card.front_image'] = 'required';
-                    $requiredFields['aadhar_card.front_image'] = 'required';
+                $requiredFields['pan_card.front_image'] = 'required';
+                $requiredFields['aadhar_card.front_image'] = 'required';
                 } elseif ($profileType == 2) { //Individual
-                    $requiredFields['pan_card.front_image'] = 'required';
-                    $requiredFields['aadhar_card.front_image'] = 'required';
-                    $requiredFields['electicity_bill.front_image'] = 'required';
+                $requiredFields['pan_card.front_image'] = 'required';
+                $requiredFields['aadhar_card.front_image'] = 'required';
+                $requiredFields['electicity_bill.front_image'] = 'required';
                 } elseif ($profileType == 3) { //Student
-                    $requiredFields['pan_card.front_image'] = 'required';
-                    $requiredFields['aadhar_card.front_image'] = 'required';
+                $requiredFields['pan_card.front_image'] = 'required';
+                $requiredFields['aadhar_card.front_image'] = 'required';
                 } elseif ($profileType == 4) { //Vender
-                    $requiredFields['pan_card.front_image'] = 'required';
-                    $requiredFields['aadhar_card.front_image'] = 'required';
+                $requiredFields['pan_card.front_image'] = 'required';
+                $requiredFields['aadhar_card.front_image'] = 'required';
                 }
 
                 $messages = [
-                    'pan_card.front_image.required' => 'The pan card front image is required.',
-                    'aadhar_card.front_image.required' => 'The aadhar card front image is required.',
-                    'driving_licence.front_image.required' => 'The driving licence front image is required.',
-                    'electicity_bill.front_image.required' => 'The electicity bill is required.',
-                    'credit_score.front_image.required' => 'The credit score image is required.',
+                'pan_card.front_image.required' => 'The pan card front image is required.',
+                'aadhar_card.front_image.required' => 'The aadhar card front image is required.',
+                'driving_licence.front_image.required' => 'The driving licence front image is required.',
+                'electicity_bill.front_image.required' => 'The electicity bill is required.',
+                'credit_score.front_image.required' => 'The credit score image is required.',
                 ];
-                */
+                 */
                 $requiredFields['documents'] = 'required';
             }
 
             if ($step == $stepFour) {
-                $requiredFields['account_type'] = ['required', Rule::in([1, 2]),];
+                $requiredFields['account_type'] = ['required', Rule::in([1, 2])];
                 $requiredFields['account_name'] = 'required';
                 $requiredFields['account_no'] = 'required';
                 $requiredFields['ifsc_code'] = 'required';
@@ -302,14 +302,18 @@ class KycApiController extends ApiController
     public function updatePaymentStatus(Request $request)
     {
         try {
+            /*
+            Payment status => 1 => Succes, 2 => Pending, 3 => Failed, 4 => Rejected, 5 => COD
+            Transaction mode=>  1 => Card, 2 => Wallet, 3 => UPI, 4 => COD
+             */
             $requiredFields = [
                 'payment_status' => [
                     'required',
-                    Rule::in([1, 2, 3, 4]),
+                    Rule::in([1, 2, 3, 4, 5]),
                 ],
                 'transaction_mode' => [
                     'required',
-                    Rule::in([1, 2, 3]),
+                    Rule::in([1, 2, 3, 4]),
                 ],
                 'order_code' => "required",
             ];

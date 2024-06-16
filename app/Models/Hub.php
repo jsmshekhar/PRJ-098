@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Response;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
-use App\Models\Product;
+
 class Hub extends Model
 {
     use HasFactory, SoftDeletes;
@@ -28,7 +29,7 @@ class Hub extends Model
             if (isset($request->per_page) && $request->per_page > 0) {
                 $perPage = $request->per_page;
             }
-            $hubs = Hub::where('hub_id', $auth->hub_id)->orWhere('created_by',$auth->user_id)->whereNull('deleted_at');
+            $hubs = Hub::where('hub_id', $auth->hub_id)->orWhere('created_by', $auth->user_id)->whereNull('deleted_at');
             if (isset($request->is_search) && $request->is_search == 1) {
                 if (isset($request->hub_id) && !empty($request->hub_id)) {
                     $hubs = $hubs->where('hubId', 'LIKE', "%{$request->hub_id}%");
@@ -45,7 +46,7 @@ class Hub extends Model
             }
 
             $hubs = $hubs->orderBy('created_at', 'DESC')->paginate($perPage);
-            if(count($hubs)>0){
+            if (count($hubs) > 0) {
                 foreach ($hubs as $key => $value) {
                     $value->vehicle_count = DB::table('products')->where('hub_id', $value->hub_id)->count();
                 }
@@ -55,8 +56,8 @@ class Hub extends Model
             if ($lastHub) {
                 $length = 2;
                 $lastId = substr($lastHub->hubId, $length);
-                $hubLast = $lastId ? (int)$lastId + 1 : 101;
-                $hubId = (string)$hubLast;
+                $hubLast = $lastId ? (int) $lastId + 1 : 101;
+                $hubId = (string) $hubLast;
             }
             if (count($hubs) > 0) {
                 return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => $hubs, 'hubId' => $hubId]);
@@ -105,52 +106,52 @@ class Hub extends Model
             $empCount = User::where('hub_id', $hub->hub_id)->whereNull('deleted_at')->count();
             $vehicleCount = Product::where('hub_id', $hub->hub_id)->whereNull('deleted_at')->count();
             $accessoriesinHub = array_unique(HubPartAccessories::where('hub_id', $hub->hub_id)->pluck('accessories_category_id')->toArray());
-            if($param == 'vehicle'){
+            if ($param == 'vehicle') {
                 $vehicles = Product::leftJoin('rider_orders', function ($join) {
                     $join->on('rider_orders.mapped_vehicle_id', '=', 'products.product_id');
                     $join->where('rider_orders.status_id', 1);
                 })
-                ->leftJoin('riders', function ($join) {
-                    $join->on('riders.rider_id', '=', 'rider_orders.rider_id');
-                    $join->where('riders.status_id', 1);
-                })
-                ->leftJoin('ev_types as et', 'products.ev_type_id', '=', 'et.ev_type_id')
-                ->where('products.hub_id', $hub->hub_id)
-                ->whereNull('products.deleted_at')
-                ->select(
-                    'products.*',
-                    'et.ev_type_name',
-                    'et.slug as ev_type_slug',
-                    'riders.customer_id',
-                    'rider_orders.payment_status',
-                    'rider_orders.status_id as statusid',
-                    'rider_orders.assigned_date',
-                    'rider_orders.cluster_manager',
-                    'rider_orders.tl_name',
-                    'rider_orders.client_name',
-                    'rider_orders.client_address',
-                    'rider_orders.slug as order_slug',
-                    'riders.kyc_status',
-                    DB::raw('CASE 
-                            WHEN riders.kyc_status = 1 THEN "Verified" 
-                            WHEN riders.kyc_status = 2 THEN "Pending" 
+                    ->leftJoin('riders', function ($join) {
+                        $join->on('riders.rider_id', '=', 'rider_orders.rider_id');
+                        $join->where('riders.status_id', 1);
+                    })
+                    ->leftJoin('ev_types as et', 'products.ev_type_id', '=', 'et.ev_type_id')
+                    ->where('products.hub_id', $hub->hub_id)
+                    ->whereNull('products.deleted_at')
+                    ->select(
+                        'products.*',
+                        'et.ev_type_name',
+                        'et.slug as ev_type_slug',
+                        'riders.customer_id',
+                        'rider_orders.payment_status',
+                        'rider_orders.status_id as statusid',
+                        'rider_orders.assigned_date',
+                        'rider_orders.cluster_manager',
+                        'rider_orders.tl_name',
+                        'rider_orders.client_name',
+                        'rider_orders.client_address',
+                        'rider_orders.slug as order_slug',
+                        'riders.kyc_status',
+                        DB::raw('CASE
+                            WHEN riders.kyc_status = 1 THEN "Verified"
+                            WHEN riders.kyc_status = 2 THEN "Pending"
                             WHEN riders.kyc_status = 3 THEN "Red Flag"
-                            ELSE "" 
+                            ELSE ""
                         END as kycStatus'),
-                    DB::raw('CASE 
-                            WHEN products.ev_category_id = 1 THEN "Two Wheeler" 
-                            WHEN products.ev_category_id = 2 THEN "Three Wheeler" 
-                            ELSE "" 
+                        DB::raw('CASE
+                            WHEN products.ev_category_id = 1 THEN "Two Wheeler"
+                            WHEN products.ev_category_id = 2 THEN "Three Wheeler"
+                            ELSE ""
                         END as ev_category_name'),
-                    DB::raw('CASE 
-                            WHEN products.profile_category = 1 THEN "Corporate" 
-                            WHEN products.profile_category = 2 THEN "Individual" 
-                            WHEN products.profile_category = 3 THEN "Student" 
-                            WHEN products.profile_category = 4 THEN "Vendor" 
-                            ELSE "" 
+                        DB::raw('CASE
+                            WHEN products.profile_category = 1 THEN "Corporate"
+                            WHEN products.profile_category = 2 THEN "Individual"
+                            WHEN products.profile_category = 3 THEN "Student"
+                            WHEN products.profile_category = 4 THEN "Vendor"
+                            ELSE ""
                         END as profile_category_name')
-                );
-              
+                    );
+
                 if (isset($request->is_search) && $request->is_search == 1) {
                     if (isset($request->ev) && !empty($request->ev)) {
                         $vehicles = $vehicles->where('products.ev_number', 'LIKE', "%{$request->ev}%");
@@ -173,7 +174,7 @@ class Hub extends Model
                     if (isset($request->kyc) && !empty($request->kyc)) {
                         $vehicles = $vehicles->where('riders.kyc_status', 'LIKE', $request->kyc);
                     }
-                    if (isset($request->gps) && !empty($request->gps)&& $request->gps == 1) {
+                    if (isset($request->gps) && !empty($request->gps) && $request->gps == 1) {
                         $vehicles = $vehicles->where('products.gps_emei_number', '!=', '');
                     }
                     if (isset($request->gps) && !empty($request->gps) && $request->gps == 2) {
@@ -181,7 +182,7 @@ class Hub extends Model
                     }
                 }
                 $vehicles = $vehicles->orderBy('products.created_at', 'DESC')->paginate($perPage);
-                
+
                 $ev_types = EvType::orderBy('created_at', 'DESC')->get();
                 $ev_categories = config('constants.EV_CATEGORIES');
                 $rent_cycles = config('constants.RENT_CYCLE');
@@ -196,19 +197,25 @@ class Hub extends Model
                 $count = Product::where('hub_id', $hub->hub_id)->whereNull('deleted_at')->count();
             }
             if ($param == 'employee') {
-                $employees = User::select('users.*', 'roles.name as role_name')
+                $employees = User::select(
+                    'users.*',
+                    'roles.name as role_name',
+                    DB::raw('SUM(tca.ammount) as total_collected')
+                )
                     ->where('users.hub_id', $hub->hub_id)
                     ->where('users.role_id', '!=', 0)
                     ->whereNull('users.deleted_at')
                     ->orderBy('users.created_at', 'DESC')
                     ->leftJoin('roles', 'users.role_id', '=', 'roles.role_id')
+                    ->leftJoin('transaction_collected_ammounts AS tca', 'tca.user_id', '=', 'users.user_id')
+                    ->groupBy('users.user_id', 'roles.name') // Add groupBy clause to ensure SUM works correctly
                     ->paginate($perPage);
                 $roles = Role::whereNull('deleted_at')->get();
-                $maxEmpId = User::select('emp_id')->orderBy('emp_id','DESC')->first();
+                $maxEmpId = User::select('emp_id')->orderBy('emp_id', 'DESC')->first();
                 $hub->max_emp_id = $maxEmpId ? $maxEmpId->emp_id : 101;
                 $count = User::where('hub_id', $hub->hub_id)->whereNull('deleted_at')->count();
             }
-            if($param == 'accessories'){
+            if ($param == 'accessories') {
                 $hub_parts = HubPartAccessories::leftJoin('accessories', 'accessories.accessories_id', '=', 'hub_part_accessories.accessories_id')
                     ->leftJoin('hubs', 'hubs.hub_id', '=', 'hub_part_accessories.hub_id')
                     ->leftJoin('users', 'users.user_id', '=', 'hub_part_accessories.created_by')
@@ -221,23 +228,22 @@ class Hub extends Model
                     'hubs.city',
                     'accessories.price',
                     DB::raw('CONCAT(users.first_name, " ", users.last_name) AS name'),
-                    DB::raw('CASE 
-                        WHEN accessories.accessories_category_id = 1 THEN "Helmet" 
-                        WHEN accessories.accessories_category_id = 2 THEN "T-Shirt" 
-                        WHEN accessories.accessories_category_id = 3 THEN "Mobile Holder"  
+                    DB::raw('CASE
+                        WHEN accessories.accessories_category_id = 1 THEN "Helmet"
+                        WHEN accessories.accessories_category_id = 2 THEN "T-Shirt"
+                        WHEN accessories.accessories_category_id = 3 THEN "Mobile Holder"
                     END as accessories')
                 );
                 $hub_parts = $hub_parts->orderBy('hub_part_accessories.created_at', 'DESC')->paginate($perPage);
                 $count = HubPartAccessories::where('hub_id', $hub->hub_id)->count();
                 $accessories_categories = config('constants.ACCESSORIES_CATEGORY');
             }
-           
 
             if ($hub) {
-                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => $hub, 'vehicles' => $vehicles, 'employees' => $employees, 'roles' => $roles,'rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'battery_types' => $battery_types, 'profile_categories' => $profile_categories, 'vehicleStatus' => $vehicleStatus, 'bike_types' => $bike_types, 'count' => $count, 'hub_parts' => $hub_parts, 'accessories_categories' => $accessories_categories, 'vehicleCount'=> $vehicleCount, 'empCount'=>$empCount, 'accessoriesinHub' => $accessoriesinHub, 'hubId' => $hub->hubId, 'paymentStatus'=> $paymentStatus, 'kycStatus' => $kycStatus, 'evStatus'=> $evStatus, 'gpsDevice'=> $gpsDevice]);
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => $hub, 'vehicles' => $vehicles, 'employees' => $employees, 'roles' => $roles, 'rent_cycles' => $rent_cycles, 'ev_types' => $ev_types, 'ev_categories' => $ev_categories, 'battery_types' => $battery_types, 'profile_categories' => $profile_categories, 'vehicleStatus' => $vehicleStatus, 'bike_types' => $bike_types, 'count' => $count, 'hub_parts' => $hub_parts, 'accessories_categories' => $accessories_categories, 'vehicleCount' => $vehicleCount, 'empCount' => $empCount, 'accessoriesinHub' => $accessoriesinHub, 'hubId' => $hub->hubId, 'paymentStatus' => $paymentStatus, 'kycStatus' => $kycStatus, 'evStatus' => $evStatus, 'gpsDevice' => $gpsDevice]);
             } else {
-                
-                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => [], 'vehicles' => [], 'employees' => [], 'roles' => [],'rent_cycles' => [], 'ev_types' => [], 'ev_categories' =>[], 'battery_types' => [], 'profile_categories' => [], 'bike_types' => [], 'count' => $count, 'hub_parts' => [], 'accessories_categories' => [],'vehicleCount' => 0, 'empCount' => 0, 'accessoriesinHub' => [],'paymentStatus'=> [], 'kycStatus' => [], 'evStatus'=>[], 'hubId' => "", 'gpsDevice'=>[]]);
+
+                return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['hubs' => [], 'vehicles' => [], 'employees' => [], 'roles' => [], 'rent_cycles' => [], 'ev_types' => [], 'ev_categories' => [], 'battery_types' => [], 'profile_categories' => [], 'bike_types' => [], 'count' => $count, 'hub_parts' => [], 'accessories_categories' => [], 'vehicleCount' => 0, 'empCount' => 0, 'accessoriesinHub' => [], 'paymentStatus' => [], 'kycStatus' => [], 'evStatus' => [], 'hubId' => "", 'gpsDevice' => []]);
             }
         } catch (\Throwable $ex) {
             $result = [

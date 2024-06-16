@@ -6,6 +6,7 @@
                     <th>EMP ID</th>
                     <th>EMP NAME</th>
                     <th>EMP EMAIL</th>
+                    <th>Collected Amount</th>
                     <th>EMP PHONE</th>
                     <th>EMP ROLE</th>
                     <th>STATUS</th>
@@ -18,6 +19,11 @@
                         <td>EVA2Z{{ $employee->emp_id }}</td>
                         <td>{{ $employee->first_name }} {{ $employee->last_name }}</td>
                         <td>{{ $employee->email }}</td>
+                        <td>
+                            <a href="{{ route('transaction-management', ['user_slug' => $employee->slug]) }}">
+                                {{ $employee->total_collected }}
+                            </a>
+                        </td>
                         <td>{{ $employee->phone }}</td>
                         <td>
                             <span class="badge bg-success text-white p-1"> {{ ucfirst($employee->role_name) }}</span>
