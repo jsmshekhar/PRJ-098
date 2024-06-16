@@ -492,7 +492,7 @@ class Kyc extends Model
                             "order_id" => $orderId,
                             "slug" => slug(),
                             "order_slug" => $orderSlug,
-                            "transaction_ammount" => $order->product_price,
+                            "transaction_ammount" => $order->ordered_ammount,
                             "transaction_type" => 1, //Credited to our portal
                             'transaction_mode' => $transactionMode,
 
