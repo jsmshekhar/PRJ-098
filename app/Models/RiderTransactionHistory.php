@@ -143,7 +143,7 @@ class RiderTransactionHistory extends Model
                     $transactions = $transactions->where('rider_transaction_histories.payment_status', $request->p_status);
                 }
                 if (isset($request->p_mode) && !empty($request->p_mode)) {
-                    $transactions = $transactions->where('rider_transaction_histories.payment_status', $request->p_mode);
+                    $transactions = $transactions->where('rider_transaction_histories.transaction_mode', $request->p_mode);
                 }
                 if (isset($request->p_type) && !empty($request->p_type)) {
                     $transactions = $transactions->where('rider_transaction_histories.transaction_type', $request->p_type);
@@ -155,7 +155,7 @@ class RiderTransactionHistory extends Model
                 ->get();
             $count = count($count);
             $payStatus = ['1' => 'Success', '2' => 'Pending', '3' => 'Failed', '4' => 'Reject'];
-            $payModes = ['1' => 'Card', '2' => 'Wallet', '3' => 'UPI', '4' => 'Net Banking'];
+            $payModes = ['1' => 'Card', '2' => 'Wallet', '3' => 'UPI', '4' => 'COD'];
             $payTypes = ['1' => 'Credit', '2' => 'Debit'];
             if (count($transactions) > 0) {
                 return successResponse(Response::HTTP_OK, Lang::get('messages.SELECT'), ['transactions' => $transactions, 'count' => $count, 'payStatus' => $payStatus, 'payModes' => $payModes, 'payTypes' => $payTypes]);
