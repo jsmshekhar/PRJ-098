@@ -17,4 +17,5 @@ Route::get('/exchange-view/{slug}', [ReturnExchangeController::class, 'exchangeV
 
 Route::post('/return-evs/{slug}', [ReturnExchangeController::class, 'returnEvs'])->name('return-evs');
 Route::post('/exchange-evs/{slug}', [ReturnExchangeController::class, 'exchangeEvs'])->name('exchange-evs');
+Route::post('/pay-cod-rent', [RiderController::class, 'payCodRent'])->name('pay-cod-rent');
 

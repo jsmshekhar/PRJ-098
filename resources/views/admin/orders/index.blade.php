@@ -185,7 +185,7 @@
                                                     <td>{{ $qty + 1 }}</td>
                                                     <td>{{ $order->ordered_ammount }}</td>
                                                     <td>{{ $order->payment_status_display }}</td>
-                                                    <td>{{ $order->transaction_mode == 4 ? "COD" : "" }}</td>
+                                                    <td>{{ $order->transaction_mode == 4 ? "COD" : "Online" }}</td>
                                                     <td>
                                                         @if ($order->payment_status == 1 || $order->payment_status == 5)
                                                             <a href="javascript:void(0)"
@@ -249,9 +249,9 @@
                             <div class="isCod">
                                 <div class="col-md-12">
                                     <div class="form-group mb-2">
-                                        <label for="paying_ammount" class="col-form-label">Paying Ammount</label>
-                                        <input name="paying_ammount" type="number" class="floating-input form-control"
-                                            autocomplete="off" id="paying_ammount">
+                                        {{-- <label for="paying_ammount" class="col-form-label">Paying Ammount</label> --}}
+                                        <input name="paying_ammount" type="hidden" class="floating-input form-control"
+                                            autocomplete="off" id="paying_ammount" readonly>
                                         <span class="spanColor paying_ammount_error"></span>
                                     </div>
                                 </div>
@@ -382,6 +382,7 @@
                     $('.isVendor').show();
                 }
                 $('#order_ammount').val(orderedAmmount);
+                $('#paying_ammount').val(orderedAmmount);
                 if (transactionMode == 4) {
                     $('.isCod').show();
                     $('#transactionMode').val(4);
