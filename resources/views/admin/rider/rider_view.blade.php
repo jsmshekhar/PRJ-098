@@ -16,8 +16,8 @@
                                 <img src="{{ asset('public/assets/images/icons/edit-pen.svg') }}" alt="">
                             </a>
                             <!-- <a href="javascript:void(0);" class="btn btn-link" onclick="showModal('targetModal');">
-                                                    <img src="{{ asset('public/assets/images/icons/edit-pen.svg') }}" alt="">
-                                                </a> -->
+                                                                                                                            <img src="{{ asset('public/assets/images/icons/edit-pen.svg') }}" alt="">
+                                                                                                                        </a> -->
                         </div>
                     </div>
                     <div class="card-body">
@@ -96,9 +96,9 @@
                                         <h5>Subscription Status : <span>{{ $riderEv->subscriptionStatus }}</span></h5>
                                         <h5>Last EV Number : <span>{{ $riderEv->last_ev }}</span></h5>
                                         <?php
-                                        $productId = $riderEv->product_id ?? "";
-                                        $gpsEmeiNumber = $riderEv->gps_emei_number ?? "";
-                                        $riderId = $riderEv->rider_id ?? "";
+                                        $productId = $riderEv->product_id ?? '';
+                                        $gpsEmeiNumber = $riderEv->gps_emei_number ?? '';
+                                        $riderId = $riderEv->rider_id ?? '';
                                         ?>
                                         <button
                                             onclick="mobilizedEv(<?= $productId ?>, <?= $gpsEmeiNumber ?>, <?= $riderId ?>, 'm')"
@@ -201,7 +201,7 @@
             </div><!-- end col -->
 
 
-            <div class="col-md-4">
+            {{-- <div class="col-md-4">
                 <div class="card">
                     <div class="card-header border-bottom">
                         <h4>Wallet Balance</h4>
@@ -212,6 +212,92 @@
                                 <span class="rond_cntr">{{ $walletBalence }}</span>
                                 <input class="knob" data-linecap=round data-fgColor="#01992366" value="100"
                                     data-skin="tron" data-angleOffset="1000" data-readOnly=true data-thickness=".1" />
+                            </div>
+                        </div>
+                    </div><!-- end card-body -->
+                </div><!-- end card -->
+            </div> --}}
+
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header border-bottom">
+                        <h4>Current Order</h4>
+                        <div class="btn-card-header">
+                            @if (!empty($orderDetails))
+                                @if (isset($orderDetails->transaction_mode) &&
+                                        $orderDetails->transaction_mode == 4 &&
+                                        $orderDetails->status_id == config('constants.ORDER_STATUS.ASSIGNED'))
+                                    <a href="javascript:void(0);" class="btn btn-link-under"
+                                        onclick="showModal('rentModel');">
+                                        Pay Rent
+                                    </a>
+                                @endif
+                            @endif
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="detail_cnt">
+                            <div class="table-rep-plugin">
+                                <div class="table-responsive mb-0" data-pattern="priority-columns">
+                                    <table class="table mb-0 table-sm">
+                                        <tbody>
+                                            @if (!empty($orderDetails))
+                                                <tr>
+                                                    <td><b>ORDER ID : </b></td>
+                                                    <td>{{ $orderDetails->slug }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>ORDER DATE : </b></td>
+                                                    <td>{{ dateFormat($orderDetails->order_date) }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>DUE DATE : </b></td>
+                                                    <td>{{ dateFormat($paymentDetails['last_date']) }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>ORDER ITEMS : </b></td>
+                                                    <td>
+                                                        @php
+                                                            $accessoriesItems = [];
+                                                        @endphp
+                                                        @if (!is_null($orderDetails->accessories_items))
+                                                            @php
+                                                                $qty = 0;
+                                                                foreach (
+                                                                    json_decode($orderDetails->accessories_items)
+                                                                    as $items
+                                                                ) {
+                                                                    $accessoriesItems[] =
+                                                                        $items->quantity . '-' . ucwords($items->title);
+                                                                    $qty = $qty + $items->quantity;
+                                                                }
+                                                                sort($accessoriesItems);
+                                                                echo implode(', ', $accessoriesItems);
+                                                            @endphp
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>ORDER MODE : </b></td>
+                                                    <td>{{ $orderDetails->transaction_mode == 4 ? 'COD' : 'ONLINE' }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>EV ASSIGNED STATUS: </b></td>
+                                                    <td>
+                                                        @if ($orderDetails->status_id == config('constants.ORDER_STATUS.ASSIGNED'))
+                                                            {{ 'ASSIGNED' }}
+                                                        @elseif ($orderDetails->status_id == config('constants.ORDER_STATUS.PENDING'))
+                                                            {{ 'PENDING' }}
+                                                        @else
+                                                            {{ 'REJECTED' }}
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </div>
+
                             </div>
                         </div>
                     </div><!-- end card-body -->
@@ -271,6 +357,7 @@
 
     </div> <!-- container-fluid -->
 
+    {{-- Change KYC status --}}
     <div class="modal fade" id="targetModal" role="dialog" aria-labelledby="modalLabel" data-keyboard="false"
         data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modelWidth" role="document">
@@ -306,6 +393,7 @@
         </div>
     </div>
 
+    {{-- Edit Personal Details --}}
     <div class="modal fade" id="detailModal" role="dialog" aria-labelledby="modalLabel" data-keyboard="false"
         data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modelWidth" role="document">
@@ -321,49 +409,49 @@
                             <div class="col-md-12">
                                 <div class="form-group mb-2">
                                     <label for="address serach" class="col-form-label">User Id</label>
-                                    <input id="autocomplete" type="text" class="floating-input form-control"
+                                    <input id="fcustomer_id" type="text" class="floating-input form-control"
                                         autocomplete="off" value="{{ 'CUS' . $rider->customer_id }}">
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group mb-2">
                                     <label for="address serach" class="col-form-label">Name</label>
-                                    <input id="autocomplete" type="text" class="floating-input form-control"
+                                    <input id="fname" type="text" class="floating-input form-control"
                                         autocomplete="off" value="{{ $rider->name }}" readonly>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group mb-2">
                                     <label for="address serach" class="col-form-label">Email Id</label>
-                                    <input id="autocomplete" type="text" class="floating-input form-control"
+                                    <input id="femail" type="text" class="floating-input form-control"
                                         autocomplete="off" value="{{ $rider->email }}" readonly>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group mb-2">
                                     <label for="address serach" class="col-form-label">Mobile Number</label>
-                                    <input id="autocomplete" type="text" class="floating-input form-control"
+                                    <input id="fphone" type="text" class="floating-input form-control"
                                         autocomplete="off" value="{{ $rider->phone }}" readonly>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group mb-2">
                                     <label for="address serach" class="col-form-label">Alternate Mobile Number</label>
-                                    <input id="autocomplete" type="text" class="floating-input form-control"
+                                    <input id="falternate_phone" type="text" class="floating-input form-control"
                                         autocomplete="off" value="{{ $rider->alternate_phone }}" readonly>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group mb-2">
                                     <label for="address serach" class="col-form-label">Current Address</label>
-                                    <input id="autocomplete" type="text" class="floating-input form-control"
+                                    <input id="fcurrent_address" type="text" class="floating-input form-control"
                                         autocomplete="off" value="{{ $rider->current_address }}" name="current_address">
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group mb-2">
                                     <label for="address serach" class="col-form-label">Permanent Address</label>
-                                    <input id="autocomplete" type="text" class="floating-input form-control"
+                                    <input id="fpermanent_address" type="text" class="floating-input form-control"
                                         autocomplete="off" value="{{ $rider->permanent_address }}"
                                         name="permanent_address">
                                 </div>
@@ -383,6 +471,50 @@
             </div>
         </div>
     </div>
+
+    {{-- Pay Rent --}}
+    @if (!empty($orderDetails))
+        <?php
+        // dd($orderDetails, $paymentDetails);
+        ?>
+        <div class="modal fade" id="rentModel" role="dialog" aria-labelledby="modalLabel" data-keyboard="false"
+            data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered modelWidth" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4>Pay Rent</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" enctype="multipart/form-data" id="payRent" autocomplete="off">
+                            @csrf
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group mb-2">
+                                        <label for="paying_ammount" class="col-form-label">Paying Ammount</label>
+                                        <input name="paying_ammount" type="number"
+                                            value="{{ $paymentDetails['payble_rent'] }}"
+                                            class="floating-input form-control" autocomplete="off" id="paying_ammount"
+                                            readonly>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="rider_slug" value="{{ $rider->slug }}">
+                                <input type="hidden" name="order_code" value="{{ $orderDetails->slug }}">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-between">
+                        <button type="button" class="btn btn-outline-danger waves-effect waves-light"
+                            data-bs-dismiss="modal">Close</button>
+                        <span class=" text-success d-block" id="message"></span>
+                        <button type="button" id="payRentBtn" class="btn btn-success waves-effect waves-light">Pay
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 @endsection
 @section('js')
     <script src="{{ asset('public/assets/libs/jquery-knob/jquery.knob.min.js') }}"></script>
@@ -437,6 +569,37 @@
                     method: 'POST',
                     url: "{{ route('update-rider-details') }}",
                     data: formDatas,
+                    contentType: false,
+                    processData: false,
+                    success: function(data) {
+                        $('#message').html("<span class='sussecmsg'>" + data.message +
+                            "</span>");
+
+                        $('#submitCompanyForm').prop('disabled', false);
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 1000);
+
+                    },
+                    errors: function() {
+                        $('#message').html(
+                            "<span class='sussecmsg'>Somthing went wrong!</span>");
+                    }
+                });
+            });
+
+            $('#payRentBtn').click(function(e) {
+                e.preventDefault();
+                $('#payRentBtn').prop('disabled', true);
+                $('#payRentBtn').html('Please wait...')
+                var formData = new FormData(document.getElementById('payRent'));
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    method: 'POST',
+                    url: "{{ route('pay-cod-rent') }}",
+                    data: formData,
                     contentType: false,
                     processData: false,
                     success: function(data) {

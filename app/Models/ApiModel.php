@@ -300,10 +300,10 @@ class ApiModel extends Model
         }
     }
 
-    public static function getCurrentOrderDetails()
+    public static function getCurrentOrderDetails($riderId = "")
     {
         try {
-            $riderId = Auth::id();
+            $riderId = empty($riderId) ? Auth::id() : $riderId;
             $currentOrder = DB::table('rider_orders as ro')
                 ->join('products as p', 'p.product_id', '=', 'ro.vehicle_id')
                 ->select('ro.slug as order_code', 'p.slug as vehicle_slug')

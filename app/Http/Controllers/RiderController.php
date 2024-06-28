@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Http\Controllers\AdminAppController;
+use App\Models\ApiModel;
 use App\Models\Rider;
 use App\Models\RiderOrder;
+use App\Models\RiderOrderPayment;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
-use App\Http\Controllers\AdminAppController;
 
 class RiderController extends AdminAppController
 {
@@ -124,7 +128,28 @@ class RiderController extends AdminAppController
                     $riderEv->subscriptionStatus = $subscriptionStatus;
                 }
                 $transactions = $rider->transactions()->paginate(15);
-                return view($this->viewPath . '/rider_view', compact('rider', 'walletBalence', 'permission', 'kycStatus', 'riderEv', 'transactions'));
+
+                $currentOrder = ApiModel::getCurrentOrderDetails($riderId);
+                $orderDetails = $paymentDetails = null;
+                if (isset($currentOrder['order_code']) && !empty($currentOrder['order_code'])) {
+                    $orderCode = $currentOrder['order_code'];
+                    $orderDetails = RiderOrder::where('slug', $orderCode)->whereNull('deleted_at')->first();
+                    $orderId = $orderDetails->order_id;
+
+                    $payments = RiderOrderPayment::selectRaw('*')->where(['rider_id' => $riderId, 'order_id' => $orderId])->orderBy('rider_order_payment_id', 'DESC')->first();
+                    $lastDate = !is_null(($payments)) ? dateTimeFormat($payments->to_date) : '';
+                    $rentCycle = $orderDetails->subscription_days;
+                    $paymentDetails = [
+                        'order_code' => $orderCode,
+                        'basic_rent' => $orderDetails->product_price,
+                        'payble_rent' => (string) ($rentCycle * $orderDetails->product_price),
+                        'last_date' => $lastDate,
+                        'rent_cycle' => $rentCycle,
+                        'extra_distance_charge' => 0,
+                        'penalty_of_extra_days' => 0,
+                    ];
+                }
+                return view($this->viewPath . '/rider_view', compact('rider', 'walletBalence', 'permission', 'kycStatus', 'riderEv', 'transactions', 'orderDetails', 'paymentDetails'));
             }
         } catch (\Throwable $ex) {
             $result = [
@@ -238,4 +263,99 @@ class RiderController extends AdminAppController
             return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
         }
     }
+
+    /*--------------------------------------------------
+    Developer : Chandra Shehar
+    Action    : Get current payment details
+    --------------------------------------------------*/
+    public function payCodRent(Request $request)
+    {
+        try {
+            $rider = Rider::where('slug', $request->rider_slug)->whereNull('deleted_at')->first();
+            if (!is_null($rider)) {
+                $orderCode = $request->order_code ?? null;
+                $orderDetail = RiderOrder::where('slug', $orderCode)->whereNull('deleted_at')->first();
+                if (!is_null($orderDetail)) {
+                    $orderId = $orderDetail->order_id;
+                    $riderId = $rider->rider_id;
+                    $transactionMode = $orderDetail->transaction_mode ?? null;
+                    if ($transactionMode == 4) {
+                        $mappedVehicleId = $orderDetail->mapped_vehicle_id;
+                        $rentCycle = (int) $orderDetail->subscription_days;
+
+                        $payments = RiderOrderPayment::selectRaw('*')->where(['rider_id' => $riderId, 'order_id' => $orderId])->orderBy('rider_order_payment_id', 'DESC')->first();
+
+                        $fromDate = !is_null($payments) ? Carbon::parse($payments->to_date)->addDay() : '';
+                        $toDate = !is_null($payments) ? Carbon::parse($payments->to_date)->addDay($rentCycle) : '';
+
+                        $riderOrderPayments = [
+                            'slug' => slug(),
+                            'order_id' => $orderId,
+                            'rider_id' => $riderId,
+                            'mapped_vehicle_id' => $mappedVehicleId,
+                            'from_date' => $fromDate,
+                            'to_date' => $toDate,
+                            'status_id' => 1,
+                        ];
+                        RiderOrderPayment::insert($riderOrderPayments);
+
+                        $orderTransaction = [
+                            "rider_id" => $riderId,
+                            "order_id" => $orderId,
+                            "slug" => slug(),
+                            "order_slug" => $orderCode,
+                            "transaction_ammount" => $request->paying_ammount ?? 0,
+                            "transaction_type" => 1, //Credited to our portal
+                            'transaction_mode' => $transactionMode,
+
+                            'status_id' => 5, // COD
+                            'payment_status' => 5, // COD
+                            'merchant_transaction_id' => null,
+                            'transaction_id' => "COD_" . slug(),
+                            'transaction_payload' => null,
+                            'transaction_notes' => 'Cash - Payment done from portal (Rent Pay)',
+                            "created_by" => $riderId,
+                            "created_at" => NOW(),
+                        ];
+                        $transactionHistoryId = DB::table('rider_transaction_histories')->insertGetId($orderTransaction);
+
+                        $collectedAmmountDetails = [
+                            "slug" => slug(),
+                            "rider_id" => $riderId,
+                            "order_id" => $orderId,
+                            "transaction_id" => $transactionHistoryId,
+                            "user_id" => Auth::id(),
+                            "ammount" => $request->paying_ammount ?? 0,
+                            'status_id' => 1,
+                            "created_by" => Auth::id(),
+                            "created_at" => NOW(),
+                        ];
+                        DB::table('transaction_collected_ammounts')->insertGetId($collectedAmmountDetails);
+                    }
+
+                    $status = [
+                        'status' => Response::HTTP_OK,
+                        'message' => Lang::get('messages.RENT_PAID'),
+                        'result' => [],
+                    ];
+                    return response()->json($status);
+                }
+
+            }
+            $status = [
+                'status' => Response::HTTP_BAD_REQUEST,
+                'message' => Lang::get('messages.NOT_FOUND'),
+                'result' => [],
+            ];
+            return response()->json($status);
+        } catch (\Exception $ex) {
+            $result = [
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'message' => $ex->getMessage(),
+            ];
+            return catchResponse(Response::HTTP_INTERNAL_SERVER_ERROR, $ex->getMessage(), $result);
+        }
+    }
+
 }
