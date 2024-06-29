@@ -84,6 +84,12 @@ class PermissionTableSeeder extends Seeder
                 "permission_slug" => "enable-disable-customer",
             ],
             [
+                'module_slug' => "CUSTOMERMGT",
+                'module_id' => 2,
+                'name' => 'Pay Rent',
+                "permission_slug" => "pay-rent",
+            ],
+            [
                 'module_slug' => "HUBMGT",
                 'module_id' => 3,
                 'name' => 'Hub List',

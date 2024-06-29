@@ -82,7 +82,7 @@ class HomeController extends AdminAppController
 
         $recievedRevenue = RiderTransactionHistory::where(['transaction_type' => 1, 'payment_status' => 1])->whereBetween('created_at', [$startDate, $endDate])->get();
         $thisMonthTotal = $recievedRevenue->sum('transaction_ammount');
-
+//print_r($thisMonthTotal);die;
         //upcomming revenu
         $upcommingPayment = '';
         $upcommingPayment = RiderOrderPayment::join('rider_orders', 'rider_orders.order_id', '=', 'rider_order_payments.order_id')
