@@ -81,6 +81,7 @@ class AuthServiceProvider extends ServiceProvider
 
         //Rider Policies
         Gate::define('enable_disable_customer', 'App\Policies\CustomerPolicy@enable_disable_customer');
+        Gate::define('pay_rent', 'App\Policies\CustomerPolicy@pay_rent');
 
         //Cpmplain Policies
         Gate::define('view_complaint', 'App\Policies\ComplaintPolicy@view_complaint');
@@ -111,7 +112,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('assiegn_request', 'App\Policies\HubPartAccessoriesPolicy@assiegn_request');
 
         //Order Policies
-        Gate::define('view', 'App\Policies\OrderPolicy@view');
+        Gate::define('view_order', 'App\Policies\OrderPolicy@view');
         Gate::define('assign_ev', 'App\Policies\OrderPolicy@assign_ev');
 
         //Transaction Policies

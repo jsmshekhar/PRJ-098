@@ -209,10 +209,10 @@
                         $('#message').html("<span class='sussecmsg'>" + data.message +
                             "</span>");
                         $('#submitAccessories').prop('disabled', false);
-                        $('#submitAccessories').html('Update');
+                        $('#submitAccessories').html('Success!');
                         setTimeout(function() {
                             window.location.reload();
-                        }, 1000);
+                        }, 500);
 
                     },
                     errors: function() {

@@ -250,10 +250,10 @@
                         $('#messageEvType').html("<span class='sussecmsg'>" + data.message +
                             "</span>");
                         $('#submitEvType').prop('disabled', false);
-                        $('#submitEvType').html('Update');
+                        $('#submitEvType').html('Success!');
                         setTimeout(function() {
                             window.location.reload();
-                        }, 1000);
+                        }, 500);
 
                     },
                     errors: function() {

@@ -367,7 +367,7 @@
                         $('#message').html("<span class='sussecmsg'>" + data.message +
                             "</span>");
                         $('#submitUser').prop('disabled', false);
-                        $('#submitUser').html('Update');
+                        $('#submitUser').html('Success');
                         setTimeout(function() {
                             window.location.reload();
                         }, 1000);

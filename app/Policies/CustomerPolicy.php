@@ -29,4 +29,14 @@ class CustomerPolicy
             return false;
         }
     }
+
+    public function pay_rent()
+    {
+        $permission = User::getPermissions();
+        if (in_array('pay-rent', $permission)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
